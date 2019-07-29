@@ -1,6 +1,6 @@
 if (jQuery) {$=jQuery;}
 !function() {
-    let playlist = "2717890285",songs = [],currentPlaying = null,lrc = null,lrcStartPos = 0,transLrc = null,transLrcStartPos = 0,overlayAval = false,cPos = {x:0,y:0};
+    let playlist = "2717890285",songs = [],currentPlaying = null,lrc = null,lrcStartPos = 0,transLrc = null,transLrcStartPos = 0,overlayAval = false,cPos = {x:0,y:0},errorCount = 0;
     function randNfloor(min,max) {
         return Math.random()*(max-min+1)+min;
     }
@@ -171,7 +171,16 @@ if (jQuery) {$=jQuery;}
         player.find(".play-pause").addClass("fa-play");
         next();
     });
+    player.find("audio").on("load",function() {
+        errorCount = 0;
+    });
     player.find("audio").on("error",function() {
+        errorCount++;
+        if (errorCount >= 5) {
+            console.log("Too many errors, stop playing");
+            errorCount = 0;
+            return;
+        }
         player.removeClass("playing");
         player.find(".play-pause").removeClass("fa-pause");
         player.find(".play-pause").addClass("fa-play");

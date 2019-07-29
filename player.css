@@ -3,12 +3,12 @@ div.player {
     left:0;
     bottom:0;
     width:400px;
-    height:68px;
+    height:52px;
     border-top-right-radius:3px;
     background-color:rgba(0,0,0,0);
     transition:all .3s linear;
     overflow:hidden;
-    max-height:468px;
+    max-height:452px;
 }
 div.player.listed {
     height:auto;
@@ -17,14 +17,14 @@ div.player > img.thumbnail {
     animation:rotation 30s linear infinite;
     animation-play-state:paused;
     margin:2px;
-    width:64px;
-    height:64px;
-    border-radius:32px;
+    width:48px;
+    height:48px;
+    border-radius:24px;
 }
 div.player > .song-info {
     position:absolute;
     top:2px;
-    left:68px;
+    left:52px;
     transition:all .3s linear;
     word-break:keep-all;
     white-space:nowrap;
@@ -41,9 +41,9 @@ div.player > .song-info > span {
 }
 div.player  > .control-overlay {
     position:absolute;
-    height:68px;
+    height:52px;
     top:0;
-    left:68px;
+    left:52px;
     bottom:0;
     right:0;
     z-index:1;
@@ -51,13 +51,13 @@ div.player  > .control-overlay {
 }
 div.player > .control-overlay table {
     width:100%;
-    height:64px;
+    height:52px;
     border:none;
 }
 div.player > .control-overlay table td {
     text-align:center;
     padding:0;
-    height:68px;
+    height:52px;
     opacity:0;
     cursor:pointer;
     transition:all .3s linear;
@@ -126,7 +126,7 @@ div.player.playing > img.thumbnail {
     animation-play-state:running;
 }
 div.player.hide:not(.listed) {
-    width:68px;
+    width:52px;
     background-color:rgba(0,0,0,0)!important;
 }
 div.player.hide:not(.listed) > .song-info {
@@ -180,9 +180,9 @@ div.progressbar > .inner {
         width:100%!important;
     }
     div.lyric {
-        bottom:68px;
+        bottom:52px;
     }
     div.lyric.listed {
-        bottom:468px;
+        bottom:452px;
     }
 }
