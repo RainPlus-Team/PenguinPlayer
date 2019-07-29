@@ -7,10 +7,14 @@ if (jQuery) {$=jQuery;}
     function rand(min,max) {
         return Math.floor(randNfloor(min,max));
     }
+    function print(text) {
+        console.log("%cPenguin%c" + text,"border-top-left-radius:5px;border-bottom-left-radius:5px;padding:0 5px;font-size:24px;font-family:'Microsoft YaHei Light','Microsoft YaHei';background-color:darkred;color:white;","border-top-right-radius:5px;border-bottom-right-radius:5px;padding:5px;padding-top:10px;padding-bottom:2px;font-size:14px;font-family:'Microsoft YaHei Light','Microsoft YaHei';background-color:pink;color:darkred;margin:5px;margin-left:0;");
+    }
     function play(id) {
         if (id < 0 || id >= songs.length) {return;}
         currentPlaying = songs[id];
         currentPlaying.index = id;
+        print("Start to play " + currentPlaying.name);
         player.find("img.thumbnail")[0].src = currentPlaying.thumbnail;
         player.css("background-color","rgba(74,74,74,0.5)");
         player.css("color","white");
@@ -18,7 +22,7 @@ if (jQuery) {$=jQuery;}
             exclude:['rgb(255,255,255)','rgb(0,0,0)'],
             success:function(res) {
                 let color = res.dominant.match(/rgb\(([0-9]+)?,([0-9]+)?,([0-9]+)?\)/);
-                if (color == null) {return;}
+                if (color == null) {print("Can't get RGB color for " + currentPlaying.name);return;}
                 player.css("background-color","rgba(" + color[1] + "," + color[2] + "," + color[3] + ",0.5)");
                 let brightness = (parseInt(color[1])+parseInt(color[2])+parseInt(color[3]))/3;
                 if (brightness < 127) {
@@ -26,12 +30,13 @@ if (jQuery) {$=jQuery;}
                 } else {
                     player.css("color","rgb(30,30,30)");
                 }
+                print("Using R(" + color[1] + ")G(" + color[2] + ")B(" + color[3] + ") color");
             }
         });
         player.find("audio")[0].src = currentPlaying.url;
         player.find("audio")[0].play().then(function(val) {},function(err) {});
         let songInfo = player.find("div.song-info");
-        songInfo.children("h4").text(currentPlaying.name);
+        songInfo.children("h3").text(currentPlaying.name);
         songInfo.children("span").text(currentPlaying.artists);
         getLyric(currentPlaying.id);
         player.find("img.thumbnail").css("animation","none");
@@ -40,15 +45,15 @@ if (jQuery) {$=jQuery;}
         });
     }
     function next() {
-        if (currentPlaying == null) {play(0);}
-        if (currentPlaying.index == songs.length) {
+        if (currentPlaying == null) {play(0);return;}
+        if (currentPlaying.index == songs.length-1) {
             play(0);
         } else {
             play(currentPlaying.index+1);
         }
     }
     function prev() {
-        if (currentPlaying == null) {play(songs.length-1);}
+        if (currentPlaying == null) {play(songs.length-1);return;}
         if (currentPlaying.index == 0) {
             play(songs.length-1);
         } else {
@@ -62,49 +67,29 @@ if (jQuery) {$=jQuery;}
         player.lyric.find("span").text("");
         lrc = null;
         transLrc = null;
+        print("Try to fetch lyric for " + currentPlaying.name);
         $.ajax({
             url:"https://texaservice.tk:21341/NeteaseLyric.aspx?song=" + id,
             success:function(data) {
                 if (currentPlaying.id != id) {return;}
-                if (data.code != 200) {return;}
-                if (data.lyric.length == 0) {return;}
+                if (data.code != 200) {print("Can't fetch lyric for " + currentPlaying.name);return;}
+                if (data.lyric.length == 0) {print("No lyric for " + currentPlaying.name);return;}
                 lrc = data.lyric.lrc;
                 if (data.lyric.tlrc) {
+                    print(currentPlaying.name + " has a translated lyric");
                     transLrc = data.lyric.tlrc;
                 }
             },
             dataType:"json"
         });
     }
-    window.player = $("<div class='player hide'><img class='thumbnail'/><div class='control-overlay'><table cellspacing='0'><tr><td><i class='fa fa-backward'></i></td><td><i class='fa fa-play play-pause'></i></td><td><i class='fa fa-forward'></i></td><td><i class='fa fa-navicon'></i></td></tr></table></div><div class='song-info'><h4></h4><span></span></div><div class='song-list'></div><audio id='player'></audio></div>");
-    player.lyric = $("<div class='lyric'><h3></h3><span></span></div>");
-    player.progress = $("<div class='progressbar'><div class='inner'></div></div>");
-    player.mouseenter(function() {
-        player.removeClass("hide");
-        setTimeout(function() {
-            overlayAval = true;
-        },50);
-    });
-    player.mouseleave(function() {
-        player.addClass("hide");
-        overlayAval = false;
-    });
-    player.progress.mousedown(function() {
-        player.progress.dragging = true;
-    });
-    $(window).mouseup(function() {
-        player.progress.dragging = false;
-    });
-    $(window).mousemove(function(e) {
-        cPos.x = e.pageX;
-        cPos.y = e.pageY;
-    });
-    player.find("audio").on("timeupdate",function() {
+    function lyricFrame() {
         let aud = player.find("audio")[0];
         if (player.progress.dragging) {
+            try {
             aud.currentTime = cPos.x / window.innerWidth * aud.duration;
+            } catch {}
         }
-        player.progress.find(".inner").css("width",aud.currentTime / aud.duration * 100 + "%");
         let mainLrc = "",subLrc = "";
         if (lrc != null&&!player.find("audio")[0].paused) {
             for (let i = lrcStartPos;i<lrc.length;i++) {
@@ -141,6 +126,34 @@ if (jQuery) {$=jQuery;}
         }
         player.lyric.find("h3").text(mainLrc);
         player.lyric.find("span").text(subLrc);
+        requestAnimationFrame(lyricFrame);
+    }
+    window.player = $("<div class='player hide'><img class='thumbnail'/><div class='control-overlay'><table cellspacing='0'><tr><td><i class='fa fa-backward'></i></td><td><i class='fa fa-play play-pause'></i></td><td><i class='fa fa-forward'></i></td><td><i class='fa fa-navicon'></i></td></tr></table></div><div class='song-info'><h3></h3><span></span></div><div class='song-list'></div><audio id='player'></audio></div>");
+    player.lyric = $("<div class='lyric'><h3></h3><span></span></div>");
+    player.progress = $("<div class='progressbar'><div class='inner'></div></div>");
+    player.mouseenter(function() {
+        player.removeClass("hide");
+        setTimeout(function() {
+            overlayAval = true;
+        },50);
+    });
+    player.mouseleave(function() {
+        player.addClass("hide");
+        overlayAval = false;
+    });
+    player.progress.mousedown(function() {
+        player.progress.dragging = true;
+    });
+    $(window).mouseup(function() {
+        player.progress.dragging = false;
+    });
+    $(window).mousemove(function(e) {
+        cPos.x = e.pageX;
+        cPos.y = e.pageY;
+    });
+    player.find("audio").on("timeupdate",function() {
+        let aud = player.find("audio")[0];
+        player.progress.find(".inner").css("width",aud.currentTime / aud.duration * 100 + "%");
     });
     player.find("audio").on("play",function() {
         player.addClass("playing");
@@ -195,12 +208,15 @@ if (jQuery) {$=jQuery;}
             player.find(".song-list").addClass("show");
         }
     });
+    print("Fetching playlist...");
     $.ajax({
         url:"https://tenmahw.com/tPlayer/tplayer.php?id=" + playlist,
         success:function(data) {
             if (data.code != 200) {
+                print("Can't fetch playlist from Netease");
                 return;
             }
+            print("Using playlist " + data.result.name);
             for (let i = 0;i<data.result.tracks.length;i++) {
                 let track = data.result.tracks[i];
                 if (location.protocol == "https:") {
@@ -228,7 +244,9 @@ if (jQuery) {$=jQuery;}
             $("body").append(player);
             $("body").append(player.lyric);
             $("body").append(player.progress);
+            requestAnimationFrame(lyricFrame);
+            print("Player ready!");
         },
         dataType:"json"
-    })
+    });
 }();
