@@ -1,4 +1,5 @@
 !function() {
+    let $ = window.$;
     if (jQuery) {$=jQuery;}
     function getAllUrlParams(url) {
         var queryString = url ? url.split('?')[1] : window.location.search.slice(1);
@@ -35,7 +36,7 @@
         }
         return obj;
     }
-    let playlist = "2717890285",songs = [],currentPlaying = null,lrc = null,lrcStartPos = 0,transLrc = null,transLrcStartPos = 0,overlayAval = false,cPos = {x:0,y:0},errorCount = 0;
+    let playlist = "2717890285",songs = [],currentPlaying = null,lrc = null,lrcStartPos = 0,transLrc = null,transLrcStartPos = 0,overlayAval = false,cPos = {x:0,y:0},errorCount = 0,lastMainLrc = "",lastSubLrc = "";
     function randNfloor(min,max) {
         return Math.random()*(max-min+1)+min;
     }
@@ -51,10 +52,10 @@
         currentPlaying = songs[id];
         currentPlaying.index = id;
         print("Start to play " + currentPlaying.name);
-        player.find("img.thumbnail")[0].src = currentPlaying.thumbnail;
+        player.find("div.thumbnail > img")[0].src = currentPlaying.thumbnail;
         player.css("background-color","rgba(74,74,74,0.5)");
         player.css("color","white");
-        RGBaster.colors(player.find("img.thumbnail")[0],{
+        RGBaster.colors(player.find("div.thumbnail > img")[0],{
             exclude:['rgb(255,255,255)','rgb(0,0,0)'],
             success:function(res) {
                 let color = res.dominant.match(/rgb\(([0-9]+)?,([0-9]+)?,([0-9]+)?\)/);
@@ -79,9 +80,9 @@
         songInfo.children("h3").text(currentPlaying.name);
         songInfo.children("span").text(currentPlaying.artists);
         getLyric(currentPlaying.id);
-        player.find("img.thumbnail").css("animation","none");
+        player.find("div.thumbnail").css("animation","none");
         setTimeout(function() {
-            player.find("img.thumbnail").css("animation","");
+            player.find("div.thumbnail").css("animation","");
         });
     }
     function next() {
@@ -164,12 +165,34 @@
                 }
             }
         }
-        player.lyric.find("h3").text(mainLrc);
-        player.lyric.find("span").text(subLrc);
+        if (mainLrc != lastMainLrc) {
+            player.lyric.find("h2").css("opacity","0");
+            setTimeout(function() {
+                if (mainLrc == "") {
+                    player.lyric.find("h2").html("&nbsp;");
+                } else {
+                    player.lyric.find("h2").text(mainLrc);
+                }
+                player.lyric.find("h2").css("opacity","1");
+            },100);
+            lastMainLrc = mainLrc;
+        }
+        if (subLrc != lastSubLrc) {
+            player.lyric.find("span").css("opacity","0");
+            setTimeout(function() {
+                if (subLrc == "") {
+                    player.lyric.find("span").html("&nbsp;");
+                } else {
+                    player.lyric.find("span").text(subLrc);
+                }
+                player.lyric.find("span").css("opacity","1");
+            },100);
+            lastSubLrc = subLrc;
+        }
         requestAnimationFrame(lyricFrame);
     }
-    window.player = $("<div class='player hide'><img class='thumbnail'/><div class='control-overlay'><table cellspacing='0'><tr><td><i class='fa fa-backward'></i></td><td><i class='fa fa-play play-pause'></i></td><td><i class='fa fa-forward'></i></td><td><i class='fa fa-navicon'></i></td></tr></table></div><div class='song-info'><h3></h3><span></span></div><div class='song-list'></div><audio id='player'></audio></div>");
-    player.lyric = $("<div class='lyric'><h3></h3><span></span></div>");
+    window.player = $("<div class='player hide'><div class='thumbnail'><img/></div><div class='control-overlay'><table cellspacing='0'><tr><td><i class='fa fa-backward'></i></td><td><i class='fa fa-play play-pause'></i></td><td><i class='fa fa-forward'></i></td><td><i class='fa fa-navicon'></i></td></tr></table></div><div class='song-info'><h3></h3><span></span></div><div class='song-list'></div><audio id='player'></audio></div>");
+    player.lyric = $("<div class='lyric'><h2></h2><span></span></div>");
     player.progress = $("<div class='progressbar'><div class='inner'></div></div>");
     player.mouseenter(function() {
         player.removeClass("hide");
@@ -272,6 +295,16 @@
                 player.removeClass("listed");
             },300);
         } else {
+            if (songs.length != player.find(".song-list").children().length) {
+                player.find(".song-list").find("*").remove();
+                for (let i = 0;i<songs.length;i++) {
+                    let song = songs[i];
+                    player.find(".song-list").append("<div class='song' data-index='" + i + "'><img src='" + song.thumbnail + "'/><h5>" + song.name + "</h5><span>" + song.artists + "</span></div>");
+                }
+                player.find(".song").click(function() {
+                    play($(this).data("index"));
+                });
+            }
             player.addClass("listed");
             player.lyric.addClass("listed");
             player.find(".song-list").addClass("show");
@@ -301,14 +334,10 @@
                     name:track.name,
                     artists:artists,
                     thumbnail:track.album.picUrl,
-                    url:(location.protocol == "file:" ? location.protocol : "") + "//music.163.com/song/media/outer/url?id=" + track.id + ".mp3"
+                    url:(location.protocol == "file:" ? "http:" : "") + "//music.163.com/song/media/outer/url?id=" + track.id + ".mp3"
                 };
                 songs.push(song);
-                player.find(".song-list").append("<div class='song' data-index='" + i + "'><img src='" + song.thumbnail + "'/><h5>" + song.name + "</h5><span>" + song.artists + "</span></div>");
             }
-            player.find(".song").click(function() {
-                play($(this).data("index"));
-            });
             if (getAllUrlParams().song != undefined&&!isNaN(parseInt(getAllUrlParams().song))) {
                 play(parseInt(getAllUrlParams().song));
             } else {

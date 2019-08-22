@@ -13,13 +13,22 @@ div.player {
 div.player.listed {
     height:auto;
 }
-div.player > img.thumbnail {
+div.player > div.thumbnail {
+    position:relative;
+    width:48px;
+    height:48px;
     animation:rotation 30s linear infinite;
     animation-play-state:paused;
     margin:2px;
-    width:48px;
-    height:48px;
     border-radius:24px;
+    overflow:hidden;
+}
+div.player > div.thumbnail > img {
+    position:absolute;
+    top:0;
+    left:50%;
+    transform:translate(-50%);
+    height:48px;
 }
 div.player > .song-info {
     position:absolute;
@@ -69,8 +78,6 @@ div.player > .control-overlay table td:hover {
     opacity:1;
 }
 div.player > .song-list {
-    position:relative;
-    top:-4px;
     height:auto;
     max-height:0;
     overflow:auto;
@@ -122,7 +129,7 @@ div.player > .song-list.show {
     height:auto;
     max-height:400px;
 }
-div.player.playing > img.thumbnail {
+div.player.playing > div.thumbnail {
     animation-play-state:running;
 }
 div.player.hide:not(.listed) {
@@ -148,8 +155,14 @@ div.lyric {
     width:100%;
     z-index:2;
 }
-div.lyric > h3 {
+div.lyric > * {
+    transition:all .1s linear;
+}
+div.lyric > h2 {
     margin:0;
+}
+div.lyric > span {
+    font-size:16px;
 }
 div.progressbar {
     position:fixed;
