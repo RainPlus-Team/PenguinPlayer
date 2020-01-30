@@ -1,4 +1,37 @@
 !function($) {
+    function getAverageRGB(imgEl) {
+        var blockSize = 5,
+            defaultRGB = {r:255,g:255,b:255},
+            canvas = document.createElement('canvas'),
+            context = canvas.getContext && canvas.getContext('2d'),
+            data, width, height,
+            i = -4,
+            length,
+            rgb = {r:0,g:0,b:0},
+            count = 0;
+        if (!context) {
+            return defaultRGB;
+        }
+        height = canvas.height = imgEl.naturalHeight || imgEl.offsetHeight || imgEl.height;
+        width = canvas.width = imgEl.naturalWidth || imgEl.offsetWidth || imgEl.width;
+        context.drawImage(imgEl, 0, 0);
+        try {
+            data = context.getImageData(0, 0, width, height);
+        } catch(e) {
+            return defaultRGB;
+        }
+        length = data.data.length;
+        while ( (i += blockSize * 4) < length ) {
+            ++count;
+            rgb.r += data.data[i];
+            rgb.g += data.data[i+1];
+            rgb.b += data.data[i+2];
+        }
+        rgb.r = ~~(rgb.r/count);
+        rgb.g = ~~(rgb.g/count);
+        rgb.b = ~~(rgb.b/count);
+        return rgb;
+    }
     function getAllUrlParams(url) {
         var queryString = url ? url.split('?')[1] : window.location.search.slice(1);
         var obj = {};
@@ -50,24 +83,9 @@
         currentPlaying = songs[id];
         currentPlaying.index = id;
         print("Start to play " + currentPlaying.name);
-        player.find("div.thumbnail > img")[0].src = currentPlaying.thumbnail;
+        player.find("div.thumbnail > img")[0].src = currentPlaying.thumbnail.replace("http:","https:");
         player.css("background-color","rgba(74,74,74,0.5)");
         player.css("color","white");
-        RGBaster.colors(player.find("div.thumbnail > img")[0],{
-            exclude:['rgb(255,255,255)','rgb(0,0,0)'],
-            success:function(res) {
-                let color = res.dominant.match(/rgb\(([0-9]+)?,([0-9]+)?,([0-9]+)?\)/);
-                if (color == null) {print("Can't get RGB color for " + currentPlaying.name);return;}
-                player.css("background-color","rgba(" + color[1] + "," + color[2] + "," + color[3] + ",0.5)");
-                let brightness = (parseInt(color[1])+parseInt(color[2])+parseInt(color[3]))/3;
-                if (brightness < 127) {
-                    player.css("color","white");
-                } else {
-                    player.css("color","rgb(30,30,30)");
-                }
-                print("Using R(" + color[1] + ")G(" + color[2] + ")B(" + color[3] + ") color");
-            }
-        });
         player.find("audio")[0].src = currentPlaying.url;
         if (!first||(new Date()).valueOf() - parseInt(localStorage.getItem("player_live")) >= 1000) {
             if (!(first&&localStorage.getItem("player_user_pause") == "true")) {
@@ -108,11 +126,11 @@
         transLrc = null;
         print("Try to fetch lyric for " + currentPlaying.name);
         $.ajax({
-            url:"https://texaservice.tk:21341/NeteaseLyric.aspx?song=" + id,
+            url:"https://api.texl.top/netease/lyric/?id=" + id,
             success:function(data) {
                 if (currentPlaying.id != id) {return;}
                 if (data.code != 200) {print("Can't fetch lyric for " + currentPlaying.name);return;}
-                if (data.lyric.length == 0) {print("No lyric for " + currentPlaying.name);return;}
+                if (data.lyric == null) {print("No lyric for " + currentPlaying.name);return;}
                 lrc = data.lyric.lrc;
                 if (data.lyric.tlrc) {
                     print(currentPlaying.name + " has a translated lyric");
@@ -164,14 +182,14 @@
             }
         }
         if (mainLrc != lastMainLrc) {
-            player.lyric.find("h2").css("opacity","0");
+            player.lyric.find("h3").css("opacity","0");
             setTimeout(function() {
                 if (mainLrc == "") {
-                    player.lyric.find("h2").html("&nbsp;");
+                    player.lyric.find("h3").html("&nbsp;");
                 } else {
-                    player.lyric.find("h2").text(mainLrc);
+                    player.lyric.find("h3").text(mainLrc);
                 }
-                player.lyric.find("h2").css("opacity","1");
+                player.lyric.find("h3").css("opacity","1");
             },100);
             lastMainLrc = mainLrc;
         }
@@ -189,8 +207,8 @@
         }
         requestAnimationFrame(lyricFrame);
     }
-    window.player = $("<div class='player hide'><div class='thumbnail'><img/></div><div class='control-overlay'><table cellspacing='0'><tr><td><i class='fa fa-backward'></i></td><td><i class='fa fa-play play-pause'></i></td><td><i class='fa fa-forward'></i></td><td><i class='fa fa-navicon'></i></td></tr></table></div><div class='song-info'><h3></h3><span></span></div><div class='song-list'></div><audio id='player'></audio></div>");
-    player.lyric = $("<div class='lyric'><h2></h2><span></span></div>");
+    window.player = $("<div class='player hide'><div class='thumbnail'><img crossOrigin='anonymous'/></div><div class='control-overlay'><table cellspacing='0'><tr><td><i class='fa fa-backward'></i></td><td><i class='fa fa-play play-pause'></i></td><td><i class='fa fa-forward'></i></td><td><i class='fa fa-navicon'></i></td></tr></table></div><div class='song-info'><h3></h3><span></span></div><div class='song-list'></div><audio id='player'></audio></div>");
+    player.lyric = $("<div class='lyric'><h3></h3><span></span></div>");
     player.progress = $("<div class='progressbar'><div class='inner'></div></div>");
     player.mouseenter(function() {
         player.removeClass("hide");
@@ -201,6 +219,17 @@
     player.mouseleave(function() {
         player.addClass("hide");
         overlayAval = false;
+    });
+    player.find("div.thumbnail > img").on("load",function() {
+        let color = getAverageRGB(player.find("div.thumbnail > img")[0]);
+        player.css("background-color","rgba(" + color.r + "," + color.g + "," + color.b + ",0.5)");
+        let brightness = (color.r+color.g+color.b)/3;
+        if (brightness < 127) {
+            player.css("color","white");
+        } else {
+            player.css("color","rgb(30,30,30)");
+        }
+        print("Using R(" + color.r + ")G(" + color.g + ")B(" + color.b + ") color");
     });
     player.progress.mousedown(function() {
         player.progress.dragging = true;
@@ -228,6 +257,13 @@
     });
     $(window).on("close",function() {
         localStorage.removeItem("player_live");
+    });
+    $(window).on("scroll",function() {
+        if (document.body.scrollHeight - Math.max( $("html").scrollTop(), $("body").scrollTop() ) - window.innerHeight <= 5) {
+            player.lyric.css("opacity",0);
+        } else {
+            player.lyric.css("opacity","");
+        }
     });
     player.find("audio").on("timeupdate",function() {
         let aud = player.find("audio")[0];
@@ -297,7 +333,7 @@
                 player.find(".song-list").find("*").remove();
                 for (let i = 0;i<songs.length;i++) {
                     let song = songs[i];
-                    player.find(".song-list").append("<div class='song' data-index='" + i + "'><img src='" + song.thumbnail + "'/><h5>" + song.name + "</h5><span>" + song.artists + "</span></div>");
+                    player.find(".song-list").append("<div class='song' data-index='" + i + "'><img src='" + song.thumbnail.replace("http:","https:") + "'/><h5>" + song.name + "</h5><span>" + song.artists + "</span></div>");
                 }
                 player.find(".song").click(function() {
                     play($(this).data("index"));
