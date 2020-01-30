@@ -1,6 +1,4 @@
-!function() {
-    let $ = window.$;
-    if (jQuery) {$=jQuery;}
+!function($) {
     function getAllUrlParams(url) {
         var queryString = url ? url.split('?')[1] : window.location.search.slice(1);
         var obj = {};
@@ -351,4 +349,4 @@
         },
         dataType:"json"
     });
-}();
+}(jQuery);
