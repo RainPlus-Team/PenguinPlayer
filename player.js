@@ -100,6 +100,14 @@
         setTimeout(function() {
             player.find("div.thumbnail").css("animation","");
         });
+        if ("mediaSession" in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: currentPlaying.name,
+                artist: currentPlaying.artists,
+                album: currentPlaying.album,
+                artwork: [{src: currentPlaying.thumbnail.replace("http:","https:") + "?param=200y200", sizes: "200x200", type: "image/jpeg"}]
+            });
+        }
     }
     function next() {
         if (currentPlaying == null) {play(0);return;}
@@ -116,6 +124,16 @@
         } else {
             play(currentPlaying.index-1);
         }
+    }
+    if ("mediaSession" in navigator) {
+        navigator.mediaSession.setActionHandler("play", function() {
+            player.find("audio")[0].play().then(function(val) {},function(err) {});
+        });
+        navigator.mediaSession.setActionHandler("pause", function() {
+            player.find("audio")[0].pause();
+        });
+        navigator.mediaSession.setActionHandler("previoustrack", prev);
+        navigator.mediaSession.setActionHandler("nexttrack", next);
     }
     function getLyric(id) {
         lrcStartPos = 0;
@@ -259,8 +277,8 @@
         localStorage.removeItem("player_live");
     });
     $(window).on("scroll",function() {
-        if (document.body.scrollHeight - Math.max( $("html").scrollTop(), $("body").scrollTop() ) - window.innerHeight <= 5) {
-            player.lyric.css("opacity",0);
+    	if (document.body.scrollHeight - Math.max( $("html").scrollTop(), $("body").scrollTop() ) - window.innerHeight <= 5) {
+        	player.lyric.css("opacity",0);
         } else {
             player.lyric.css("opacity","");
         }
@@ -367,6 +385,7 @@
                     id:track.id,
                     name:track.name,
                     artists:artists,
+                    album:track.album.name,
                     thumbnail:track.album.picUrl,
                     url:(location.protocol == "file:" ? "http:" : "") + "//music.163.com/song/media/outer/url?id=" + track.id + ".mp3"
                 };
