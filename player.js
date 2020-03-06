@@ -293,16 +293,19 @@
         player.addClass("playing");
         player.find(".play-pause").removeClass("fa-play");
         player.find(".play-pause").addClass("fa-pause");
+        navigator.mediaSession.playbackState = "playing";
     });
     player.find("audio").on("pause",function() {
         player.removeClass("playing");
         player.find(".play-pause").removeClass("fa-pause");
         player.find(".play-pause").addClass("fa-play");
+        navigator.mediaSession.playbackState = "paused";
     });
     player.find("audio").on("ended",function() {
         player.removeClass("playing");
         player.find(".play-pause").removeClass("fa-pause");
         player.find(".play-pause").addClass("fa-play");
+        navigator.mediaSession.playbackState = "none";
         next();
     });
     player.find("audio").on("load",function() {
