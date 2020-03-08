@@ -10,6 +10,9 @@ div.player {
     overflow:hidden;
     max-height:452px;
 }
+div.player * {
+    text-align:left;
+}
 div.player.listed {
     height:auto;
 }
