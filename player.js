@@ -67,7 +67,7 @@
         }
         return obj;
     }
-    let playlist = "2717890285",songs = [],currentPlaying = null,lrc = null,lrcStartPos = 0,transLrc = null,transLrcStartPos = 0,overlayAval = false,cPos = {x:0,y:0},errorCount = 0,lastMainLrc = "",lastSubLrc = "";
+    let playlist = "2717890285",songs = [],currentPlaying = null,lrc = null,lrcStartPos = 0,transLrc = null,transLrcStartPos = 0,overlayAval = false,cPos = {x:0,y:0},errorCount = 0,lastMainLrc = "",lastSubLrc = "",cUrlReq = null;
     function randNfloor(min,max) {
         return Math.random()*(max-min+1)+min;
     }
@@ -79,19 +79,47 @@
     }
     function play(id) {
         if (id < 0 || id >= songs.length) {return;}
+        if (cUrlReq != null && cUrlReq.readyState != 4 && songs[id].id == cUrlReq.song) {return;}
         let first = currentPlaying == null;
         currentPlaying = songs[id];
         currentPlaying.index = id;
         print("Start to play " + currentPlaying.name);
-        player.find("div.thumbnail > img")[0].src = currentPlaying.thumbnail.replace("http:","https:");
+        player.find("audio")[0].src = "";
+        player.find("audio").removeAttr("src");
+        player.find("div.thumbnail > img")[0].src = currentPlaying.thumbnail.replace("http:","https:") + "?param=48y48";
         player.css("background-color","rgba(74,74,74,0.5)");
         player.css("color","white");
-        player.find("audio")[0].src = currentPlaying.url;
-        if (!first||(new Date()).valueOf() - parseInt(localStorage.getItem("player_live")) >= 1000) {
-            if (!(first&&localStorage.getItem("player_user_pause") == "true")) {
-                player.find("audio")[0].play().then(function(val) {},function(err) {});
-            }
+        let cid = currentPlaying.id;
+        if (cUrlReq != null && cUrlReq.readyState != 4) {
+            cUrlReq.abort();
         }
+        cUrlReq = $.ajax({
+            url: "https://cm.luotianyi.me/api/song/url?id=" + cid,
+            success: function(data) {
+                if (cid != currentPlaying.id || player.find("audio").attr("src") != undefined) {
+                    return;
+                }
+                if (data["code"] != 200) {
+                    player.find("audio").trigger("error");
+                    return;
+                }
+                try {
+                    player.find("audio")[0].src = data["data"][0]["url"].replace("http:","https:");
+                    if (!first||(new Date()).valueOf() - parseInt(localStorage.getItem("player_live")) >= 1000) {
+                        if (!(first&&localStorage.getItem("player_user_pause") == "true")) {
+                            player.find("audio")[0].play().then(function(val) {},function(err) {});
+                        }
+                    }
+                } catch {
+                    player.find("audio").trigger("error");
+                }
+            },
+            error: function() {
+                player.find("audio").trigger("error");
+            },
+            dataType: "json"
+        });
+        cUrlReq.song = cid;
         let songInfo = player.find("div.song-info");
         songInfo.children("h3").text(currentPlaying.name);
         songInfo.children("span").text(currentPlaying.artists);
@@ -124,6 +152,19 @@
         } else {
             play(currentPlaying.index-1);
         }
+    }
+    function updateVolumeBar() {
+        let volume = player.find("audio")[0].volume;
+        let width = (volume*100) + "%";
+        player.find(".volume-bar-inner").css("width",width);
+    }
+    function handleVolumeBarChange(x) {
+        let vol = (x-player.find(".volume-bar").offset().left) / player.find(".volume-bar").width();
+        if (vol > 1) {vol = 1;}
+        if (vol < 0) {vol = 0;}
+        localStorage.setItem("player_volume",vol);
+        player.find("audio")[0].volume = vol;
+        updateVolumeBar();
     }
     if ("mediaSession" in navigator) {
         navigator.mediaSession.setActionHandler("play", function() {
@@ -225,7 +266,7 @@
         }
         requestAnimationFrame(lyricFrame);
     }
-    window.player = $("<div class='player hide'><div class='thumbnail'><img crossOrigin='anonymous'/></div><div class='control-overlay'><table cellspacing='0'><tr><td><i class='fa fa-backward'></i></td><td><i class='fa fa-play play-pause'></i></td><td><i class='fa fa-forward'></i></td><td><i class='fa fa-navicon'></i></td></tr></table></div><div class='song-info'><h3></h3><span></span></div><div class='song-list'></div><audio id='player'></audio></div>");
+    window.player = $("<div class='player hide'><div class='thumbnail'><img crossOrigin='anonymous'/></div><div class='control-overlay'><table cellspacing='0'><tr><td title='上一首'><i class='fa fa-backward'></i></td><td title='播放/暂停'><i class='fa fa-play play-pause'></i></td><td title='下一首'><i class='fa fa-forward'></i></td><td title='播放列表/音量调节'><i class='fa fa-navicon'></i></td></tr></table></div><div class='song-info'><h3></h3><span></span></div><div class='volume-control'><i class='fa fa-volume-up'></i><div class='volume-bar'><div class='volume-bar-inner'><div class='volume-bar-dot'></div></div></div></div><div class='song-list'></div><audio></audio></div>");
     player.lyric = $("<div class='lyric'><h3></h3><span></span></div>");
     player.progress = $("<div class='progressbar'><div class='inner'></div></div>");
     player.mouseenter(function() {
@@ -244,8 +285,20 @@
         let brightness = (color.r+color.g+color.b)/3;
         if (brightness < 127) {
             player.css("color","white");
+            player.find(".volume-bar").css("background-color","rgba(255,255,255,0.3)");
+            player.find(".volume-bar-inner").css("background-color","rgba(255,255,255,0.5)");
+            player.find(".volume-bar-dot").css({
+                "background-color":"rgba(255,255,255,0.8)",
+                "box-shadow":"0 0 5px white"
+            });
         } else {
             player.css("color","rgb(30,30,30)");
+            player.find(".volume-bar").css("background-color","rgba(30,30,30,0.3)");
+            player.find(".volume-bar-inner").css("background-color","rgba(30,30,30,0.5)");
+            player.find(".volume-bar-dot").css({
+                "background-color":"rgba(30,30,30,0.8)",
+                "box-shadow":"0 0 5px #333"
+            });
         }
         print("Using R(" + color.r + ")G(" + color.g + ")B(" + color.b + ") color");
     });
@@ -262,16 +315,32 @@
             player.progress.dragging = false;
             player.addClass("playing");
         }
+        if (player.volumeDragging) {
+            player.volumeDragging = false;
+        }
     });
     $(window).on("touchend",function() {
         if (player.progress.dragging) {
             player.progress.dragging = false;
             player.addClass("playing");
         }
+        if (player.volumeDragging) {
+            player.volumeDragging = false;
+        }
     });
     $(window).mousemove(function(e) {
         cPos.x = e.pageX;
         cPos.y = e.pageY;
+        if (player.volumeDragging) {
+            handleVolumeBarChange(cPos.x);
+        }
+    });
+    $(window).on("touchmove",function(e) {
+        cPos.x = e.originalEvent.touches[0].pageX;
+        cPos.y = e.originalEvent.touches[0].pageY;
+        if (player.volumeDragging) {
+            handleVolumeBarChange(cPos.x);
+        }
     });
     $(window).on("close",function() {
         localStorage.removeItem("player_live");
@@ -354,7 +423,7 @@
                 player.find(".song-list").find("*").remove();
                 for (let i = 0;i<songs.length;i++) {
                     let song = songs[i];
-                    player.find(".song-list").append("<div class='song' data-index='" + i + "'><img src='" + song.thumbnail.replace("http:","https:") + "'/><h5>" + song.name + "</h5><span>" + song.artists + "</span></div>");
+                    player.find(".song-list").append("<div class='song' data-index='" + i + "'><img src='" + song.thumbnail.replace("http:","https:") + "?param=48y48'/><h5>" + song.name + "</h5><span>" + song.artists + "</span></div>");
                 }
                 player.find(".song").click(function() {
                     play($(this).data("index"));
@@ -364,6 +433,16 @@
             player.lyric.addClass("listed");
             player.find(".song-list").addClass("show");
         }
+    });
+    player.find(".volume-bar").mousedown(function() {
+        handleVolumeBarChange(cPos.x);
+        player.volumeDragging = true;
+        return false;
+    });
+    player.find(".volume-control").on("touchstart",function(e) {
+        e.preventDefault();
+        handleVolumeBarChange(e.originalEvent.touches[0].pageX);
+        player.volumeDragging = true;
     });
     print("Fetching playlist...");
     $.ajax({
@@ -399,9 +478,11 @@
             } else {
                 play(rand(0,songs.length-1));
             }
+            player.find("audio")[0].volume = localStorage.getItem("player_volume") || 1;
             $("body").append(player);
             $("body").append(player.lyric);
             $("body").append(player.progress);
+            updateVolumeBar();
             requestAnimationFrame(lyricFrame);
             print("Player ready!");
         },

@@ -1,11 +1,12 @@
 div.player {
+    color:white;
     position:fixed;
     left:0;
     bottom:0;
     width:400px;
     height:52px;
     border-top-right-radius:3px;
-    background-color:rgba(0,0,0,0);
+    background-color:rgba(30,30,30,0.5);
     transition:all .3s linear;
     overflow:hidden;
     max-height:452px;
@@ -42,6 +43,7 @@ div.player > .song-info {
     white-space:nowrap;
 }
 div.player > .song-info > h3 {
+    font-size:24px;
     position:relative;
     top:-2px;
     margin:0;
@@ -79,6 +81,37 @@ div.player > .control-overlay table td {
 }
 div.player > .control-overlay table td:hover {
     opacity:1;
+}
+div.player > .volume-control {
+    height:auto;
+    padding:5px 20px;
+}
+div.player > .volume-control > .fa-volume-up {
+    font-size:20px;
+}
+div.player > .volume-control > .volume-bar {
+    border-radius:2.5px;
+    width:100%;
+    height:5px;
+    background-color:rgba(255,255,255,0.3);
+}
+div.player > .volume-control > .volume-bar > .volume-bar-inner {
+    position:relative;
+    border-radius:2.5px;
+    height:5px;
+    background-color:rgba(255,255,255,0.5);
+}
+div.player > .volume-control > .volume-bar > .volume-bar-inner > .volume-bar-dot {
+    cursor:pointer;
+    position:absolute;
+    top:0;
+    left:100%;
+    border-radius:5px;
+    width:10px;
+    height:10px;
+    transform:translate(-50%,-25%);
+    background-color:rgba(255,255,255,0.8);
+    box-shadow:0 0 5px white;
 }
 div.player > .song-list {
     height:auto;
@@ -118,12 +151,14 @@ div.player > .song-list > .song > img {
     height:32px;
 }
 div.player > .song-list > .song > h5 {
+    white-space:nowrap;
     display:inline-block;
     position:absolute;
     margin:0;
     margin-left:5px;
 }
 div.player > .song-list > .song > span {
+    white-space:nowrap;
     position:relative;
     top:-3px;
     font-size:10px;
@@ -163,6 +198,8 @@ div.lyric,div.lyric > * {
     transition:all .1s linear;
 }
 div.lyric > h3 {
+    font-size:20px;
+    line-height:normal;
     margin:0;
 }
 div.lyric > span {
