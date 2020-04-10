@@ -1,4 +1,5 @@
 div.player {
+    all:initial;
     color:white;
     position:fixed;
     left:0;
@@ -183,6 +184,7 @@ div.player.hide:not(.listed) > .song-list {
     max-height:0!important;
 }
 div.lyric {
+    all:initial;
     text-align:center;
     position:fixed;
     left:50%;
@@ -206,6 +208,7 @@ div.lyric > span {
     font-size:16px;
 }
 div.progressbar {
+    all:initial;
     position:fixed;
     top:0;
     left:0;
