@@ -152,6 +152,7 @@ div.player > .song-list > .song > img {
     height:32px;
 }
 div.player > .song-list > .song > h5 {
+    font-size:0.83em;
     white-space:nowrap;
     display:inline-block;
     position:absolute;
