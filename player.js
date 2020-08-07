@@ -452,14 +452,14 @@
                 print("Can't fetch playlist from Netease");
                 return;
             }
-            print("Using playlist " + data.result.name);
-            for (let i = 0;i<data.result.tracks.length;i++) {
-                let track = data.result.tracks[i];
+            print("Using playlist " + data.playlist.name);
+            for (let i = 0;i<data.playlist.tracks.length;i++) {
+                let track = data.playlist.tracks[i];
                 if (location.protocol == "https:") {
-                    track.album.picUrl = track.album.picUrl.replace("http:",location.protocol);
+                    track.al.picUrl = track.al.picUrl.replace("http:",location.protocol);
                 }
                 let artists = "";
-                for (let artist of track.artists) {
+                for (let artist of track.ar) {
                     artists += artist.name + ", ";
                 }
                 artists = artists.substring(0,artists.length-2);
@@ -467,9 +467,8 @@
                     id:track.id,
                     name:track.name,
                     artists:artists,
-                    album:track.album.name,
-                    thumbnail:track.album.picUrl,
-                    url:(location.protocol == "file:" ? "http:" : "") + "//music.163.com/song/media/outer/url?id=" + track.id + ".mp3"
+                    album:track.al.name,
+                    thumbnail:track.al.picUrl
                 };
                 songs.push(song);
             }
