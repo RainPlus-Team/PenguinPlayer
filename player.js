@@ -214,7 +214,7 @@
                     if (lrc[i].time < aud.currentTime*1000) {
                         mainLrc = line.value;
                         if (transLrc == null&&i != lrc.length-1) {
-                            subLrc = lrc[i+1].Value;
+                            subLrc = lrc[i+1].value;
                         }
                     } else {
                         lrcStartPos = 0;
