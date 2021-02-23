@@ -94,7 +94,7 @@
             cUrlReq.abort();
         }
         cUrlReq = $.ajax({
-            url: "https://cm.luotianyi.me/api/song/url?id=" + cid,
+            url: "https://gcm.tenmahw.com/song/url?id=" + cid,
             success: function(data) {
                 if (cid != currentPlaying.id || player.find("audio").attr("src") != undefined) {
                     return;
