@@ -1,246 +1,292 @@
 div.player {
-    all:initial;
-    color:white;
-    position:fixed;
-    left:0;
-    bottom:0;
-    width:400px;
-    height:52px;
-    border-top-right-radius:3px;
-    background-color:rgba(30,30,30,0.5);
-    transition:all .3s linear;
-    overflow:hidden;
-    max-height:452px;
+    all: initial;
+    color: white;
+    position: fixed;
+    left: 5px;
+    bottom: 5px;
+    width: 400px;
+    height: 52px;
+    border-radius: 26px;
+    background-color: rgba(30, 30, 30, 0.5);
+    -webkit-transition: all .3s;
+    transition: all .3s;
+    overflow: hidden;
+    max-height: 400px;
+    z-index: 100;
+    box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+    /*Safari*/
 }
+
 div.player * {
-    text-align:left;
+    text-align: left;
 }
+
 div.player.listed {
-    height:auto;
+    height: auto;
 }
-div.player > div.thumbnail {
-    position:relative;
-    width:48px;
-    height:48px;
-    animation:rotation 30s linear infinite;
-    animation-play-state:paused;
-    margin:2px;
-    border-radius:24px;
-    overflow:hidden;
+
+div.player>div.thumbnail {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    animation: rotation 30s linear infinite;
+    animation-play-state: paused;
+    margin: 2px;
+    border-radius: 24px;
+    overflow: hidden;
 }
-div.player > div.thumbnail > img {
-    position:absolute;
-    top:0;
-    left:50%;
-    transform:translate(-50%);
-    height:48px;
+
+div.player>div.thumbnail>img {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%);
+    height: 48px;
 }
-div.player > .song-info {
-    position:absolute;
-    top:2px;
-    left:52px;
-    transition:all .3s linear;
-    word-break:keep-all;
-    white-space:nowrap;
+
+div.player>.song-info {
+    position: absolute;
+    top: 2px;
+    left: 52px;
+    transition: all .3s linear;
+    word-break: keep-all;
+    white-space: nowrap;
 }
-div.player > .song-info > h3 {
-    font-size:24px;
-    position:relative;
-    top:-2px;
-    margin:0;
+
+div.player>.song-info>h3 {
+    font-size: 24px;
+    position: relative;
+    top: -2px;
+    margin: 0;
 }
-div.player > .song-info > span {
-    position:relative;
-    top:-8px;
-    font-size:12px;
+
+div.player>.song-info>span {
+    position: relative;
+    top: -8px;
+    font-size: 12px;
 }
-div.player  > .control-overlay {
-    position:absolute;
-    height:52px;
-    top:0;
-    left:52px;
-    bottom:0;
-    right:0;
-    z-index:1;
-    border:none;
+
+div.player>.control-overlay {
+    position: absolute;
+    height: 52px;
+    top: 0;
+    left: 52px;
+    bottom: 0;
+    right: 0;
+    z-index: 101;
+    border: none;
 }
-div.player > .control-overlay table {
-    width:100%;
-    height:52px;
-    border:none;
+
+div.player>.control-overlay table {
+    width: 100%;
+    height: 52px;
 }
-div.player > .control-overlay table td {
-    text-align:center;
-    padding:0;
-    height:52px;
-    opacity:0;
-    cursor:pointer;
-    transition:all .3s linear;
-    color:white;
-    background-color:rgba(0,0,0,0.3);
-    border:none;
+
+div.player>.control-overlay table td {
+    text-align: center;
+    padding: 0;
+    height: 52px;
+    opacity: 0.7;
+    cursor: pointer;
+    transition: all .3s linear;
+    color: white;
+    border-radius: 10px;
 }
-div.player > .control-overlay table td:hover {
-    opacity:1;
+
+div.player>.control-overlay table td:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+    opacity: 1;
 }
-div.player > .volume-control {
-    height:auto;
-    padding:5px 20px;
+
+div.player>.volume-control {
+    height: auto;
+    padding: 5px 20px;
 }
-div.player > .volume-control > .fa-volume-up {
-    font-size:20px;
+
+div.player>.volume-control>.fa-volume-up {
+    font-size: 20px;
 }
-div.player > .volume-control > .volume-bar {
-    border-radius:2.5px;
-    width:100%;
-    height:5px;
-    background-color:rgba(255,255,255,0.3);
+
+div.player>.volume-control>.volume-bar {
+    border-radius: 2.5px;
+    width: 100%;
+    height: 5px;
+    background-color: rgba(255, 255, 255, 0.3);
 }
-div.player > .volume-control > .volume-bar > .volume-bar-inner {
-    position:relative;
-    border-radius:2.5px;
-    height:5px;
-    background-color:rgba(255,255,255,0.5);
+
+div.player>.volume-control>.volume-bar>.volume-bar-inner {
+    position: relative;
+    border-radius: 2.5px;
+    height: 5px;
+    background-color: rgba(255, 255, 255, 0.5);
 }
-div.player > .volume-control > .volume-bar > .volume-bar-inner > .volume-bar-dot {
-    cursor:pointer;
-    position:absolute;
-    top:0;
-    left:100%;
-    border-radius:5px;
-    width:10px;
-    height:10px;
-    transform:translate(-50%,-25%);
-    background-color:rgba(255,255,255,0.8);
-    box-shadow:0 0 5px white;
+
+div.player>.volume-control>.volume-bar>.volume-bar-inner>.volume-bar-dot {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    border-radius: 5px;
+    width: 10px;
+    height: 10px;
+    transform: translate(-50%, -25%);
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 5px white;
 }
-div.player > .song-list {
-    height:auto;
-    max-height:0;
-    overflow:auto;
-    overflow-x:hidden;
-    transition:all .3s linear;
+
+div.player>.song-list {
+    height: auto;
+    max-height: 0;
+    overflow: auto;
+    overflow-x: hidden;
+    transition: all .3s linear;
 }
-div.player > .song-list::-webkit-scrollbar {
-    width:10px;
-    background-color:transparent;
+
+div.player>.song-list::-webkit-scrollbar {
+    width: 10px;
+    background-color: transparent;
 }
-div.player > .song-list::-webkit-scrollbar-thumb {
-    width:10px;
-    border-radius:5px;
-    background-color:gray;
+
+div.player>.song-list::-webkit-scrollbar-thumb {
+    width: 10px;
+    border-radius: 5px;
+    background-color: gray;
 }
-div.player > .song-list::-webkit-scrollbar-thumb:hover {
-    background-color:rgb(112, 112, 112);
+
+div.player>.song-list::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(112, 112, 112);
 }
-div.player > .song-list::-webkit-scrollbar-thumb:active {
-    background-color:#444;
+
+div.player>.song-list::-webkit-scrollbar-thumb:active {
+    background-color: #444;
 }
-div.player > .song-list > .song {
-    margin-top:4px;
-    cursor:pointer;
-    position:relative;
-    height:32px;
-    transition:all .3s linear;
-    overflow:hidden;
+
+div.player>.song-list>.song {
+    margin-top: 4px;
+    cursor: pointer;
+    position: relative;
+    height: 32px;
+    transition: all .3s linear;
+    overflow: hidden;
 }
-div.player > .song-list > .song:hover {
-    background-color:rgba(255,255,255,0.3);
+
+div.player>.song-list>.song:hover {
+    background-color: rgba(255, 255, 255, 0.3);
 }
-div.player > .song-list > .song > img {
-    width:32px;
-    height:32px;
+
+div.player>.song-list>.song>img {
+    width: 32px;
+    height: 32px;
 }
-div.player > .song-list > .song > h5 {
-    font-size:0.83em;
-    white-space:nowrap;
-    display:inline-block;
-    position:absolute;
-    margin:0;
-    margin-left:5px;
+
+div.player>.song-list>.song>h5 {
+    font-size: 0.83em;
+    white-space: nowrap;
+    display: inline-block;
+    position: absolute;
+    margin: 0;
+    margin-left: 5px;
 }
-div.player > .song-list > .song > span {
-    white-space:nowrap;
-    position:relative;
-    top:-3px;
-    font-size:10px;
-    margin-left:5px;
+
+div.player>.song-list>.song>span {
+    white-space: nowrap;
+    position: relative;
+    top: -3px;
+    font-size: 10px;
+    margin-left: 5px;
 }
-div.player > .song-list.show {
-    height:auto;
-    max-height:400px;
+
+div.player>.song-list.show {
+    height: auto;
+    max-height: 400px;
 }
-div.player.playing > div.thumbnail {
-    animation-play-state:running;
+
+div.player.playing>div.thumbnail {
+    animation-play-state: running;
 }
+
 div.player.hide:not(.listed) {
-    width:52px;
-    background-color:rgba(0,0,0,0)!important;
+    width: 52px;
+    background-color: rgba(0, 0, 0, 0)!important;
 }
-div.player.hide:not(.listed) > .song-info {
-    opacity:0;
+
+div.player.hide:not(.listed)>.song-info {
+    opacity: 0;
 }
-div.player.hide:not(.listed) > .song-list {
-    opacity:0;
-    max-height:0!important;
+
+div.player.hide:not(.listed)>.song-list {
+    opacity: 0;
+    max-height: 0!important;
 }
+
 div.lyric {
-    all:initial;
-    text-align:center;
-    position:fixed;
-    left:50%;
-    bottom:0;
-    transform:translate(-50%);
-    text-shadow:0 0 5px white;
-    pointer-events:none;
-    transition:all .3s linear;
-    width:100%;
-    z-index:2;
+    all: initial;
+    text-align: center;
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%);
+    color: #66ccff;
+    text-shadow: 0 0 5px black;
+    pointer-events: none;
+    transition: all .3s linear;
+    width: 100%;
+    z-index: 102;
 }
-div.lyric,div.lyric > * {
-    transition:all .1s linear;
+
+div.lyric,
+div.lyric>* {
+    transition: all .1s linear;
 }
-div.lyric > h3 {
-    font-size:20px;
-    line-height:normal;
-    margin:0;
+
+div.lyric>h3 {
+    font-size: 20px;
+    line-height: normal;
+    margin: 0;
 }
-div.lyric > span {
-    font-size:16px;
+
+div.lyric>span {
+    font-size: 16px;
 }
+
 div.progressbar {
-    all:initial;
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    height:10px;
-    background-color:rgba(122,122,122,0.5);
+    all: initial;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 10px;
+    background-color: rgba(122, 122, 122, 0.5);
 }
-div.progressbar > .inner {
-    position:absolute;
-    left:0;
-    top:0;
-    height:10px;
-    background-color:#66CCFF;
+
+div.progressbar>.inner {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 10px;
+    background-color: #66CCFF;
 }
+
 @keyframes rotation {
     0% {
-        transform:rotate(0);
+        transform: rotate(0);
     }
     100% {
-        transform:rotate(360deg);
+        transform: rotate(360deg);
     }
 }
+
 @media screen and (max-width:780px) {
     div.player {
-        border-radius:0;
-        width:100%!important;
+        border-radius: 0;
+        width: 100%!important;
     }
     div.lyric {
-        bottom:52px;
+        bottom: 52px;
     }
     div.lyric.listed {
-        bottom:452px;
+        bottom: 452px;
     }
 }
