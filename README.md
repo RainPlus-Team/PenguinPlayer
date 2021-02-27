@@ -1,8 +1,6 @@
 # PenguinPlayer
-A simple player based on Netease Cloud Music
+A simple player based on Netease Cloud Music, and it only needs to load ONE JavaScript file!
 
 ## Usage
-Modify playlist ID inside ```player.js``` to yourself's playlist ID and include ```player.js``` and ```player.css``` in your page.
-
-## Require
-You need ```FontAwesome 4.7.0``` and ```jQuery``` to use it
+Set your playlist ID by setting ```penguin_id``` in ```window``` context, for example ```window.penguin_id = "440401494"```.
+Then just include ```player.js``` inside your page!
