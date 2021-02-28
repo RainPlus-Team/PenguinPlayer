@@ -7,6 +7,7 @@ import { findHighContrastColor } from "./color";
 import { formatTime, getOffsetLeft } from "./helper";
 import cookie from "./cookie";
 
+import "perfect-scrollbar/css/perfect-scrollbar.css";
 import "../sass/player.sass";
 
 import template from "../template.pug";
@@ -69,7 +70,6 @@ let volumebarDragging = false;
 const volumebarUpdater = () => {
     if (!volumebarDragging) {return;}
     let bar: HTMLElement = el.querySelector(".penguin-player__player--controls-volume-bar");
-    console.log(getOffsetLeft(bar));
     let left = Math.max(0, cx - getOffsetLeft(bar));
     let width = bar.clientWidth;
     let progress = Math.min(1, left / width);
@@ -132,9 +132,11 @@ const volumeHandlers = {
     window.addEventListener("mouseup", progressHandlers.endDrag);
     window.addEventListener("touchend", progressHandlers.endDrag);
     // Volume bar setup
+    (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume")).addEventListener("mousedown", volumeHandlers.beginDrag);
     (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume-bar")).addEventListener("mousedown", volumeHandlers.beginDrag);
     (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume-inner")).addEventListener("mousedown", volumeHandlers.beginDrag);
     (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume-dot")).addEventListener("mousedown", volumeHandlers.beginDrag);
+    (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume")).addEventListener("touchstart", volumeHandlers.beginDrag);
     (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume-bar")).addEventListener("touchstart", volumeHandlers.beginDrag);
     (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume-inner")).addEventListener("touchstart", volumeHandlers.beginDrag);
     (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume-dot")).addEventListener("touchstart", volumeHandlers.beginDrag);
@@ -417,6 +419,7 @@ function play(id?: number) {
             print("Invalid song index");
             throw "Invalid song index";
         }
+        (<HTMLAudioElement>el.querySelector(".penguin-player__audio")).pause();
         currentSong = id;
         lyric = undefined;
         tLrc = undefined;
@@ -500,6 +503,7 @@ function play(id?: number) {
             if (result.data.lyric) {
                 lyric = result.data.lyric.lrc;
                 tLrc = result.data.lyric.tlrc;
+                requestAnimationFrame(lyricUpdater);
             } else {
                 print(`No lyric for ${song.name}`);
             }
