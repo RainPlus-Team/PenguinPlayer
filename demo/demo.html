@@ -7,6 +7,12 @@
     <title>Player</title>
 </head>
 <body style="background: url(background.jpg) no-repeat;background-size: cover;background-attachment: fixed;">
+    <script>
+        var match = location.href.match(/playlist=([0-9]+)/);
+        if (match != null) {
+            window.penguin_id = match[1];
+        }
+    </script>
     <script src="dist/player.js" onerror="let s = document.createElement('script');s.src = '../dist/player.js';document.body.appendChild(s);this.parentNode.removeChild(this);"></script>
 </body>
 </html>
