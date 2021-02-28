@@ -25,7 +25,7 @@ function findLrcPos(lrc: Array<LyricLine>, time: number, offset = 0): number {
 }
 
 function setElText(el: HTMLElement, text: string) {
-    if (text == "") {
+    if (text == "" || !text.replace(/\s/g, '').length) {
         el.innerHTML = "&nbsp;";
     } else {
         el.textContent = text;
