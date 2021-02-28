@@ -37,12 +37,14 @@ jobs:
           cp -R dist public
       
       - id: time
+        if: ${{ github.event == push }}
         uses: nanzm/get-time-action@v1.1
         with:
           timeZone: 8
           format: "YYYY-MM-DD HH:mm:ss"
       
       - id: tagtime
+        if: ${{ github.event == push }}
         uses: nanzm/get-time-action@v1.1
         with:
           timeZone: 8
@@ -50,6 +52,7 @@ jobs:
       
       - name: Create Release
         id: create_release
+        if: ${{ github.event == push }}
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -60,7 +63,8 @@ jobs:
           prerelease: false
           
       - name: Upload Release Asset
-        id: upload-release-asset 
+        id: upload-release-asset
+        if: ${{ github.event == push }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -71,6 +75,7 @@ jobs:
           asset_content_type: text/javascript
       
       - name: Publish to GitHub Pages
+        if: ${{ github.event == push }}
         uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
           branch: gh-pages

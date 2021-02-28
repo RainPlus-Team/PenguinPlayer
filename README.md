@@ -1,4 +1,5 @@
 # PenguinPlayer
+[![Maintainability](https://api.codeclimate.com/v1/badges/d9903fe9ee1f24a780be/maintainability)](https://codeclimate.com/github/M4TEC/PenguinPlayer/maintainability)
 A simple player based on Netease Cloud Music, and it only needs to load ONE JavaScript file!
 
 ## Usage
