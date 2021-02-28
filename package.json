@@ -25,6 +25,7 @@
   "homepage": "https://github.com/M4TEC/PenguinPlayer#readme",
   "devDependencies": {
     "@babel/core": "^7.13.1",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@babel/preset-env": "^7.13.5",
     "@babel/preset-typescript": "^7.13.0",
     "axios": "^0.21.1",

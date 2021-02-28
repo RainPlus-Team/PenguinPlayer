@@ -139,7 +139,7 @@
                             transform: translate(-50%, -50%)
                             cursor: pointer
                             display: none
-                    &.penguin-player__player--progress-bar-dragging .penguin-player__player--progress-dot
+                    &.penguin-player--slider-dragging .penguin-player__player--progress-dot
                         display: block
                 .penguin-player__player--progress-time
                     margin-top: 5px
@@ -197,7 +197,7 @@
                                 transform: translate(-50%, -50%)
                                 cursor: pointer
                                 display: none
-                        &.penguin-player__player--controls-volume-bar-dragging .penguin-player__player--controls-volume-dot
+                        &.penguin-player--slider-dragging .penguin-player__player--controls-volume-dot
                             display: block
                     &:hover
                         .penguin-player__player--controls-volume-bar
@@ -249,7 +249,7 @@
         &.penguin-player__player-full, &:hover
             width: min(calc(100vw - 20px), max(#{variables.$expand-width}, 300px))
             &+.penguin-player__lyric
-                margin-left: min(calc(100vw - 20px), max(#{variables.$expand-width}, 300px))
+                margin-left: calc(20px + min(calc(100vw - 20px), max(#{variables.$expand-width}, 300px)))
         &.penguin-player__player-full
             border-radius: variables.$thumbnail-size / 2
             height: 56px + 92px
@@ -283,6 +283,6 @@
             text-align: center
             transition: opacity .1s linear
         .penguin-player__lyric--main
-            font-size: 24px
+            font-size: 22px
         .penguin-player__lyric--sub
-            font-size: 18px
+            font-size: 16px

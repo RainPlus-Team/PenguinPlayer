@@ -31,9 +31,10 @@ jobs:
       - name: Build the player
         run: |
           npm run build
-          cp demo.html dist
-          mkdir dist/dist
-          mv dist/player.js dist/dist
+          mkdir public
+          cp demo/* public
+          mkdir public/dist
+          cp -R dist public
       
       - id: time
         uses: nanzm/get-time-action@v1.1
@@ -65,7 +66,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/dist/player.js
+          asset_path: ./dist/player.js
           asset_name: player.js
           asset_content_type: text/javascript
       
@@ -73,4 +74,4 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
           branch: gh-pages
-          folder: dist
+          folder: public

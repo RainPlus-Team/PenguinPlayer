@@ -1,4 +1,6 @@
-function luminance(r, g, b) {
+import { container as el } from "./player";
+
+function luminance(r: number, g: number, b: number): number {
     var a = [r, g, b].map(function (v) {
         v /= 255;
         return v <= 0.03928
@@ -7,7 +9,8 @@ function luminance(r, g, b) {
     });
     return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
 }
-export function contrast(rgb1, rgb2) {
+
+function contrast(rgb1: Color, rgb2: Color): number {
     var lum1 = luminance(rgb1[0], rgb1[1], rgb1[2]);
     var lum2 = luminance(rgb2[0], rgb2[1], rgb2[2]);
     var brightest = Math.max(lum1, lum2);
@@ -15,10 +18,12 @@ export function contrast(rgb1, rgb2) {
     return (brightest + 0.05)
          / (darkest + 0.05);
 }
-export function isBright(color): boolean {
+
+export function isBright(color: Color): boolean {
     return ((color[0] * 299) + (color[1] * 587) + (color[2] * 114)) / 1000 >= 125;
 }
-export function findHighContrastColor(background, colors) {
+
+export function findHighContrastColor(background: Color, colors: Array<Color>): Color {
     let contrasts = [];
     for (let color of colors) {
         contrasts.push(contrast(background, color));
