@@ -24,51 +24,40 @@ function findLrcPos(lrc: Array<LyricLine>, time: number, offset = 0): number {
     return -1;
 }
 
-function setElText(el: HTMLElement, text: string) {
-    if (text == "" || !text.replace(/\s/g, '').length) {
-        el.innerHTML = "&nbsp;";
-    } else {
-        el.textContent = text;
-    }
-    el.style.opacity = "1";
-}
-
-function setMain(text: string = "") {
-    if (text == lastMain) {return;}
-    mainEl.style.opacity = "0";
-    clearTimeout(lrcTimeout);
-    lrcTimeout = setTimeout(setElText, 100, mainEl, text);
-    lastMain = text;
-}
-
-function setSub(text: string = "") {
-    if (text == lastSub) {return;}
-    subEl.style.opacity = "0";
-    clearTimeout(subLrcTimeout);
-    subLrcTimeout = setTimeout(setElText, 100, subEl, text);
-    lastSub = text;
+function setElText(text: string, sub: boolean = false) {
+    if (text == (sub ? lastSub : lastMain)) {return;}
+    let el = sub ? subEl : mainEl;
+    el.style.opacity = "0";
+    clearTimeout(sub ? subLrcTimeout : lrcTimeout);
+    let id = setTimeout(() => {
+        if (text == "" || !text.replace(/\s/g, '').length) {
+            el.innerHTML = "&nbsp;";
+        } else {
+            el.textContent = text;
+        }
+        el.style.opacity = "1";
+    }, 100);
+    if (sub) {lastSub = text;subLrcTimeout = id;} else {lastMain = text;lrcTimeout = id;}
 }
 
 function lyricUpdate() {
     if (audio.paused) {return;}
     let main = "", sub = "";
     if (!isNaN(audio.currentTime) && lrc != null) {
-        let mainPos = findLrcPos(lrc, audio.currentTime, lrcOffset);
-        if (mainPos != -1) {
+        let mainPos: number, subPos: number;
+        if ((mainPos = findLrcPos(lrc, audio.currentTime, lrcOffset)) != -1) {
             main = lrc[mainPos].value;
-            if (tLrc) {
-                let subPos = findLrcPos(tLrc, audio.currentTime, tLrcOffset);
-                if (subPos != -1) {
-                    sub = tLrc[subPos].value;
-                    tLrcOffset = subPos;
-                }
+            lrcOffset = mainPos;
+            if (tLrc && (subPos = findLrcPos(tLrc, audio.currentTime, tLrcOffset)) != -1) {
+                sub = tLrc[subPos].value;
+                tLrcOffset = subPos;
             } else if (mainPos < lrc.length - 1) {
                 sub = lrc[mainPos + 1].value;
             }
         }
     }
-    setMain(main);
-    setSub(sub);
+    setElText(main);
+    setElText(sub, true);
     requestAnimationFrame(lyricUpdate);
 }
 
