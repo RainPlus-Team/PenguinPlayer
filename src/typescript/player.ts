@@ -28,10 +28,11 @@ let volumeSlider: Slider;
 
 // Setup
 {
+    const stateChange = (state: boolean) => {rotateToggle(state);(<HTMLDivElement>el.querySelector(".penguin-player__lyric")).style.opacity = state ? "1" : "0";}
     // Audio element setup
     let audio = (<HTMLAudioElement>el.querySelector(".penguin-player__audio"));
-    audio.addEventListener("playing", () => {rotateToggle(true);(<HTMLDivElement>el.querySelector(".penguin-player__lyric")).style.opacity = "1";});
-    audio.addEventListener("pause", () => {rotateToggle(false);(<HTMLDivElement>el.querySelector(".penguin-player__lyric")).style.opacity = "0";});
+    audio.addEventListener("playing", () => stateChange(true));
+    audio.addEventListener("pause", () => stateChange(false));
     audio.addEventListener("playing", updatePlayPauseButton);
     audio.addEventListener("pause", updatePlayPauseButton);
     audio.addEventListener("ended", next);
@@ -140,56 +141,50 @@ function createSongElement(song: Song, click: () => void): HTMLElement {
     return songEl;
 }
 
-function initialize() {
+function onPlaylistSongLoaded(el: HTMLElement) {
+    let color = colorthief.getColor(el);
+    let palette = colorthief.getPalette(el);
+    let song = <HTMLElement>el.parentNode;
+    song.style.backgroundColor = `rgba(${color.join(", ")}, 0.6)`;
+    song.style.color = `rgb(${findHighContrastColor(color, palette).join(", ")})`;
+}
+
+function initialize(list: any) {
+    print(`Using playlist ${list.name}`);
+    for (let track of list.tracks) {
+        let artists = "";
+        for (let artist of track.ar) { artists += `, ${artist.name}`; }
+        songs.push({ id: track.id, name: track.name, artists: artists.substring(2), album: track.al.name, thumbnail: track.al.picUrl.replace("http:", "https:") });
+    }
+    print("Playlist processed");
+    let playlist: HTMLElement = el.querySelector(".penguin-player__player--playlist");
+    for (let i = 0;i<songs.length;i++) { playlist.appendChild(createSongElement(songs[i], () => {play(i);})); }
+    lazyLoad = new LazyLoad({
+        container: playlist,
+        elements_selector: ".penguin-player--lazy",
+        callback_loaded: onPlaylistSongLoaded
+    });
+    perfectScrollbar = new PerfectScrollbar(playlist);
+    document.body.appendChild(el);
+    window.dispatchEvent(new Event("penguininitialized"));
+    play(Math.floor(Math.random() * songs.length));
+    print("Player ready");
+}
+
+function fetchPlaylist() {
     axios.get(`https://gcm.tenmahw.com/resolve/playlist?id=${playlist}`).then((result) => {
         if (result.data.code != 200) {
             print("Cannot fetch playlist");
-            setTimeout(initialize, 3000);
+            setTimeout(fetchPlaylist, 3000);
         } else {
             try {
-                let list = result.data.playlist;
-                print(`Using playlist ${list.name}`);
-                for (let track of list.tracks) {
-                    let artists = "";
-                    for (let artist of track.ar) {
-                        artists += `, ${artist.name}`;
-                    }
-                    songs.push({
-                        id: track.id,
-                        name: track.name,
-                        artists: artists.substring(2),
-                        album: track.al.name,
-                        thumbnail: track.al.picUrl.replace("http:", "https:")
-                    });
-                }
-                print("Playlist processed");
-                let playlist: HTMLElement = el.querySelector(".penguin-player__player--playlist");
-                for (let i = 0;i<songs.length;i++) {
-                    let songEl = createSongElement(songs[i], () => {play(i);})
-                    playlist.appendChild(songEl);
-                }
-                lazyLoad = new LazyLoad({
-                    container: playlist,
-                    elements_selector: ".penguin-player--lazy",
-                    callback_loaded: (el) => {
-                        let color = colorthief.getColor(el);
-                        let palette = colorthief.getPalette(el);
-                        let song = <HTMLElement>el.parentNode;
-                        song.style.backgroundColor = `rgba(${color.join(", ")}, 0.6)`;
-                        song.style.color = `rgb(${findHighContrastColor(color, palette).join(", ")})`;
-                    }
-                });
-                perfectScrollbar = new PerfectScrollbar(playlist);
-                document.body.appendChild(el);
-                window.dispatchEvent(new Event("penguininitialized"));
-                play(Math.floor(Math.random() * songs.length));
-                print("Player ready");
+                initialize(result.data.playlist);
             } catch(e) {console.error(e);}
         }
     }).catch((err) => {
         if (!axios.isCancel(err)) {
             print("Cannot fetch playlist");
-            setTimeout(initialize, 3000);
+            setTimeout(fetchPlaylist, 3000);
         }
     });
 }
@@ -228,4 +223,4 @@ export function setVolume(volume: number) {
 
 print("https://github.com/M4TEC/PenguinPlayer");
 print("Initializing...");
-initialize();
+fetchPlaylist();

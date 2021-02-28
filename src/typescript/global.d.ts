@@ -1,6 +1,6 @@
 declare module "*.pug" {
     const html: string
-    export = html
+    export default html
 }
 
 interface Song {

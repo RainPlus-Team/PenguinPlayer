@@ -29,13 +29,14 @@ export function setThemeColor(color: Color, palette: Array<Color>) {
     foregroundRgb = `rgb(${findHighContrastColor([255, 255, 255], palette).join(", ")})`;
     fullContent.style.color = foregroundRgb;
     fullContent.style.fill = foregroundRgb;
-    (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-bar")).style.backgroundColor = `rgba(${findHighContrastColor([255, 255, 255], palette).join(", ")}, 0.5)`;
+    let highContrastToWhiteAlpha = `rgba(${findHighContrastColor([255, 255, 255], palette).join(", ")}, 0.5)`;
+    (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-bar")).style.backgroundColor = highContrastToWhiteAlpha;
     (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-inner")).style.backgroundColor = foregroundRgb;
     (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-dot")).style.backgroundColor = foregroundRgb;
-    (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume-bar")).style.backgroundColor = `rgba(${findHighContrastColor([255, 255, 255], palette).join(", ")}, 0.5)`;
+    (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume-bar")).style.backgroundColor = highContrastToWhiteAlpha;
     (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume-inner")).style.backgroundColor = foregroundRgb;
     (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume-dot")).style.backgroundColor = foregroundRgb;
-    (<HTMLDivElement>el.querySelector(".penguin-player__lyric")).style.color = `rgb(${findHighContrastColor([255, 255, 255], palette).join(", ")})`;
+    (<HTMLDivElement>el.querySelector(".penguin-player__lyric")).style.color = highContrastToWhiteAlpha;
 }
 
 export function rotateToggle(rotate: boolean) {

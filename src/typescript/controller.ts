@@ -2,7 +2,7 @@ import { print } from "./helper";
 import { container as el } from "./player";
 import { setSong as setMediaSession } from "./mediaSession";
 import { getLyric } from "./lyric";
-import { resetRotate } from "./ui";
+import { resetRotate, setThemeColor } from "./ui";
 
 import axios, { CancelTokenSource } from "axios";
 
@@ -31,19 +31,11 @@ window.addEventListener("penguininitialized", () => {
 
 export function play(id?: number) {
     if (typeof id == "number") {
-        if (id < 0 || id > songs.length - 1) {
-            print("Invalid song index");
-            throw "Invalid song index";
-        }
+        if (id < 0 || id > songs.length - 1) { throw "Invalid song index"; }
         audio.pause();
         currentSong = id;
-        let song = songs[currentSong];
-        let player: HTMLDivElement = el.querySelector(".penguin-player__player");
-        player.style.backgroundColor = "";
-        player.style.color = "";
-        (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img")).src = song.thumbnail + "?param=48y48";
-        (<HTMLHeadingElement>el.querySelector(".penguin-player__player--name")).textContent = song.name;
-        (<HTMLParagraphElement>el.querySelector(".penguin-player__player--artists")).textContent = song.artists;
+        let song = songs[id];
+        setThemeColor([255, 255, 255], [[0, 0, 0]]);
         setMediaSession(song);
         if (currentUrlToken) { currentUrlToken.cancel("Song changed"); }
         currentUrlToken = axios.CancelToken.source();
@@ -57,20 +49,12 @@ export function play(id?: number) {
                     audio.src = track.url.replace("http:", "https:");
                     audio.play();
                 }
-            } else {
-                playFailedHandler();
-            }
-        }).catch((err) => {
-            if (!axios.isCancel(err)) {
-                playFailedHandler();
-            }
-        });
+            } else { playFailedHandler(); }
+        }).catch((err) => !axios.isCancel(err) ? playFailedHandler() : null );
         getLyric(song);
         resetRotate();
         window.dispatchEvent(new CustomEvent("penguinsongchange", { detail: song }));
-    } else {
-        audio.play();
-    }
+    } else { audio.play(); }
 }
 
 export function pause() {

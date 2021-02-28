@@ -1,6 +1,13 @@
 import { container as el } from "./player";
 import { deepEventHandler, getOffsetLeft } from "./helper";
 
+function callHandlers(handlers: Array<(e: any) => void>, ...args: any) {
+    for (let callback of handlers) {
+        try {
+            callback.apply(null, args);
+        } catch(e) { console.error(e); }
+    }
+}
 export default class Slider {
     private activeEl: HTMLElement
     private barEl: HTMLElement
@@ -32,11 +39,7 @@ export default class Slider {
         if (this.dragging) { return; }
         this.dragging = true;
         this.barEl.classList.add("penguin-player--slider-dragging");
-        for (let callback of this.beginDragHandlers) {
-            try {
-                callback(e);
-            } catch(e) { console.error(e); }
-        }
+        callHandlers(this.beginDragHandlers, e);
         this.update(e);
     }
 
@@ -45,11 +48,7 @@ export default class Slider {
         if (e instanceof TouchEvent && e.touches.length > 0) { return; }
         this.dragging = false;
         this.barEl.classList.remove("penguin-player--slider-dragging");
-        for (let callback of this.endDragHandlers) {
-            try {
-                callback(e);
-            } catch(e) { console.error(e); }
-        }
+        callHandlers(this.endDragHandlers, e);
     }
 
     private update(e: MouseEvent | TouchEvent) {
@@ -64,17 +63,7 @@ export default class Slider {
         let width = this.barEl.clientWidth;
         let progress = Math.min(1, left / width);
         if (progress != this.value) {
-            this.innerEl.style.width = `${progress * 100}%`;
-            this.value = progress;
-            this.broadcastValue();
-        }
-    }
-
-    private broadcastValue() {
-        for (let callback of this.valueChangeHandlers) {
-            try {
-                callback(this.value);
-            } catch (e) { console.error(e); }
+            this.setValue(progress);
         }
     }
 
@@ -95,6 +84,6 @@ export default class Slider {
     setValue(e: number) {
         this.innerEl.style.width = `${e * 100}%`;
         this.value = e;
-        this.broadcastValue();
+        callHandlers(this.valueChangeHandlers, this.value);
     }
 }

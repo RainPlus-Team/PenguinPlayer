@@ -17,6 +17,9 @@ if ("mediaSession" in navigator) {
 }
 
 export function setSong(song: Song) {
+    (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img")).src = song.thumbnail + "?param=48y48";
+    (<HTMLHeadingElement>el.querySelector(".penguin-player__player--name")).textContent = song.name;
+    (<HTMLParagraphElement>el.querySelector(".penguin-player__player--artists")).textContent = song.artists;
     if ("mediaSession" in navigator) {
         (<any>navigator).mediaSession.metadata = new MediaMetadata({
             title: song.name,
