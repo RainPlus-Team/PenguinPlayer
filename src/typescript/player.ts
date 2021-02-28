@@ -167,6 +167,7 @@ const volumeHandlers = {
         (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-current")).textContent = formatTime(this.currentTime);
         (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-inner")).style.width = (this.currentTime / this.duration * 100) + "%";
     });
+    audio.addEventListener("error", () => {print("Cannot play " + songs[currentSong].name);next();})
     // Volume setup
     setVolume(1);
     try {
@@ -421,6 +422,8 @@ function play(id?: number) {
         }
         (<HTMLAudioElement>el.querySelector(".penguin-player__audio")).pause();
         currentSong = id;
+        lrcStartPos = 0;
+        tLrcStartPos = 0;
         lyric = undefined;
         tLrc = undefined;
         let song = songs[currentSong];
@@ -503,7 +506,6 @@ function play(id?: number) {
             if (result.data.lyric) {
                 lyric = result.data.lyric.lrc;
                 tLrc = result.data.lyric.tlrc;
-                requestAnimationFrame(lyricUpdater);
             } else {
                 print(`No lyric for ${song.name}`);
             }
