@@ -123,6 +123,8 @@ jobs:
           folder: public
 
   error:
+    runs-on: ubuntu-latest
+
     name: Delete Release
     if: failure() && ${{ github.event }} == "push"
 
