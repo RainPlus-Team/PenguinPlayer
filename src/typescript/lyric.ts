@@ -67,7 +67,7 @@ export function getLyric(song: Song) {
             print(`No lyric for ${songs[currentSong].name}`);
         } else {
             lrc = result.data.lyric.lrc;
-            tLrc = result.data.lyric.tLrc;
+            tLrc = result.data.lyric.tlrc;
         }
     }).catch((err) => {
         if (!axios.isCancel(err)) {
