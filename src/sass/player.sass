@@ -14,6 +14,7 @@
         transform: rotate(360deg)
 
 .penguin-player
+    font-family: "Microsoft YaHei UI", "Microsoft YaHei", "黑体"
     .penguin-player__player
         padding: 4px 0
         width: variables.$thumbnail-size + 8px
@@ -30,7 +31,7 @@
         background-color: white
         color: black
         backdrop-filter: blur(5px)
-        max-width: calc(100vw - 20px)
+        max-width: 750px
         min-width: variables.$thumbnail-size + 8px
         .penguin-player__player--mini
             padding-left: variables.$thumbnail-size + 8px
@@ -98,7 +99,7 @@
                     white-space: nowrap
                     text-overflow: ellipsis
                 .penguin-player__player--name
-                    font-size: 22px
+                    font-size: 24px
                 .penguin-player__player--artists
                     font-size: 12px
                 .penguin-player__player--full-toggle
@@ -236,7 +237,7 @@
                     text-overflow: ellipsis
                     margin: 0
                 .penguin-player__player--playlist-title
-                    font-size: 14px
+                    font-size: 16px
                 .penguin-player__player--playlist-artists
                     font-size: 12px
                 &::after
@@ -260,7 +261,7 @@
                 margin-left: calc(20px + min(calc(100vw - 20px), max(#{variables.$expand-width}, 300px)))
         &.penguin-player__player-full
             border-radius: variables.$thumbnail-size / 2
-            height: 56px + 92px
+            height: variables.$thumbnail-size + 8px + 92px
             .penguin-player__player--mini
                 .penguin-player__player--full-toggle
                     border-bottom-right-radius: 0
@@ -270,7 +271,7 @@
                     .penguin-player__player--full-toggle-close
                         display: block
         &.penguin-player__player-playlist
-            height: calc(#{56px + 92px} + 30vh)
+            height: calc(#{variables.$thumbnail-size + 8px + 92px} + 30vh)
             .penguin-player__player--playlist
                 height: 30vh
     .penguin-player__lyric
