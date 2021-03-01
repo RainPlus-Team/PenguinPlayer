@@ -1,10 +1,12 @@
+import "./polyfill";
+
 import ColorThief from "colorthief";
 import axios from 'axios';
 import PerfectScrollbar from "perfect-scrollbar";
 import LazyLoad, { ILazyLoadInstance } from "vanilla-lazyload";
 
 import { findHighContrastColor } from "./color";
-import { print, formatTime } from "./helper";
+import { print, formatTime, isHovered } from "./helper";
 import { songs, currentSong, play, pause, prev, next } from "./controller";
 import { setCircleProgress, setThemeColor, rotateToggle } from "./ui";
 import cookie from "./cookie";
@@ -14,6 +16,7 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 import "../sass/player.sass";
 
 import template from "../template.pug";
+import { dispatchEvent } from "./event";
 
 let el = document.createElement("div");
 el.className = "penguin-player";
@@ -80,7 +83,8 @@ let volumeSlider: Slider;
     (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img")).addEventListener("load", function() {
         setThemeColor(colorthief.getColor(this), colorthief.getPalette(this));
     });
-    (<HTMLButtonElement>el.querySelector(".penguin-player__player--thumbnail-play-pause")).addEventListener("click", () => {
+    (<HTMLButtonElement>el.querySelector(".penguin-player__player--thumbnail-play-pause")).addEventListener("click", (e: MouseEvent) => {
+        if (el.querySelector(".penguin-player__player").clientWidth == 56) {return;}
         let audio = (<HTMLAudioElement>el.querySelector(".penguin-player__audio"));
         if (audio.paused) {
             audio.play();
@@ -164,7 +168,7 @@ function initialize(list: any) {
     });
     perfectScrollbar = new PerfectScrollbar(playlist);
     document.body.appendChild(el);
-    window.dispatchEvent(new Event("penguininitialized"));
+    dispatchEvent("penguininitialized");
     play(Math.floor(Math.random() * songs.length));
     print("Player ready");
 }

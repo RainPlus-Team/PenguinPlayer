@@ -1,13 +1,6 @@
 import { container as el } from "./player";
 import { deepEventHandler, getOffsetLeft } from "./helper";
-
-function callHandlers(handlers: Array<(e: any) => void>, ...args: any) {
-    for (let callback of handlers) {
-        try {
-            callback.apply(null, args);
-        } catch(e) { console.error(e); }
-    }
-}
+import { callHandlers } from "./event";
 export default class Slider {
     private activeEl: HTMLElement
     private barEl: HTMLElement
@@ -35,7 +28,8 @@ export default class Slider {
     }
 
     private handleBeginDrag(e: MouseEvent | TouchEvent) {
-        e.preventDefault();
+        if (e instanceof MouseEvent)
+            e.preventDefault();
         if (this.dragging) { return; }
         this.dragging = true;
         this.barEl.classList.add("penguin-player--slider-dragging");
@@ -44,8 +38,7 @@ export default class Slider {
     }
 
     private handleEndDrag(e: MouseEvent | TouchEvent) {
-        e.preventDefault();
-        if (e instanceof TouchEvent && e.touches.length > 0) { return; }
+        if (!this.dragging || ("TouchEvent" in window && e instanceof TouchEvent && e.touches.length > 0)) { return; }
         this.dragging = false;
         this.barEl.classList.remove("penguin-player--slider-dragging");
         callHandlers(this.endDragHandlers, e);

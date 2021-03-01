@@ -5,10 +5,8 @@
             "@babel/preset-env",
             {
                 "targets": {
-                    "browsers": [
-                        "last 2 versions",
-                        "ie >= 9"
-                    ]
+                    "chrome": "46",
+                    "ie": "10"
                 }
             }
         ]

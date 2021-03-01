@@ -31,6 +31,7 @@
     "axios": "^0.21.1",
     "babel-loader": "^8.2.2",
     "colorthief": "^2.3.2",
+    "core-js": "^3.9.1",
     "css-loader": "^5.1.0",
     "html-loader": "^2.1.1",
     "jpeg-js": "^0.4.3",
@@ -47,5 +48,6 @@
     "vanilla-lazyload": "^17.3.1",
     "webpack": "^5.24.2",
     "webpack-cli": "^4.5.0"
-  }
+  },
+  "dependencies": {}
 }

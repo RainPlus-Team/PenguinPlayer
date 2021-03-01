@@ -3,6 +3,7 @@
 .ps__rail-y
     left: auto!important
     right: 0!important
+    z-index: 3
     .ps__thumb-y
         min-height: 15px
 
@@ -161,6 +162,7 @@
                     .penguin-player__player--progress-time
                         margin-top: 4px
             .penguin-player__player--controls
+                positoin: relative
                 > *
                     border-radius: 5px
                     display: inline-block
@@ -211,7 +213,8 @@
                                 .penguin-player__player--controls-volume-dot
                                     display: block
                 .penguin-player__player--controls-playlist
-                    float: right
+                    position: absolute
+                    right: 0
         .penguin-player__player--playlist
             position: relative
             overflow: auto
@@ -274,13 +277,14 @@
         bottom: 0
         pointer-events: none
         opacity: 0
-        transition: opacity .1s linear, margin-left .2s ease-in-out
+        transition: opacity .1s linear, margin-left .2s ease-in-out, bottom .2s ease-in-out
         margin-left: 0
+        z-index: 4
         > *
             overflow: hidden
             white-space: nowrap
             text-overflow: ellipsis
-            text-shadow: 0 0 5px white
+            text-shadow: 1px 1px white
             margin: 0
             text-align: center
             transition: opacity .1s linear
@@ -288,3 +292,18 @@
             font-size: 22px
         .penguin-player__lyric--sub
             font-size: 16px
+@media only screen and (max-width: 700px)
+    .penguin-player__player
+        &.penguin-player__player-full, &.penguin-player__player-playlist, &:hover
+            width: calc(100vw - 20px)!important
+            &+.penguin-player__lyric
+                margin-left: 0!important
+        &:hover
+            &+.penguin-player__lyric
+                bottom: 56px + 20px
+        &.penguin-player__player-full
+            &+.penguin-player__lyric
+                bottom: 56px + 92px + 20px
+        &.penguin-player__player-playlist
+            &+.penguin-player__lyric
+                bottom: calc(#{56px + 92px + 20px} + 30vh)

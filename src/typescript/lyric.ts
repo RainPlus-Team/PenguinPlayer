@@ -25,9 +25,7 @@ function findLrcPos(lrc: Array<LyricLine>, time: number, offset = 0): number {
 }
 
 function setElText(text: string, sub: boolean = false) {
-    let el = sub ? subEl : mainEl,
-        last = sub ? lastSub : lastMain,
-        timeout = sub ? subLrcTimeout : lrcTimeout;
+    let [el, last, timeout] = sub ? [subEl, lastSub, subLrcTimeout] : [mainEl, lastMain, lrcTimeout];
     if (text == last) {return;}
     el.style.opacity = "0";
     clearTimeout(timeout);

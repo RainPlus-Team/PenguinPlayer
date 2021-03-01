@@ -5,6 +5,7 @@ import { getLyric } from "./lyric";
 import { resetRotate, setThemeColor } from "./ui";
 
 import axios, { CancelTokenSource } from "axios";
+import { dispatchEvent } from "./event";
 
 export let songs: Array<Song> = [];
 export let currentSong: number;
@@ -53,7 +54,7 @@ export function play(id?: number) {
         }).catch((err) => !axios.isCancel(err) ? playFailedHandler() : null );
         getLyric(song);
         resetRotate();
-        window.dispatchEvent(new CustomEvent("penguinsongchange", { detail: song }));
+        dispatchEvent("penguinsongchange", { detail: song });
     } else { audio.play(); }
 }
 

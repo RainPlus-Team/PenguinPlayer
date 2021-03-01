@@ -20,7 +20,9 @@ export function print(text: string) {
 export function deepEventHandler(element: HTMLElement, ...args: any[]) {
     element.addEventListener.apply(element, args);
 
-    for (let child of element.children) {
+    [].forEach.call(element.childNodes, (child: ChildNode) => {
         deepEventHandler(<HTMLElement>child, ...args);
-    }
+    });
 }
+
+export function isHovered(e: HTMLElement) {return e.parentElement.querySelector(":hover") === e;}

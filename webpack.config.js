@@ -2,79 +2,62 @@ const path = require("path");
 const svgo = require("svgo");
 const TerserPlugin = require("terser-webpack-plugin");
 
+const optimization = {
+    minimize: true,
+    minimizer: [
+        new TerserPlugin({
+            terserOptions: {
+                ecma: 5, // Compatible for IE
+                compress: true,
+                output: { comments: false, beautify: false }
+            },
+            extractComments: false
+        })
+    ]
+};
+
+const svgoFilter = function(text) {
+    return svgo.optimize(text, {
+        plugins: svgo.extendDefaultPlugins([
+            {
+                name: "removeXMLNS",
+                active: true
+            },
+            {
+                name: "removeViewBox",
+                active: false
+            }
+        ])
+    }).data;
+}
+
 module.exports = env => {
     // Determine build mode
     let mode = "development";
     try {if (env.production) {mode = "production";}} catch {}
     console.log("Compilation Mode: " + mode);
-    // Optimizations
-    let optimization = undefined;
-    if (mode === "production") {
-        optimization = {
-            minimize: true,
-            minimizer: [
-                new TerserPlugin({
-                    terserOptions: {
-                        ecma: 6,
-                        compress: true,
-                        output: {
-                            comments: false,
-                            beautify: false
-                        }
-                    },
-                    extractComments: false
-                })
-            ]
-        }
-    }
     // Static configuration
     return {
         mode: mode,
-        entry: {
-            player: path.resolve(__dirname, "src/typescript/player.ts")
-        },
+        target: ["web", "es5"],
+        entry: { player: path.resolve(__dirname, "src/typescript/player.ts") },
         output: {
             path: path.resolve(__dirname, "dist/"),
-            filename: "[name].js",
-            publicPath: "/"
+            filename: "[name].js"
         },
-        optimization: optimization,
-        resolve: {
-            extensions: [".wasm", ".mjs", ".ts", ".js", ".json"]
-        },
+        optimization: mode === "production" ? optimization : undefined,
+        resolve: { extensions: [".wasm", ".mjs", ".ts", ".js", ".json"] },
         module: {
             rules: [
                 {
                     test: /\.(js|ts)$/,
-                    use: [
-                        "babel-loader"
-                    ]
+                    use: [ "babel-loader" ]
                 },
                 {
                     test: /\.pug$/,
                     use: [
                         "html-loader",
-                        {
-                            loader: "pug-html-loader",
-                            options: {
-                                filters: {
-                                    "svgo": function(text) {
-                                        return svgo.optimize(text, {
-                                            plugins: svgo.extendDefaultPlugins([
-                                                {
-                                                    name: "removeXMLNS",
-                                                    active: true
-                                                },
-                                                {
-                                                    name: "removeViewBox",
-                                                    active: false
-                                                }
-                                            ])
-                                        }).data;
-                                    }
-                                }
-                            }
-                        }
+                        { loader: "pug-html-loader", options: { filters: { "svgo": svgoFilter } } }
                     ]
                 },
                 {
@@ -96,17 +79,7 @@ module.exports = env => {
                 },
                 {
                     test: /\.svg$/,
-                    use: [
-                        {
-                            loader: "svgo-loader",
-                            options: {
-                                plugins: [
-                                    { removeXMLNS: true },
-                                    { removeViewBox: false }
-                                ]
-                            }
-                        }
-                    ]
+                    use: [ { loader: "svgo-loader", options: { plugins: [ { removeXMLNS: true }, { removeViewBox: false } ] } } ]
                 }
             ]
         }
