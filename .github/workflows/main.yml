@@ -51,7 +51,7 @@ jobs:
           echo "${{ steps.tagtime.outputs.time }}" > rel_tag
 
       - name: Upload Release Data
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2.2.2
         with:
           name: release
           path: rel_*
@@ -60,7 +60,7 @@ jobs:
   build:
     name: Build the player
 
-    if: always()
+    if: ${{ success() }}
 
     needs: release
 
@@ -126,7 +126,7 @@ jobs:
     runs-on: ubuntu-latest
 
     name: Delete Release
-    if: failure() && ${{ github.event }} == "push"
+    if: ${{ failure() }} && ${{ github.event }} == "push"
 
     needs: [release, build]
 
