@@ -1,3 +1,5 @@
+[中文README](README-zh_CN.md)
+
 # PenguinPlayer
 [![Maintainability](https://api.codeclimate.com/v1/badges/d9903fe9ee1f24a780be/maintainability)](https://codeclimate.com/github/M4TEC/PenguinPlayer/maintainability)
 

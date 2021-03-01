@@ -8,7 +8,10 @@ window.addEventListener("penguininitialized", () => {
     audio = <HTMLAudioElement>el.querySelector(".penguin-player__audio");
     mainEl = <HTMLHeadingElement>el.querySelector(".penguin-player__lyric--main");
     subEl = <HTMLHeadingElement>el.querySelector(".penguin-player__lyric--sub");
-    audio.addEventListener("playing", lyricUpdate);
+    audio.addEventListener("playing", () => {
+        lrcOffset = tLrcOffset = 0;
+        lyricUpdate();
+    });
 });
 
 let axiosToken: CancelTokenSource, retryTimeout: number;
