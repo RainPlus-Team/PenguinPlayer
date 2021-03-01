@@ -101,7 +101,7 @@ jobs:
       - name: Read Release URL
         if: ${{ github.event }} == "push"
         run: |
-          URL=$(cat releaseurl/rel_url)
+          URL=$(cat release/rel_url)
           echo "RELEASE_URL=$URL" >> $GITHUB_ENV
           
       - name: Upload Release Asset
@@ -138,7 +138,7 @@ jobs:
 
       - name: Read Release Tag
         run: |
-          URL=$(cat releaseurl/rel_tag)
+          URL=$(cat release/rel_tag)
           echo "RELEASE_TAG=$URL" >> $GITHUB_ENV
 
       - name: Delete release just created
