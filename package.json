@@ -6,6 +6,7 @@
   "scripts": {
     "build": "webpack --env production",
     "watch": "webpack --watch",
+    "watch-ie": "webpack --watch --env ie",
     "build-dev": "webpack"
   },
   "repository": {

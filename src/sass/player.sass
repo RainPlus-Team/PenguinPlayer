@@ -25,11 +25,13 @@
         box-shadow: -1px 1px 4px black
         left: 10px
         bottom: 10px
-        transition: width .2s ease-in-out, height .2s ease-in-out, border-radius .2s ease-in-out
+        transition: min-width .2s ease-in-out, width .2s ease-in-out, height .2s ease-in-out, border-radius .2s ease-in-out
         overflow: hidden
         background-color: white
         color: black
         backdrop-filter: blur(5px)
+        max-width: calc(100vw - 20px)
+        min-width: variables.$thumbnail-size + 8px
         .penguin-player__player--mini
             padding-left: variables.$thumbnail-size + 8px
             height: variables.$thumbnail-size
@@ -39,7 +41,7 @@
                 left: 4px
                 width: variables.$thumbnail-size
                 height: variables.$thumbnail-size
-                border-radius: calc(#{variables.$thumbnail-size} / 2)
+                border-radius: variables.$thumbnail-size / 2
                 overflow: hidden
                 cursor: pointer
                 .penguin-player__player--thumbnail-img
@@ -252,7 +254,8 @@
                 &:hover::after
                     width: 30%
         &.penguin-player__player-full, &:hover
-            width: min(calc(100vw - 20px), max(#{variables.$expand-width}, 300px))
+            min-width: 300px
+            width: #{variables.$expand-width}
             &+.penguin-player__lyric
                 margin-left: calc(20px + min(calc(100vw - 20px), max(#{variables.$expand-width}, 300px)))
         &.penguin-player__player-full
@@ -274,7 +277,7 @@
         position: fixed
         left: 0
         right: 0
-        bottom: 0
+        bottom: 10px
         pointer-events: none
         opacity: 0
         transition: opacity .1s linear, margin-left .2s ease-in-out, bottom .2s ease-in-out
