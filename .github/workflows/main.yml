@@ -104,7 +104,7 @@ jobs:
           echo "RELEASE_URL=$URL" >> $GITHUB_ENV
           
       - name: Upload Release Asset
-        if: ${{ github.event == "push" }}
+        if: ${{ github.event == 'push' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
