@@ -2,20 +2,6 @@ const path = require("path");
 const svgo = require("svgo");
 const TerserPlugin = require("terser-webpack-plugin");
 
-const optimization = {
-    minimize: true,
-    minimizer: [
-        new TerserPlugin({
-            terserOptions: {
-                ecma: 5, // Compatible for IE
-                compress: true,
-                output: { comments: false, beautify: false }
-            },
-            extractComments: false
-        })
-    ]
-};
-
 const svgoFilter = function(text) {
     return svgo.optimize(text, {
         plugins: svgo.extendDefaultPlugins([
@@ -34,12 +20,32 @@ const svgoFilter = function(text) {
 module.exports = env => {
     // Determine build mode
     let mode = "development";
-    try {if (env.production) {mode = "production";}} catch {}
+    if (env.production) {mode = "production";}
     console.log("Compilation Mode: " + mode);
+    // Compile variables
+    const ENABLE_IE_SUPPORT = env.ie !== undefined;
+    const compileOptions = {
+        PRODUCTION: mode === "production",
+        IE_SUPPORT: ENABLE_IE_SUPPORT
+    }
+    // Optimization
+    const optimization = {
+        minimize: true,
+        minimizer: [
+            new TerserPlugin({
+                terserOptions: {
+                    ecma: ENABLE_IE_SUPPORT ? 5 : 6,
+                    compress: true,
+                    output: { comments: false, beautify: false }
+                },
+                extractComments: false
+            })
+        ]
+    };
     // Static configuration
     return {
         mode: mode,
-        target: ["web", "es5"],
+        target: ENABLE_IE_SUPPORT ? ["web", "es5"] : undefined,
         entry: { player: path.resolve(__dirname, "src/typescript/player.ts") },
         output: {
             path: path.resolve(__dirname, "dist/"),
@@ -51,7 +57,21 @@ module.exports = env => {
             rules: [
                 {
                     test: /\.(js|ts)$/,
-                    use: [ "babel-loader" ]
+                    use: [
+                        {
+                            loader: "babel-loader",
+                            options: {
+                                presets: [
+                                    "@babel/preset-typescript",
+                                    [ "@babel/preset-env", { "targets": { chrome: "46", ie: "10" } } ]
+                                ]
+                            }
+                        },
+                        {
+                            loader: "ifdef-loader",
+                            options: compileOptions
+                        }
+                    ]
                 },
                 {
                     test: /\.pug$/,

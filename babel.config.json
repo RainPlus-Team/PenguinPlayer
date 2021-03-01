@@ -1,16 +1,4 @@
 {
-    "presets": [
-        "@babel/preset-typescript",
-        [
-            "@babel/preset-env",
-            {
-                "targets": {
-                    "chrome": "46",
-                    "ie": "10"
-                }
-            }
-        ]
-    ],
     "plugins": [
         "@babel/plugin-proposal-class-properties"
     ]

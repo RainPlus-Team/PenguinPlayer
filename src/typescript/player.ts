@@ -1,4 +1,6 @@
+/// #if IE_SUPPORT
 import "./polyfill";
+/// #endif
 
 import ColorThief from "colorthief";
 import axios from 'axios';
@@ -6,7 +8,7 @@ import PerfectScrollbar from "perfect-scrollbar";
 import LazyLoad, { ILazyLoadInstance } from "vanilla-lazyload";
 
 import { findHighContrastColor } from "./color";
-import { print, formatTime, isHovered } from "./helper";
+import { print, formatTime } from "./helper";
 import { songs, currentSong, play, pause, prev, next } from "./controller";
 import { setCircleProgress, setThemeColor, rotateToggle } from "./ui";
 import cookie from "./cookie";

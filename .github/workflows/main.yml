@@ -15,10 +15,57 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+
+    if: ${{ github.event }} == "push"
+
+    steps:
+      - id: time
+        uses: nanzm/get-time-action@v1.1
+        with:
+          timeZone: 8
+          format: "YYYY-MM-DD HH:mm:ss"
+      
+      - id: tagtime
+        uses: nanzm/get-time-action@v1.1
+        with:
+          timeZone: 8
+          format: "YYYYMMDDHHmmss"
+      
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tagtime.outputs.time }}
+          release_name: Release ${{ steps.time.outputs.time }}
+          draft: false
+          prerelease: false
+
+      - name: Output Release URL
+        run: echo ${{ steps.create_release.outputs.upload_url }} > url.txt
+
+      - name: Upload Release URL
+        uses: actions/upload-artifact@v1
+        with:
+          name: releaseurl
+          path: url.txt
+
   # This workflow contains a single job called "build"
   build:
+    name: Build the player
+
+    needs: release
+
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        environment: ["", "--env ie"]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -28,54 +75,39 @@ jobs:
       - name: Install Dependencies
         run: npm i
 
-      - name: Build the player
+      - name: Build
         run: |
-          npm run build
+          npm run build -- ${{ matrix.environment }}
           mkdir public
           cp demo/* public
           mkdir public/dist
           cp -R dist public
-      
-      - id: time
+
+      - name: Download Release URL
         if: ${{ github.event }} == "push"
-        uses: nanzm/get-time-action@v1.1
+        uses: actions/download-artifact@v1
         with:
-          timeZone: 8
-          format: "YYYY-MM-DD HH:mm:ss"
+          name: releaseurl
       
-      - id: tagtime
+      - name: Read Release URL
         if: ${{ github.event }} == "push"
-        uses: nanzm/get-time-action@v1.1
-        with:
-          timeZone: 8
-          format: "YYYYMMDDHHmmss"
-      
-      - name: Create Release
-        id: create_release
-        if: ${{ github.event }} == "push"
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.tagtime.outputs.time }}
-          release_name: Release ${{ steps.time.outputs.time }}
-          draft: false
-          prerelease: false
+        run: |
+          URL=$(cat url.txt)
+          echo "RELEASE_URL=$URL" >> $GITHUB_ENV
           
       - name: Upload Release Asset
-        id: upload-release-asset
         if: ${{ github.event }} == "push"
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ env.RELEASE_URL }}
           asset_path: ./dist/player.js
           asset_name: player.js
           asset_content_type: text/javascript
       
       - name: Publish to GitHub Pages
-        if: ${{ github.event }} == "push"
+        if: ${{ github.event }} == "push" && ${{ matrix.environment }} == "--env ie" # Only publish the version that has most functions
         uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
           branch: gh-pages

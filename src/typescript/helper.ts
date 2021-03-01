@@ -24,5 +24,3 @@ export function deepEventHandler(element: HTMLElement, ...args: any[]) {
         deepEventHandler(<HTMLElement>child, ...args);
     });
 }
-
-export function isHovered(e: HTMLElement) {return e.parentElement.querySelector(":hover") === e;}
