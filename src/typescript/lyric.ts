@@ -25,12 +25,14 @@ function findLrcPos(lrc: Array<LyricLine>, time: number, offset = 0): number {
 }
 
 function setElText(text: string, sub: boolean = false) {
-    if (text == (sub ? lastSub : lastMain)) {return;}
-    let el = sub ? subEl : mainEl;
+    let el = sub ? subEl : mainEl,
+        last = sub ? lastSub : lastMain,
+        timeout = sub ? subLrcTimeout : lrcTimeout;
+    if (text == last) {return;}
     el.style.opacity = "0";
-    clearTimeout(sub ? subLrcTimeout : lrcTimeout);
+    clearTimeout(timeout);
     let id = setTimeout(() => {
-        if (text == "" || !text.replace(/\s/g, '').length) {
+        if (!text.replace(/\s/g, '').length) {
             el.innerHTML = "&nbsp;";
         } else {
             el.textContent = text;
@@ -44,15 +46,12 @@ function lyricUpdate() {
     if (audio.paused) {return;}
     let main = "", sub = "";
     if (!isNaN(audio.currentTime) && lrc != null) {
-        let mainPos: number, subPos: number;
-        if ((mainPos = findLrcPos(lrc, audio.currentTime, lrcOffset)) != -1) {
-            main = lrc[mainPos].value;
-            lrcOffset = mainPos;
-            if (tLrc && (subPos = findLrcPos(tLrc, audio.currentTime, tLrcOffset)) != -1) {
-                sub = tLrc[subPos].value;
-                tLrcOffset = subPos;
-            } else if (mainPos < lrc.length - 1) {
-                sub = lrc[mainPos + 1].value;
+        if ((lrcOffset = findLrcPos(lrc, audio.currentTime, lrcOffset)) != -1) {
+            main = lrc[lrcOffset].value;
+            if (tLrc && (tLrcOffset = findLrcPos(tLrc, audio.currentTime, tLrcOffset)) != -1) {
+                sub = tLrc[tLrcOffset].value;
+            } else if (lrcOffset != -1 && lrcOffset < lrc.length - 1) {
+                sub = lrc[lrcOffset + 1].value;
             }
         }
     }

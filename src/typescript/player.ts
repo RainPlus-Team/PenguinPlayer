@@ -113,9 +113,7 @@ let volumeSlider: Slider;
             let volume = parseInt(cookie.getItem("penguin_volume"));
             setVolume(volume);
         }
-    } catch {
-        print("Invalid volume cookie");
-    }
+    } catch { print("Invalid volume cookie"); }
 }
 
 let lazyLoad: ILazyLoadInstance, perfectScrollbar: PerfectScrollbar;

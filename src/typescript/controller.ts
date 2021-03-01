@@ -31,7 +31,7 @@ window.addEventListener("penguininitialized", () => {
 
 export function play(id?: number) {
     if (typeof id == "number") {
-        if (id < 0 || id > songs.length - 1) { throw "Invalid song index"; }
+        if (id < 0 || id >= songs.length) { throw "Invalid song index"; }
         audio.pause();
         currentSong = id;
         let song = songs[id];
