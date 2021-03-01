@@ -65,7 +65,12 @@ jobs:
 
     strategy:
       matrix:
-        environment: ["", "--env ie"]
+        include:
+          - environment: "",
+            file: "player.js",
+          - environment: "--env ie",
+            file: "player.ie.js",
+            publish: "yes" # Only publish the version that has most functions
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -92,7 +97,7 @@ jobs:
       - name: Read Release URL
         if: ${{ github.event }} == "push"
         run: |
-          URL=$(cat url.txt)
+          URL=$(cat releaseurl/url.txt)
           echo "RELEASE_URL=$URL" >> $GITHUB_ENV
           
       - name: Upload Release Asset
@@ -103,11 +108,11 @@ jobs:
         with:
           upload_url: ${{ env.RELEASE_URL }}
           asset_path: ./dist/player.js
-          asset_name: player.js
+          asset_name: ${{ matrix.file }}
           asset_content_type: text/javascript
       
       - name: Publish to GitHub Pages
-        if: ${{ github.event }} == "push" && ${{ matrix.environment }} == "--env ie" # Only publish the version that has most functions
+        if: ${{ github.event }} == "push" && ${{ matrix.publish }} == "yes"
         uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
           branch: gh-pages
