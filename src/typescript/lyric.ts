@@ -42,15 +42,13 @@ function setElText(text: string, sub: boolean = false) {
 
 function lyricUpdate() {
     if (audio.paused) {return;}
-    let main = "", sub = "";
-    if (!isNaN(audio.currentTime) && lrc != null) {
-        if ((lrcOffset = findLrcPos(lrc, audio.currentTime, lrcOffset)) != -1) {
-            main = lrc[lrcOffset].value;
-            if (tLrc && (tLrcOffset = findLrcPos(tLrc, audio.currentTime, tLrcOffset)) != -1) {
-                sub = tLrc[tLrcOffset].value;
-            } else if (lrcOffset != -1 && lrcOffset < lrc.length - 1) {
-                sub = lrc[lrcOffset + 1].value;
-            }
+    let [main, sub] = ["", ""];
+    if (!isNaN(audio.currentTime) && lrc != null && (lrcOffset = findLrcPos(lrc, audio.currentTime, lrcOffset)) != -1) {
+        main = lrc[lrcOffset].value;
+        if (tLrc && (tLrcOffset = findLrcPos(tLrc, audio.currentTime, tLrcOffset)) != -1) {
+            sub = tLrc[tLrcOffset].value;
+        } else if (lrcOffset != -1 && lrcOffset < lrc.length - 1) {
+            sub = lrc[lrcOffset + 1].value;
         }
     }
     setElText(main);
