@@ -60,9 +60,8 @@ jobs:
   build:
     name: Build the player
 
-    if: ${{ success() }}
-
     needs: release
+    if: ${{ success() }}
 
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
