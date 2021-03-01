@@ -19,7 +19,7 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
 
-    if: ${{ github.event == "push" }}
+    if: ${{ github.event == 'push' }}
 
     steps:
       - id: time
@@ -92,13 +92,13 @@ jobs:
           cp -R dist public
 
       - name: Download Release URL
-        if: ${{ github.event == "push" }}
+        if: ${{ github.event == 'push' }}
         uses: actions/download-artifact@v1
         with:
           name: release
       
       - name: Read Release URL
-        if: ${{ github.event == "push" }}
+        if: ${{ github.event == 'push' }}
         run: |
           URL=$(cat release/rel_url)
           echo "RELEASE_URL=$URL" >> $GITHUB_ENV
@@ -115,7 +115,7 @@ jobs:
           asset_content_type: text/javascript
       
       - name: Publish to GitHub Pages
-        if: ${{ github.event == "push" && matrix.publish == "yes" }}
+        if: ${{ github.event == 'push' && matrix.publish == 'yes' }}
         uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
           branch: gh-pages
@@ -127,7 +127,7 @@ jobs:
     name: Delete Release
 
     needs: [release, build]
-    if: ${{ failure() && github.event == "push" }}
+    if: ${{ failure() && github.event == 'push' }}
 
     steps:
       - name: Download Release Data
