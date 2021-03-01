@@ -45,18 +45,22 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Output Release URL
-        run: echo ${{ steps.create_release.outputs.upload_url }} > url.txt
+      - name: Output Release Data
+        run: |
+          echo "${{ steps.create_release.outputs.upload_url }}" > rel_url
+          echo "${{ steps.tagtime.outputs.time }}" > rel_tag
 
-      - name: Upload Release URL
+      - name: Upload Release Data
         uses: actions/upload-artifact@v1
         with:
-          name: releaseurl
-          path: url.txt
+          name: release
+          path: rel_*
 
   # This workflow contains a single job called "build"
   build:
     name: Build the player
+
+    if: always()
 
     needs: release
 
@@ -92,12 +96,12 @@ jobs:
         if: ${{ github.event }} == "push"
         uses: actions/download-artifact@v1
         with:
-          name: releaseurl
+          name: release
       
       - name: Read Release URL
         if: ${{ github.event }} == "push"
         run: |
-          URL=$(cat releaseurl/url.txt)
+          URL=$(cat releaseurl/rel_url)
           echo "RELEASE_URL=$URL" >> $GITHUB_ENV
           
       - name: Upload Release Asset
@@ -117,3 +121,25 @@ jobs:
         with:
           branch: gh-pages
           folder: public
+
+  error:
+    name: Delete Release
+    if: failure() && ${{ github.event }} == "push"
+
+    needs: [release, build]
+
+    steps:
+      - name: Download Release Data
+        uses: actions/download-artifact@v1
+        with:
+          name: release
+
+      - name: Read Release Tag
+        run: |
+          URL=$(cat releaseurl/rel_tag)
+          echo "RELEASE_TAG=$URL" >> $GITHUB_ENV
+
+      - name: Delete release just created
+        uses: dev-drprasad/delete-tag-and-release@v0.1.3
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
