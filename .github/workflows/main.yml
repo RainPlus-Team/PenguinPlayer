@@ -66,10 +66,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - environment: "",
-            file: "player.js",
-          - environment: "--env ie",
-            file: "player.ie.js",
+          - environment: ""
+            file: "player.js"
+          - environment: "--env ie"
+            file: "player.ie.js"
             publish: "yes" # Only publish the version that has most functions
 
     # Steps represent a sequence of tasks that will be executed as part of the job
