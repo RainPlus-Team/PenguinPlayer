@@ -223,7 +223,8 @@
             position: relative
             overflow: auto
             height: 0
-            transition: height .2s ease-in-out
+            transition: min-height .2s ease-in-out, height .2s ease-in-out
+            min-height: 0
             .penguin-player__player--playlist-song
                 position: relative
                 height: 36px
@@ -273,9 +274,10 @@
                     .penguin-player__player--full-toggle-close
                         display: block
         &.penguin-player__player-playlist
-            height: calc(#{variables.$thumbnail-size + 8px + 92px} + 30vh)
+            height: calc(#{variables.$thumbnail-size + 8px + 92px} + #{variables.$playlist-height})
             .penguin-player__player--playlist
-                height: 30vh
+                min-height: 250px
+                height: variables.$playlist-height
     .penguin-player__lyric
         position: fixed
         left: 0
@@ -306,10 +308,10 @@
                 margin-left: 0!important
         &:hover
             &+.penguin-player__lyric
-                bottom: 56px + 20px
+                bottom: variables.$thumbnail-size + 8px + 20px
         &.penguin-player__player-full
             &+.penguin-player__lyric
-                bottom: 56px + 92px + 20px
+                bottom: variables.$thumbnail-size + 8px + 92px + 20px
         &.penguin-player__player-playlist
             &+.penguin-player__lyric
-                bottom: calc(#{56px + 92px + 20px} + 30vh)
+                bottom: calc(#{variables.$thumbnail-size + 8px + 92px + 20px} + #{variables.$playlist-height})
