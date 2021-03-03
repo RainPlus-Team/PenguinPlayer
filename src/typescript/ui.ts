@@ -1,5 +1,58 @@
+import Scrollbar from "smooth-scrollbar";
+/// #if IE_SUPPORT
+const StackBlur = require("stackblur-canvas");
+/// #endif
+
 import { findHighContrastColor } from "./color";
+import cookie from "./cookie";
+import { dispatchEvent } from "./event";
 import { container as el } from "./player";
+import Slider from "./slider";
+
+export let volumeSlider: Slider;
+
+window.addEventListener("penguininitialized", () => {
+    let audio: HTMLAudioElement = el.querySelector(".penguin-player__audio");
+    /// #if IE_SUPPORT
+
+    /// #endif
+    // Progress bar setup
+    let playerOldState: boolean;
+    let slider = new Slider({
+        activeSelector: ".penguin-player__player--progress",
+        barSelector: ".penguin-player__player--progress-bar",
+        innerSelector: ".penguin-player__player--progress-inner",
+        value: 0
+    });
+    slider.addEventHandler("begindrag", () => {
+        playerOldState = audio.paused;
+        audio.pause();
+    });
+    slider.addEventHandler("enddrag", () => {
+        if (!playerOldState) {audio.play();}
+    });
+    slider.addEventHandler("valuechange", (value: number) => {
+        audio.currentTime = audio.duration * value;
+    });
+    // Volume bar setup
+    volumeSlider = new Slider({
+        activeSelector: ".penguin-player__player--controls-volume",
+        barSelector: ".penguin-player__player--controls-volume-bar",
+        innerSelector: ".penguin-player__player--controls-volume-inner"
+    });
+    volumeSlider.addEventHandler("valuechange", (value: number) => {
+        audio.volume = value;
+        cookie.setItem("penguin_volume", value, Infinity);
+    });
+    Scrollbar.init(el.querySelector(".penguin-player__player--playlist"), {
+        damping: 0.15,
+        plugins: {
+            overscroll: {
+                damping: 0.2
+            }
+        }
+    });
+});
 
 export function setCircleProgress(progress: number) {
     let prog = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress"));
@@ -37,6 +90,7 @@ export function setThemeColor(color: Color, palette: Array<Color>) {
     (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume-inner")).style.backgroundColor = foregroundRgb;
     (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume-dot")).style.backgroundColor = foregroundRgb;
     (<HTMLDivElement>el.querySelector(".penguin-player__lyric")).style.color = highContrastToWhiteAlpha;
+    dispatchEvent("penguinthemecolorchange", { color, palette });
 }
 
 export function rotateToggle(rotate: boolean) {

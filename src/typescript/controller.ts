@@ -2,7 +2,7 @@ import { print } from "./helper";
 import { container as el } from "./player";
 import { setSong as setMediaSession } from "./mediaSession";
 import { getLyric } from "./lyric";
-import { resetRotate, setThemeColor } from "./ui";
+import { resetRotate, setThemeColor, volumeSlider } from "./ui";
 
 import axios, { CancelTokenSource } from "axios";
 import { dispatchEvent } from "./event";
@@ -29,6 +29,10 @@ window.addEventListener("penguininitialized", () => {
     audio.addEventListener("playing", () => errorAmount = 0);
     audio.addEventListener("error", playFailedHandler);
 });
+
+export function setVolume(volume: number) {
+    volumeSlider.setValue(volume);
+}
 
 export function play(id?: number) {
     if (typeof id == "number") {

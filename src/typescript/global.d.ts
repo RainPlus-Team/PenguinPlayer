@@ -41,3 +41,8 @@ interface SliderOptions {
     innerSelector: string
     value?: number
 }
+
+interface ThemeColorChangeEvent {
+    color: Color
+    palette: Color[]
+}

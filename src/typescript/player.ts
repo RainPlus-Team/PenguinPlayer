@@ -1,20 +1,18 @@
 /// #if IE_SUPPORT
 import "./polyfill";
+import "../sass/ie.sass";
 /// #endif
 
 import ColorThief from "colorthief";
 import axios from 'axios';
-import PerfectScrollbar from "perfect-scrollbar";
 import LazyLoad, { ILazyLoadInstance } from "vanilla-lazyload";
 
 import { findHighContrastColor } from "./color";
 import { print, formatTime } from "./helper";
-import { songs, currentSong, play, pause, prev, next } from "./controller";
+import { songs, currentSong, play, pause, prev, next, setVolume } from "./controller";
 import { setCircleProgress, setThemeColor, rotateToggle } from "./ui";
 import cookie from "./cookie";
-import Slider from "./slider";
 
-import "perfect-scrollbar/css/perfect-scrollbar.css";
 import "../sass/player.sass";
 
 import template from "../template.pug";
@@ -28,8 +26,6 @@ export const container = el;
 
 const playlist = (<any>window).penguin_id || "2717890285";
 const colorthief = new ColorThief();
-
-let volumeSlider: Slider;
 
 // Setup
 {
@@ -50,34 +46,6 @@ let volumeSlider: Slider;
         (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-inner")).style.width = (this.currentTime / this.duration * 100) + "%";
     });
     audio.addEventListener("error", () => {print("Cannot play " + songs[currentSong].name);next();});
-    // Progress bar setup
-    let playerOldState: boolean;
-    let slider = new Slider({
-        activeSelector: ".penguin-player__player--progress",
-        barSelector: ".penguin-player__player--progress-bar",
-        innerSelector: ".penguin-player__player--progress-inner",
-        value: 0
-    });
-    slider.addEventHandler("begindrag", () => {
-        playerOldState = audio.paused;
-        audio.pause();
-    });
-    slider.addEventHandler("enddrag", () => {
-        if (!playerOldState) {audio.play();}
-    });
-    slider.addEventHandler("valuechange", (value: number) => {
-        audio.currentTime = audio.duration * value;
-    });
-    // Volume bar setup
-    volumeSlider = new Slider({
-        activeSelector: ".penguin-player__player--controls-volume",
-        barSelector: ".penguin-player__player--controls-volume-bar",
-        innerSelector: ".penguin-player__player--controls-volume-inner"
-    });
-    volumeSlider.addEventHandler("valuechange", (value: number) => {
-        audio.volume = value;
-        cookie.setItem("penguin_volume", value, Infinity);
-    });
     // Controls setup
     (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-previous")).addEventListener("click", prev);
     (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-next")).addEventListener("click", next);
@@ -109,20 +77,21 @@ let volumeSlider: Slider;
             player.classList.remove("penguin-player__player-playlist");
         } else {
             player.classList.add("penguin-player__player-playlist");
-            perfectScrollbar.update();
         }
     });
-    // Volume setup
-    setVolume(1);
-    try {
-        if (cookie.hasItem("penguin_volume")) {
-            let volume = parseInt(cookie.getItem("penguin_volume"));
-            setVolume(volume);
-        }
-    } catch { print("Invalid volume cookie"); }
+    window.addEventListener("penguininitialized", () => {
+        // Volume setup
+        setVolume(1);
+        try {
+            if (cookie.hasItem("penguin_volume")) {
+                let volume = parseInt(cookie.getItem("penguin_volume"));
+                setVolume(volume);
+            }
+        } catch { print("Invalid volume cookie"); }
+    });
 }
 
-let lazyLoad: ILazyLoadInstance, perfectScrollbar: PerfectScrollbar;
+let lazyLoad: ILazyLoadInstance;
 
 function createSongElement(song: Song, click: () => void): HTMLElement {
     let songEl = document.createElement("div");
@@ -168,7 +137,6 @@ function initialize(list: any) {
         elements_selector: ".penguin-player--lazy",
         callback_loaded: onPlaylistSongLoaded
     });
-    perfectScrollbar = new PerfectScrollbar(playlist);
     document.body.appendChild(el);
     dispatchEvent("penguininitialized");
     play(Math.floor(Math.random() * songs.length));
@@ -203,10 +171,6 @@ function updatePlayPauseButton() {
         play.style.display = "none";
         pause.style.display = "block";
     }
-}
-
-export function setVolume(volume: number) {
-    volumeSlider.setValue(volume);
 }
 
 (<any>window).PPlayer = {
