@@ -64,7 +64,7 @@ export function getLyric(song: Song) {
     lrcOffset = tLrcOffset = 0;
     clearTimeout(retryTimeout);
     if (lyricReq) { lyricReq.cancel(); }
-    lyricReq = ajax(`https://gcm.tenmahw.com/resolve/lyric?id=${song.id}`).then((result) => {
+    lyricReq = ajax(`https://gcm.tenmahw.com/resolve/lyric?id=${song.id}`).send().then((result) => {
         if (result.data.lyric == null) {
             print(`No lyric for ${songs[currentSong].name}`);
         } else {
