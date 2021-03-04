@@ -3,14 +3,13 @@ import { container as el } from "./player";
 import { setSong as setMediaSession } from "./mediaSession";
 import { getLyric } from "./lyric";
 import { resetRotate, setThemeColor, volumeSlider } from "./ui";
-
-import axios, { CancelTokenSource } from "axios";
-import { dispatchEvent } from "./event";
+import { dispatchEvent } from "./modules/event";
+import ajax from "./modules/ajax";
 
 export let songs: Array<Song> = [];
 export let currentSong: number;
 
-let errorAmount = 0, currentUrlToken: CancelTokenSource;
+let errorAmount = 0, currentUrlReq: AjaxPromise;
 
 const playFailedHandler = () => {
     errorAmount++;
@@ -42,9 +41,8 @@ export function play(id?: number) {
         let song = songs[id];
         setThemeColor([255, 255, 255], [[0, 0, 0]]);
         setMediaSession(song);
-        if (currentUrlToken) { currentUrlToken.cancel("Song changed"); }
-        currentUrlToken = axios.CancelToken.source();
-        axios.get(`https://gcm.tenmahw.com/song/url?id=${song.id}`, { cancelToken: currentUrlToken.token }).then((result) => {
+        if (currentUrlReq) { currentUrlReq.cancel(); }
+        currentUrlReq = ajax(`https://gcm.tenmahw.com/song/url?id=${song.id}`).send().then((result) => {
             if (result.data.code == 200) {
                 let track = result.data.data[0];
                 if (track.url == null) {
@@ -55,7 +53,7 @@ export function play(id?: number) {
                     audio.play();
                 }
             } else { playFailedHandler(); }
-        }).catch((err) => !axios.isCancel(err) ? playFailedHandler() : null );
+        }).catch(playFailedHandler);
         getLyric(song);
         resetRotate();
         dispatchEvent("penguinsongchange", { detail: song });

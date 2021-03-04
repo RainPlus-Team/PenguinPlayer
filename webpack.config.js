@@ -1,6 +1,7 @@
 const path = require("path");
 const svgo = require("svgo");
 const TerserPlugin = require("terser-webpack-plugin");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const svgoFilter = function(text) {
     return svgo.optimize(text, {
@@ -28,6 +29,11 @@ module.exports = env => {
         PRODUCTION: mode === "production",
         IE_SUPPORT: ENABLE_IE_SUPPORT
     }
+    // Compile targets
+    let targets = {
+        chrome: "70"
+    }
+    if (ENABLE_IE_SUPPORT) {targets.ie = "10";}
     // Optimization
     const optimization = {
         minimize: true,
@@ -51,6 +57,9 @@ module.exports = env => {
             path: path.resolve(__dirname, "dist/"),
             filename: "[name].js"
         },
+        plugins: [
+            new BundleAnalyzerPlugin()
+        ],
         optimization: mode === "production" ? optimization : undefined,
         resolve: { extensions: [".wasm", ".mjs", ".ts", ".js", ".json"] },
         module: {
@@ -63,7 +72,7 @@ module.exports = env => {
                             options: {
                                 presets: [
                                     "@babel/preset-typescript",
-                                    [ "@babel/preset-env", { "targets": { chrome: "46", ie: "10" } } ]
+                                    [ "@babel/preset-env", { targets, modules: false, shippedProposals: true } ]
                                 ]
                             }
                         },

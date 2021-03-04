@@ -46,3 +46,17 @@ interface ThemeColorChangeEvent {
     color: Color
     palette: Color[]
 }
+
+interface AjaxPromise extends Promise<AjaxResponse> {
+    method(method: "GET" | "POST"): AjaxPromise
+    url(url: string): AjaxPromise
+    send(): AjaxPromise
+    cancel(): AjaxPromise
+    then(callback: any): AjaxPromise
+    catch(callback: any): AjaxPromise
+    finally(callback: any): AjaxPromise
+}
+interface AjaxResponse {
+    code: number
+    data: any
+}

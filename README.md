@@ -6,11 +6,17 @@
 A simple player based on Netease Cloud Music, and it only needs to load ONE JavaScript file!
 
 ## Usage
-First, download the [latest release](https://github.com/M4TEC/PenguinPlayer/releases/latest/download/player.js) of ```player.js``` from Releases.
+First, download the [latest release](https://github.com/M4TEC/PenguinPlayer/releases/latest) of the player from Releases.
 
 Now, set your playlist ID by setting ```penguin_id``` in ```window``` context, for example ```window.penguin_id = "440401494"```.
 
-Then just include ```player.js``` inside your page!
+Then just include the JavaScript file that you just downloaded inside your page!
+
+## Versions
+| File Name | Description |
+| --------- | ----------- |
+| player.js | ```Recommend``` This version will work in modern browsers |
+| player.ie.js | A version that contains polyfills for ```Internet Explorer```, use this if you want to support it |
 
 ### Note
 If you are visiting the demo page, you can use your own playlist by append ```?playlist=[YOUR PLAYLIST ID HERE]``` after the URL

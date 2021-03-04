@@ -1,5 +1,3 @@
-import { container as el } from "./player";
-
 function luminance(r: number, g: number, b: number): number {
     var a = [r, g, b].map(function (v) {
         v /= 255;

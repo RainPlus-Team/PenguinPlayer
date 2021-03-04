@@ -1,6 +1,7 @@
-import { container as el } from "./player";
-import { deepEventHandler, getOffsetLeft } from "./helper";
+import { container as el } from "../player";
+import { deepEventHandler, getOffsetLeft } from "../helper";
 import { callHandlers } from "./event";
+
 export default class Slider {
     private activeEl: HTMLElement
     private barEl: HTMLElement

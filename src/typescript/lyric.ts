@@ -1,6 +1,6 @@
-import axios, { CancelTokenSource } from "axios";
 import { songs, currentSong } from "./controller";
 import { print } from "./helper";
+import ajax from "./modules/ajax";
 import { container as el } from "./player";
 
 let audio: HTMLAudioElement, mainEl: HTMLHeadingElement, subEl: HTMLHeadingElement;
@@ -14,9 +14,9 @@ window.addEventListener("penguininitialized", () => {
     });
 });
 
-let axiosToken: CancelTokenSource, retryTimeout: number;
+let lyricReq: AjaxPromise, retryTimeout: any;
 
-let lrc: Array<LyricLine>, tLrc: Array<LyricLine>, lrcOffset = 0, tLrcOffset = 0, lastMain: string, lastSub: string, lrcTimeout: number, subLrcTimeout: number;
+let lrc: Array<LyricLine>, tLrc: Array<LyricLine>, lrcOffset = 0, tLrcOffset = 0, lastMain: string, lastSub: string, lrcTimeout: any, subLrcTimeout: any;
 
 function findLrcPos(lrc: Array<LyricLine>, time: number, offset = 0): number {
     for (let i = offset;i < lrc.length;i++) {
@@ -63,19 +63,16 @@ export function getLyric(song: Song) {
     lrc = tLrc = null;
     lrcOffset = tLrcOffset = 0;
     clearTimeout(retryTimeout);
-    if (axiosToken) {axiosToken.cancel("Fetch new lyric");}
-    axiosToken = axios.CancelToken.source();
-    axios.get(`https://gcm.tenmahw.com/resolve/lyric?id=${song.id}`, { cancelToken: axiosToken.token }).then((result) => {
+    if (lyricReq) { lyricReq.cancel(); }
+    lyricReq = ajax(`https://gcm.tenmahw.com/resolve/lyric?id=${song.id}`).then((result) => {
         if (result.data.lyric == null) {
             print(`No lyric for ${songs[currentSong].name}`);
         } else {
             lrc = result.data.lyric.lrc;
             tLrc = result.data.lyric.tlrc;
         }
-    }).catch((err) => {
-        if (!axios.isCancel(err)) {
-            print("Cannot fetch lyric");
-            retryTimeout = setTimeout(getLyric, 5000, song);
-        }
+    }).catch(() => {
+        print("Cannot fetch lyric");
+        retryTimeout = setTimeout(getLyric, 5000, song);
     });
 }

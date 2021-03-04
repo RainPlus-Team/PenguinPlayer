@@ -4,19 +4,19 @@ import "../sass/ie.sass";
 /// #endif
 
 import ColorThief from "colorthief";
-import axios from 'axios';
 import LazyLoad, { ILazyLoadInstance } from "vanilla-lazyload";
 
-import { findHighContrastColor } from "./color";
+import { findHighContrastColor } from "./modules/color";
 import { print, formatTime } from "./helper";
 import { songs, currentSong, play, pause, prev, next, setVolume } from "./controller";
 import { setCircleProgress, setThemeColor, rotateToggle } from "./ui";
-import cookie from "./cookie";
+import cookie from "./modules/cookie";
 
 import "../sass/player.sass";
 
 import template from "../template.pug";
-import { dispatchEvent } from "./event";
+import { dispatchEvent } from "./modules/event";
+import ajax from "./modules/ajax";
 
 let el = document.createElement("div");
 el.className = "penguin-player";
@@ -144,8 +144,8 @@ function initialize(list: any) {
 }
 
 function fetchPlaylist() {
-    axios.get(`https://gcm.tenmahw.com/resolve/playlist?id=${playlist}`).then((result) => {
-        if (result.data.code != 200) {
+    ajax(`https://gcm.tenmahw.com/resolve/playlist?id=${playlist}`).send().then((result) => {
+        if (result.data == null || result.data.code != 200) {
             print("Cannot fetch playlist");
             setTimeout(fetchPlaylist, 3000);
         } else {
@@ -153,11 +153,9 @@ function fetchPlaylist() {
                 initialize(result.data.playlist);
             } catch(e) {console.error(e);}
         }
-    }).catch((err) => {
-        if (!axios.isCancel(err)) {
-            print("Cannot fetch playlist");
-            setTimeout(fetchPlaylist, 3000);
-        }
+    }).catch(() => {
+        print("Cannot fetch playlist");
+        setTimeout(fetchPlaylist, 3000);
     });
 }
 

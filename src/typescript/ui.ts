@@ -3,11 +3,11 @@ import Scrollbar from "smooth-scrollbar";
 const StackBlur = require("stackblur-canvas");
 /// #endif
 
-import { findHighContrastColor } from "./color";
-import cookie from "./cookie";
-import { dispatchEvent } from "./event";
+import { findHighContrastColor } from "./modules/color";
+import cookie from "./modules/cookie";
+import { dispatchEvent } from "./modules/event";
 import { container as el } from "./player";
-import Slider from "./slider";
+import Slider from "./modules/slider";
 
 export let volumeSlider: Slider;
 
@@ -44,14 +44,7 @@ window.addEventListener("penguininitialized", () => {
         audio.volume = value;
         cookie.setItem("penguin_volume", value, Infinity);
     });
-    Scrollbar.init(el.querySelector(".penguin-player__player--playlist"), {
-        damping: 0.15,
-        plugins: {
-            overscroll: {
-                damping: 0.2
-            }
-        }
-    });
+    Scrollbar.init(el.querySelector(".penguin-player__player--playlist"), { damping: 0.15 });
 });
 
 export function setCircleProgress(progress: number) {
