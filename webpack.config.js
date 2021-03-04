@@ -34,6 +34,11 @@ module.exports = env => {
         chrome: "70"
     }
     if (ENABLE_IE_SUPPORT) {targets.ie = "10";}
+    // Plugins
+    let plugins = [];
+    if (mode == "development") {
+        plugins.push(new BundleAnalyzerPlugin());
+    }
     // Optimization
     const optimization = {
         minimize: true,
@@ -57,9 +62,7 @@ module.exports = env => {
             path: path.resolve(__dirname, "dist/"),
             filename: "[name].js"
         },
-        plugins: [
-            new BundleAnalyzerPlugin()
-        ],
+        plugins,
         optimization: mode === "production" ? optimization : undefined,
         resolve: { extensions: [".wasm", ".mjs", ".ts", ".js", ".json"] },
         module: {
