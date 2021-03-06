@@ -8,7 +8,7 @@ import LazyLoad, { ILazyLoadInstance } from "vanilla-lazyload";
 
 import { findHighContrastColor } from "./modules/color";
 import { print, formatTime } from "./helper";
-import { songs, currentSong, play, pause, prev, next, setVolume } from "./controller";
+import { songs, currentSong, play, pause, prev, next, setVolume, getCurrentTime } from "./controller";
 import { setCircleProgress, setThemeColor, rotateToggle } from "./ui";
 import cookie from "./modules/cookie";
 
@@ -37,13 +37,10 @@ const colorthief = new ColorThief();
     audio.addEventListener("playing", updatePlayPauseButton);
     audio.addEventListener("pause", updatePlayPauseButton);
     audio.addEventListener("ended", next);
-    audio.addEventListener("durationchange", function() {
-        (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-duration")).textContent = formatTime(this.duration);
-    });
     audio.addEventListener("timeupdate", function() {
-        setCircleProgress(this.currentTime / this.duration * 100);
-        (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-current")).textContent = formatTime(this.currentTime);
-        (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-inner")).style.width = (this.currentTime / this.duration * 100) + "%";
+        setCircleProgress(getCurrentTime() / songs[currentSong].duration * 100);
+        (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-current")).textContent = formatTime(getCurrentTime());
+        (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-inner")).style.width = (getCurrentTime() / songs[currentSong].duration * 100) + "%";
     });
     audio.addEventListener("error", () => {print("Cannot play " + songs[currentSong].name);next();});
     // Controls setup
@@ -96,6 +93,7 @@ let lazyLoad: ILazyLoadInstance;
 function createSongElement(song: Song, click: () => void): HTMLElement {
     let songEl = document.createElement("div");
     songEl.classList.add("penguin-player__player--playlist-song");
+    songEl.setAttribute("role", "listitem");
     songEl.addEventListener("click", click);
     let img = document.createElement("img");
     img.classList.add("penguin-player__player--playlist-thumbnail");
@@ -127,7 +125,7 @@ function initialize(list: any) {
     for (let track of list.tracks) {
         let artists = "";
         for (let artist of track.ar) { artists += `, ${artist.name}`; }
-        songs.push({ id: track.id, name: track.name, artists: artists.substring(2), album: track.al.name, thumbnail: track.al.picUrl.replace("http:", "https:") });
+        songs.push({ id: track.id, name: track.name, artists: artists.substring(2), album: track.al.name, thumbnail: track.al.picUrl.replace("http:", "https:"), duration: track.dt / 1000 });
     }
     print("Playlist processed");
     let playlist: HTMLElement = el.querySelector(".penguin-player__player--playlist");

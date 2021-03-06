@@ -1,3 +1,4 @@
+const webpack = require("webpack");
 const path = require("path");
 const svgo = require("svgo");
 const TerserPlugin = require("terser-webpack-plugin");
@@ -61,6 +62,9 @@ module.exports = env => {
         output: {
             path: path.resolve(__dirname, "dist/"),
             filename: "[name].js"
+        },
+        externals: {
+            "./polyfills": "undefined"
         },
         plugins,
         optimization: mode === "production" ? optimization : undefined,

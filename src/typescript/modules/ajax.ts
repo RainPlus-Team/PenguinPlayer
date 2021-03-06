@@ -16,7 +16,7 @@ function makeRequest(ajax: any) {
 
 function ajax(url?: string): AjaxPromise {
     let _resolve: any, _reject: any;
-    let promise: any = <AjaxPromise>new Promise<AjaxResponse>(function(resolve, reject) { _resolve = resolve; _reject = reject });
+    let promise: any = new Promise<AjaxResponse>(function(resolve, reject) { _resolve = resolve; _reject = reject });
     promise._resolve = _resolve; promise._reject = _reject;
     promise._url = url;
     promise._method = "GET";

@@ -13,7 +13,10 @@ export default class Slider {
     private beginDragHandlers: Array<(e: MouseEvent | TouchEvent) => void> = []
     private endDragHandlers: Array<(e: MouseEvent | TouchEvent) => void> = []
     private valueChangeHandlers: Array<(e: number) => void> = []
-    
+
+    public minValue: number = null
+    public maxValue: number = null
+
     constructor(options: SliderOptions) {
         this.activeEl = el.querySelector(options.activeSelector);
         this.barEl = el.querySelector(options.barSelector);
@@ -53,9 +56,10 @@ export default class Slider {
         } else {
             cx = e.touches[0].pageX;
         }
-        let left = Math.max(0, cx - getOffsetLeft(this.barEl));
         let width = this.barEl.clientWidth;
-        let progress = Math.min(1, left / width);
+        let left = Math.min(Math.max(0, cx - getOffsetLeft(this.barEl)), width);
+        let progress = left / width;
+        progress = Math.max(Math.min(progress, this.maxValue || 1), this.minValue || 0);
         if (progress != this.value) {
             this.setValue(progress);
         }
@@ -76,8 +80,10 @@ export default class Slider {
     }
 
     setValue(e: number) {
-        this.innerEl.style.width = `${e * 100}%`;
-        this.value = e;
-        callHandlers(this.valueChangeHandlers, this.value);
+        let ret = callHandlers(this.valueChangeHandlers, e);
+        if (!ret) {
+            this.innerEl.style.width = `${e * 100}%`;
+            this.value = e;
+        }
     }
 }

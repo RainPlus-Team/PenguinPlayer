@@ -9,10 +9,12 @@ export function dispatchEvent(name: string, detail?: object) {
     window.dispatchEvent(event);
 }
 
-export function callHandlers(handlers: Array<(e: any) => void>, ...args: any) {
+export function callHandlers(handlers: Array<(e: any) => void>, ...args: any): boolean {
+    let ret = false;
     for (let callback of handlers) {
         try {
-            callback.apply(null, args);
+            ret = ret || callback.apply(null, args);
         } catch(e) { console.error(e); }
     }
+    return ret;
 }

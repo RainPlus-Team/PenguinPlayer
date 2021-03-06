@@ -1,4 +1,4 @@
-import { songs, currentSong } from "./controller";
+import { getCurrentTime } from "./controller";
 import { print } from "./helper";
 import ajax from "./modules/ajax";
 import { container as el } from "./player";
@@ -19,6 +19,7 @@ let lyricReq: AjaxPromise, retryTimeout: any;
 let lrc: Array<LyricLine>, tLrc: Array<LyricLine>, lrcOffset = 0, tLrcOffset = 0, lastMain: string, lastSub: string, lrcTimeout: any, subLrcTimeout: any;
 
 function findLrcPos(lrc: Array<LyricLine>, time: number, offset = 0): number {
+    if (!lrc) {return;}
     for (let i = offset;i < lrc.length;i++) {
         if (lrc[i + 1] == null || lrc[i + 1].time > time * 1000) {
             return i;
@@ -29,7 +30,7 @@ function findLrcPos(lrc: Array<LyricLine>, time: number, offset = 0): number {
 
 function setElText(text: string, sub: boolean = false) {
     let [el, last, timeout] = sub ? [subEl, lastSub, subLrcTimeout] : [mainEl, lastMain, lrcTimeout];
-    if (text == last) {return;}
+    if (text == last) { return; }
     el.style.opacity = "0";
     clearTimeout(timeout);
     let id = setTimeout(() => {
@@ -44,14 +45,14 @@ function setElText(text: string, sub: boolean = false) {
 }
 
 function lyricUpdate() {
-    if (audio.paused) {return;}
+    if (audio.paused) { return; }
     let [main, sub] = ["", ""];
-    if (!isNaN(audio.currentTime) && lrc != null && (lrcOffset = findLrcPos(lrc, audio.currentTime, lrcOffset)) != -1) {
+    if (!isNaN(audio.currentTime) && lrc && (lrcOffset = findLrcPos(lrc, getCurrentTime(), lrcOffset)) != -1) {
         main = lrc[lrcOffset].value;
-        if (tLrc && (tLrcOffset = findLrcPos(tLrc, audio.currentTime, tLrcOffset)) != -1) {
+        if (tLrc && (tLrcOffset = findLrcPos(tLrc, getCurrentTime(), tLrcOffset)) != -1) {
             sub = tLrc[tLrcOffset].value;
-        } else if (lrcOffset != -1 && lrcOffset < lrc.length - 1) {
-            sub = lrc[lrcOffset + 1].value;
+        } else {
+            sub = lrc[lrcOffset + 1]?.value || "";
         }
     }
     setElText(main);
@@ -65,12 +66,9 @@ export function getLyric(song: Song) {
     clearTimeout(retryTimeout);
     if (lyricReq) { lyricReq.cancel(); }
     lyricReq = ajax(`https://gcm.tenmahw.com/resolve/lyric?id=${song.id}`).send().then((result) => {
-        if (result.data.lyric == null) {
-            print(`No lyric for ${songs[currentSong].name}`);
-        } else {
-            lrc = result.data.lyric.lrc;
-            tLrc = result.data.lyric.tlrc;
-        }
+        let lyric = result.data?.lyric;
+        lrc = lyric?.lrc;
+        tLrc = lyric?.tlrc;
     }).catch(() => {
         print("Cannot fetch lyric");
         retryTimeout = setTimeout(getLyric, 5000, song);

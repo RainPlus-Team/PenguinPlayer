@@ -1,8 +1,8 @@
-import { print } from "./helper";
+import { formatTime, print } from "./helper";
 import { container as el } from "./player";
 import { setSong as setMediaSession } from "./mediaSession";
 import { getLyric } from "./lyric";
-import { resetRotate, setThemeColor, volumeSlider } from "./ui";
+import { progressSlider, resetRotate, setThemeColor, volumeSlider } from "./ui";
 import { dispatchEvent } from "./modules/event";
 import ajax from "./modules/ajax";
 
@@ -29,18 +29,45 @@ window.addEventListener("penguininitialized", () => {
     audio.addEventListener("error", playFailedHandler);
 });
 
+function playTrack(track: any) {
+    progressSlider.maxValue = progressSlider.minValue = null;
+    if (track.freeTrialInfo) {
+        trialInfo = track.freeTrialInfo;
+        progressSlider.minValue = trialInfo.start / Math.floor(songs[currentSong].duration);
+        progressSlider.maxValue = trialInfo.end / songs[currentSong].duration;
+    }
+    audio.src = track.url.replace("http:", "https:");
+    play();
+}
+
+function reset() {
+    setThemeColor([255, 255, 255], [[0, 0, 0]]);
+    resetRotate();
+    trialInfo = null;
+}
+
+export let trialInfo: TrialInfo;
+
 export function setVolume(volume: number) {
     volumeSlider.setValue(volume);
+}
+
+export function getCurrentTime(): number {
+    return audio.currentTime + (trialInfo?.start || 0);
+}
+
+export function getRealDuration(): number {
+    return (trialInfo?.end - trialInfo?.start) || songs[currentSong].duration;
 }
 
 export function play(id?: number) {
     if (typeof id == "number") {
         if (id < 0 || id >= songs.length) { throw "Invalid song index"; }
         audio.pause();
-        currentSong = id;
-        let song = songs[id];
-        setThemeColor([255, 255, 255], [[0, 0, 0]]);
+        let song = songs[currentSong = id];
+        reset();
         setMediaSession(song);
+        (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-duration")).textContent = formatTime(song.duration);
         if (currentUrlReq) { currentUrlReq.cancel(); }
         currentUrlReq = ajax(`https://gcm.tenmahw.com/song/url?id=${song.id}`).send().then((result) => {
             if (result.data.code == 200) {
@@ -49,13 +76,11 @@ export function play(id?: number) {
                     print(`${song.name} is unavailable`);
                     next();
                 } else {
-                    audio.src = track.url.replace("http:", "https:");
-                    audio.play();
+                    playTrack(track);
                 }
             } else { playFailedHandler(); }
         }).catch(playFailedHandler);
         getLyric(song);
-        resetRotate();
         dispatchEvent("penguinsongchange", { detail: song });
     } else { audio.play(); }
 }
@@ -65,17 +90,9 @@ export function pause() {
 }
 
 export function next() {
-    if (currentSong >= songs.length - 1) {
-        play(0);
-    } else {
-        play(currentSong + 1);
-    }
+    play(currentSong >= songs.length - 1 ? 0 : currentSong + 1);
 }
 
 export function prev() {
-    if (currentSong <= 0) {
-        play(songs.length - 1);
-    } else {
-        play(currentSong - 1);
-    }
+    play(currentSong <= 0 ? songs.length - 1 : currentSong - 1);
 }

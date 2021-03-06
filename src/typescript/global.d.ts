@@ -4,11 +4,12 @@ declare module "*.pug" {
 }
 
 interface Song {
-    id : number,
-    name : string,
-    artists : string,
-    album : string,
-    thumbnail : string
+    id: number,
+    name: string,
+    artists: string,
+    album: string,
+    thumbnail: string,
+    duration: number
 }
 interface LyricLine {
     time: number,
@@ -24,6 +25,10 @@ interface MediaMetadataOptions {
     artist: string
     album: string
     artwork: Array<Artwork>
+}
+interface TrialInfo {
+    start: number
+    end: number
 }
 declare class MediaMetadata {
     constructor(options: MediaMetadataOptions)

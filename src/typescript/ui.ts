@@ -8,8 +8,10 @@ import cookie from "./modules/cookie";
 import { dispatchEvent } from "./modules/event";
 import { container as el } from "./player";
 import Slider from "./modules/slider";
+import { currentSong, getRealDuration, songs, trialInfo } from "./controller";
 
 export let volumeSlider: Slider;
+export let progressSlider: Slider;
 
 window.addEventListener("penguininitialized", () => {
     let audio: HTMLAudioElement = el.querySelector(".penguin-player__audio");
@@ -18,21 +20,26 @@ window.addEventListener("penguininitialized", () => {
     /// #endif
     // Progress bar setup
     let playerOldState: boolean;
-    let slider = new Slider({
+    progressSlider = new Slider({
         activeSelector: ".penguin-player__player--progress",
         barSelector: ".penguin-player__player--progress-bar",
         innerSelector: ".penguin-player__player--progress-inner",
         value: 0
     });
-    slider.addEventHandler("begindrag", () => {
+    progressSlider.addEventHandler("begindrag", () => {
         playerOldState = audio.paused;
         audio.pause();
     });
-    slider.addEventHandler("enddrag", () => {
+    progressSlider.addEventHandler("enddrag", () => {
         if (!playerOldState) {audio.play();}
     });
-    slider.addEventHandler("valuechange", (value: number) => {
-        audio.currentTime = audio.duration * value;
+    progressSlider.addEventHandler("valuechange", (value: number) => {
+        let fullTime = songs[currentSong].duration * value;
+        if (trialInfo?.start > fullTime || trialInfo?.end < fullTime) {
+            return true;
+        } else {
+            audio.currentTime = getRealDuration() * value;
+        }
     });
     // Volume bar setup
     volumeSlider = new Slider({
