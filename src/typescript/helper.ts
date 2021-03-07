@@ -1,5 +1,5 @@
 /// #if IE_SUPPORT
-const Modernizr = require("../javascript/modernizr");
+const Modernizr = require("../../vendor/modernizr");
 /// #endif
 
 export function getOffsetLeft(element: HTMLElement): number {
