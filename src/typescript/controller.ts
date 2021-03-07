@@ -6,7 +6,7 @@ import { progressSlider, resetRotate, setThemeColor, volumeSlider } from "./ui";
 import { dispatchEvent } from "./modules/event";
 import ajax from "./modules/ajax";
 
-export let songs: Array<Song> = [];
+export let songs: Song[] = [];
 export let currentSong: number;
 
 let errorAmount = 0, currentUrlReq: AjaxPromise;

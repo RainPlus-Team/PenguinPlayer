@@ -1,3 +1,7 @@
+/// #if IE_SUPPORT
+const Modernizr = require("../javascript/modernizr");
+/// #endif
+
 export function getOffsetLeft(element: HTMLElement): number {
     let left=0;
     while(element) {
@@ -24,3 +28,9 @@ export function deepEventHandler(element: HTMLElement, ...args: any[]) {
         deepEventHandler(<HTMLElement>child, ...args);
     });
 }
+
+/// #if IE_SUPPORT
+export function isBlurSupported() {
+    return Modernizr.testAllProps("backdropFilter", "blur(5px)");
+}
+/// #endif

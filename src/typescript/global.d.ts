@@ -24,7 +24,7 @@ interface MediaMetadataOptions {
     title: string
     artist: string
     album: string
-    artwork: Array<Artwork>
+    artwork: Artwork[]
 }
 interface TrialInfo {
     start: number

@@ -1,7 +1,4 @@
 import Scrollbar from "smooth-scrollbar";
-/// #if IE_SUPPORT
-const StackBlur = require("stackblur-canvas");
-/// #endif
 
 import { findHighContrastColor } from "./modules/color";
 import cookie from "./modules/cookie";
@@ -9,15 +6,13 @@ import { dispatchEvent } from "./modules/event";
 import { container as el } from "./player";
 import Slider from "./modules/slider";
 import { currentSong, getRealDuration, songs, trialInfo } from "./controller";
+import { isBlurSupported } from "./helper";
 
 export let volumeSlider: Slider;
 export let progressSlider: Slider;
 
 window.addEventListener("penguininitialized", () => {
     let audio: HTMLAudioElement = el.querySelector(".penguin-player__audio");
-    /// #if IE_SUPPORT
-
-    /// #endif
     // Progress bar setup
     let playerOldState: boolean;
     progressSlider = new Slider({
@@ -51,6 +46,14 @@ window.addEventListener("penguininitialized", () => {
         audio.volume = value;
         cookie.setItem("penguin_volume", value, Infinity);
     });
+    // Lyric overlay setup
+    window.addEventListener("mousemove", (e) => {
+        if (e.pageY >= window.innerHeight - 60) {
+            el.querySelector(".penguin-player__lyric").classList.add("penguin-player__lyric-hover");
+        } else {
+            el.querySelector(".penguin-player__lyric").classList.remove("penguin-player__lyric-hover");
+        }
+    });
     Scrollbar.init(el.querySelector(".penguin-player__player--playlist"), { damping: 0.15 });
 });
 
@@ -69,8 +72,11 @@ export function setCircleProgress(progress: number) {
     }
 }
 
-export function setThemeColor(color: Color, palette: Array<Color>) {
+export function setThemeColor(color: Color, palette: Color[]) {
     let backgroundRgba = `rgba(${color.join(", ")}, 0.5)`;
+    /// #if IE_SUPPORT
+    backgroundRgba = `rgba(${color.join(", ")}, ${isBlurSupported() ? 0.5 : 0.8})`; // Increase opacity if blur is not supported
+    /// #endif
     let foregroundRgb = `rgb(${findHighContrastColor(color, palette).join(", ")})`;
     let player: HTMLDivElement = el.querySelector(".penguin-player__player");
     player.style.backgroundColor = backgroundRgba;

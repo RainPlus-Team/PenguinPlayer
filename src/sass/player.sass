@@ -261,7 +261,7 @@
             min-width: 300px
             width: #{variables.$expand-width}
             &+.penguin-player__lyric
-                margin-left: calc(20px + min(calc(100vw - 20px), max(#{variables.$expand-width}, 300px)))
+                padding-left: calc(20px + min(calc(100vw - 20px), max(#{variables.$expand-width}, 300px)))
         &.penguin-player__player-full
             border-radius: variables.$thumbnail-size / 2
             height: variables.$thumbnail-size + 8px + 92px
@@ -282,13 +282,13 @@
         position: fixed
         left: 0
         right: 0
-        bottom: 10px
+        bottom: 0
+        padding: 10px
         pointer-events: none
         opacity: 0
-        transition: opacity .1s linear, margin-left .2s ease-in-out, bottom .2s ease-in-out
+        transition: opacity .1s linear, padding-left .2s ease-in-out, bottom .2s ease-in-out
         margin-left: 0
-        z-index: 4
-        > *
+        > *:not(.penguin-player__lyric--background)
             overflow: hidden
             white-space: nowrap
             text-overflow: ellipsis
@@ -300,12 +300,25 @@
             font-size: 22px
         .penguin-player__lyric--sub
             font-size: 16px
+        .penguin-player__lyric--background
+            position: fixed
+            left: 0
+            right: 0
+            bottom: -10px
+            height: 60px
+            transition: bottom .2s ease-in-out
+            background: linear-gradient(to top, black, transparent)
+            z-index: -1
+        &.penguin-player__lyric-hover .penguin-player__lyric--background
+            bottom: 0
 @media only screen and (max-width: 700px)
     .penguin-player__player
         &.penguin-player__player-full, &.penguin-player__player-playlist, &:hover
             width: calc(100vw - 20px)!important
             &+.penguin-player__lyric
-                margin-left: 0!important
+                padding-left: 0!important
+                .penguin-player__lyric--background
+                    bottom: -60px!important
         &:hover
             &+.penguin-player__lyric
                 bottom: variables.$thumbnail-size + 8px + 20px
@@ -315,3 +328,6 @@
         &.penguin-player__player-playlist
             &+.penguin-player__lyric
                 bottom: calc(#{variables.$thumbnail-size + 8px + 92px + 20px} + #{variables.$playlist-height})
+    .penguin-player__lyric
+        > *
+            text-align: right!important

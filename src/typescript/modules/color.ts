@@ -21,7 +21,7 @@ export function isBright(color: Color): boolean {
     return ((color[0] * 299) + (color[1] * 587) + (color[2] * 114)) / 1000 >= 125;
 }
 
-export function findHighContrastColor(background: Color, colors: Array<Color>): Color {
+export function findHighContrastColor(background: Color, colors: Color[]): Color {
     let contrasts = [];
     for (let color of colors) {
         contrasts.push(contrast(background, color));

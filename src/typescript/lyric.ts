@@ -16,9 +16,9 @@ window.addEventListener("penguininitialized", () => {
 
 let lyricReq: AjaxPromise, retryTimeout: any;
 
-let lrc: Array<LyricLine>, tLrc: Array<LyricLine>, lrcOffset = 0, tLrcOffset = 0, lastMain: string, lastSub: string, lrcTimeout: any, subLrcTimeout: any;
+let lrc: LyricLine[], tLrc: LyricLine[], lrcOffset = 0, tLrcOffset = 0, lastMain: string, lastSub: string, lrcTimeout: any, subLrcTimeout: any;
 
-function findLrcPos(lrc: Array<LyricLine>, time: number, offset = 0): number {
+function findLrcPos(lrc: LyricLine[], time: number, offset = 0): number {
     if (!lrc) {return;}
     for (let i = offset;i < lrc.length;i++) {
         if (lrc[i + 1] == null || lrc[i + 1].time > time * 1000) {

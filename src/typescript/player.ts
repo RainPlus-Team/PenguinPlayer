@@ -133,7 +133,7 @@ function initialize(list: any) {
     lazyLoad = new LazyLoad({
         container: playlist,
         elements_selector: ".penguin-player--lazy",
-        callback_loaded: onPlaylistSongLoaded
+        callback_loaded: onPlaylistSongLoaded // TODO: Fix performance problem when lazy load is not working
     });
     document.body.appendChild(el);
     dispatchEvent("penguininitialized");
@@ -180,7 +180,7 @@ function updatePlayPauseButton() {
     get song(): Song {
         return songs[currentSong];
     },
-    get playlist(): Array<Song> {
+    get playlist(): Song[] {
         return songs;
     }
 }

@@ -64,7 +64,7 @@ module.exports = env => {
             filename: "[name].js"
         },
         externals: {
-            "./polyfills": "undefined"
+            "./polyfills": "''"
         },
         plugins,
         optimization: mode === "production" ? optimization : undefined,
