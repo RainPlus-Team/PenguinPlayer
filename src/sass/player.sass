@@ -288,7 +288,7 @@
         opacity: 0
         transition: opacity .1s linear, padding-left .2s ease-in-out, bottom .2s ease-in-out
         margin-left: 0
-        > *:not(.penguin-player__lyric--background)
+        .penguin-player__lyric--line
             overflow: hidden
             white-space: nowrap
             text-overflow: ellipsis
@@ -296,10 +296,10 @@
             margin: 0
             text-align: center
             transition: opacity .1s linear
-        .penguin-player__lyric--main
-            font-size: 22px
-        .penguin-player__lyric--sub
-            font-size: 16px
+            &[line-name=main]
+                font-size: 22px
+            &[line-name=sub]
+                font-size: 16px
         .penguin-player__lyric--background
             position: fixed
             left: 0
@@ -309,8 +309,66 @@
             transition: bottom .2s ease-in-out
             background: linear-gradient(to top, black, transparent)
             z-index: -1
-        &.penguin-player__lyric-hover .penguin-player__lyric--background
+        .penguin-player__lyric--expand-button
+            position: absolute
+            right: 0
             bottom: 0
+            width: 48px
+            height: 48px
+            fill: white
+            opacity: 0
+            transition: opacity .2s ease-in-out, fill .1s linear
+            padding: 8px
+            box-sizing: border-box
+            cursor: pointer
+            svg
+                width: 100%
+                height: 100%
+            &:hover
+                fill: #d7d7d7
+        &.penguin-player__lyric-hover
+            .penguin-player__lyric--background
+                bottom: 0
+            .penguin-player__lyric--expand-button
+                pointer-events: all
+                opacity: 1
+    .penguin-player__lyric-settings
+        color: #333
+        position: fixed
+        z-index: 6
+        bottom: 60px
+        display: none
+        transform: translate(10px)
+        opacity: 0
+        transition: transform .2s ease-in-out, opacity .2s ease-in-out
+        background-color: white
+        right: 10px
+        bottom: 60px
+        padding: 10px
+        border-radius: 5px
+        box-shadow: 2px 2px 3px #333
+        .penguin-player__lyric-settings--title
+            margin: 0
+            font-size: 22px
+        .penguin-player__lyric-settings--status
+            margin: 0
+            font-size: 12px
+            .penguin-player__lyric-settings--status-lrc-icon, .penguin-player__lyric-settings--status-tlrc-icon
+                vertical-align: middle
+                fill: #333
+                margin-right: 2px
+                svg
+                    width: 14px
+                    height: 14px
+    .penguin-player__lyric-settings--overlay
+        position: fixed
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        z-index: 5
+        background-color: rgba(0, 0, 0, 0.5)
+        display: none
 @media only screen and (max-width: 700px)
     .penguin-player__player
         &.penguin-player__player-full, &.penguin-player__player-playlist, &:hover
@@ -329,5 +387,13 @@
             &+.penguin-player__lyric
                 bottom: calc(#{variables.$thumbnail-size + 8px + 92px + 20px} + #{variables.$playlist-height})
     .penguin-player__lyric
-        > *
+        > *:not(.penguin-player__lyric--expand-button)
             text-align: right!important
+        .penguin-player__lyric--expand-button
+            display: none
+    .penguin-player__lyric-settings
+        left: 10px
+        bottom: 10px!important
+        min-height: 30vh
+        &.penguin-player__lyric-settings-shown + .penguin-player__lyric-settings--overlay
+            display: block

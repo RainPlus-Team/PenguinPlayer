@@ -3,12 +3,21 @@ const Modernizr = require("../../vendor/modernizr");
 /// #endif
 
 export function getOffsetLeft(element: HTMLElement): number {
-    let left=0;
+    let left = 0;
     while(element) {
         left = left + element.offsetLeft;
         element = <HTMLElement>element.offsetParent;
     }
     return left;
+}
+
+export function getOffsetTop(element: HTMLElement): number {
+    let top = 0;
+    while(element) {
+        top = top + element.offsetLeft;
+        element = <HTMLElement>element.offsetParent;
+    }
+    return top;
 }
 
 export function formatTime(time: number): string {

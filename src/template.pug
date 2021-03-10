@@ -41,7 +41,17 @@ audio.penguin-player__audio
                 include:svgo icons/playlist.svg
     .penguin-player__player--playlist(role="list")
 .penguin-player__lyric
-    h1.penguin-player__lyric--main
-    h2.penguin-player__lyric--sub
+    h1.penguin-player__lyric--line(line-name="main")
+    h2.penguin-player__lyric--line(line-name="sub")
     .penguin-player__lyric--background
-        //-.penguin-player__lyric--expand-button(role="button")
+    .penguin-player__lyric--expand-button(role="button")
+        include:svgo icons/lyric.svg
+.penguin-player__lyric-settings
+    h1.penguin-player__lyric-settings--title 歌词选项
+    p.penguin-player__lyric-settings--status
+        span.penguin-player__lyric-settings--status-lrc-icon
+        span.penguin-player__lyric-settings--status-lrc-text
+        |&nbsp;&nbsp;
+        span.penguin-player__lyric-settings--status-tlrc-icon
+        span.penguin-player__lyric-settings--status-tlrc-text
+.penguin-player__lyric-settings--overlay

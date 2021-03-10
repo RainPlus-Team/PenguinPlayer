@@ -113,14 +113,13 @@ function createSongElement(song: Song, click: () => void): HTMLElement {
 }
 
 function onPlaylistSongLoaded(el: HTMLElement) {
-    let color = colorthief.getColor(el);
-    let palette = colorthief.getPalette(el);
+    let color = colorthief.getColor(el), palette = colorthief.getPalette(el);
     let song = <HTMLElement>el.parentNode;
     song.style.backgroundColor = `rgba(${color.join(", ")}, 0.6)`;
     song.style.color = `rgb(${findHighContrastColor(color, palette).join(", ")})`;
 }
 
-function initialize(list: any) {
+function initialize(list: any) { // TODO: Refactor initialize
     print(`Using playlist ${list.name}`);
     for (let track of list.tracks) {
         let artists = "";
@@ -158,14 +157,14 @@ function fetchPlaylist() {
 }
 
 function updatePlayPauseButton() {
-    let play = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-play"));
-    let pause = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-pause"))
+    let [play, pause] = [
+        (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-play")),
+        (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-pause"))
+    ];
     if ((<HTMLAudioElement>el.querySelector(".penguin-player__audio")).paused) {
-        play.style.display = "block";
-        pause.style.display = "none";
+        [play.style.display, pause.style.display] = ["block", "none"];
     } else {
-        play.style.display = "none";
-        pause.style.display = "block";
+        [play.style.display, pause.style.display] = ["none", "block"];
     }
 }
 

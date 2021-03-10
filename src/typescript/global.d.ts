@@ -2,6 +2,10 @@ declare module "*.pug" {
     const html: string
     export default html
 }
+declare module "*.svg" {
+    const svg: string
+    export default svg
+}
 
 interface Song {
     id: number,
@@ -64,4 +68,16 @@ interface AjaxPromise extends Promise<AjaxResponse> {
 interface AjaxResponse {
     code: number
     data: any
+}
+
+interface PlatformData {
+    platform: MusicProvider
+    type: string
+    data: any
+} // Draft
+
+interface MusicProvider {
+    getPlaylist(data: PlatformData): Song[]
+    getLyric(data: PlatformData): any // TODO: Return type T.B.D.
+    getPlatUrl(data: PlatformData): any // TODO: Return type T.B.D.
 }

@@ -3,20 +3,46 @@ import { print } from "./helper";
 import ajax from "./modules/ajax";
 import { container as el } from "./player";
 
-let audio: HTMLAudioElement, mainEl: HTMLHeadingElement, subEl: HTMLHeadingElement;
+import tickIcon from "../icons/tick.svg";
+import errorIcon from "../icons/error.svg";
+
+let audio: HTMLAudioElement, lrcInfos = {
+    main: <any>{},
+    sub: <any>{}
+};
 window.addEventListener("penguininitialized", () => {
     audio = <HTMLAudioElement>el.querySelector(".penguin-player__audio");
-    mainEl = <HTMLHeadingElement>el.querySelector(".penguin-player__lyric--main");
-    subEl = <HTMLHeadingElement>el.querySelector(".penguin-player__lyric--sub");
+    [lrcInfos.main.el, lrcInfos.sub.el] = [
+        <HTMLHeadingElement>el.querySelector(".penguin-player__lyric--line[line-name=main]"),
+        <HTMLHeadingElement>el.querySelector(".penguin-player__lyric--line[line-name=sub]")
+    ];
     audio.addEventListener("playing", () => {
         lrcOffset = tLrcOffset = 0;
         lyricUpdate();
     });
+    window.addEventListener("click", (e: MouseEvent) => {
+        if (e.pageY >= window.innerHeight - 60 && e.pageX >= 56 + 20 && el.querySelector(".penguin-player__player").clientWidth <= 56 && window.innerWidth <= 700) {
+            lyricTap();
+            e.preventDefault();
+        }
+    });
+    (<HTMLDivElement>el.querySelector(".penguin-player__lyric--expand-button")).addEventListener("click", () => toggleSettings());
+    el.querySelector(".penguin-player__lyric-settings--overlay").addEventListener("click", () => toggleSettings(false));
 });
+
+let lastTap: number;
+function lyricTap() {
+    var now = new Date().getTime();
+    var timesince = now - lastTap;
+    if ((timesince < 600) && (timesince > 0)) {
+        toggleSettings();
+    }
+    lastTap = new Date().getTime();
+}
 
 let lyricReq: AjaxPromise, retryTimeout: any;
 
-let lrc: LyricLine[], tLrc: LyricLine[], lrcOffset = 0, tLrcOffset = 0, lastMain: string, lastSub: string, lrcTimeout: any, subLrcTimeout: any;
+let lrc: LyricLine[], tLrc: LyricLine[], lrcOffset = 0, tLrcOffset = 0;
 
 function findLrcPos(lrc: LyricLine[], time: number, offset = 0): number {
     if (!lrc) {return;}
@@ -28,20 +54,20 @@ function findLrcPos(lrc: LyricLine[], time: number, offset = 0): number {
     return -1;
 }
 
-function setElText(text: string, sub: boolean = false) {
-    let [el, last, timeout] = sub ? [subEl, lastSub, subLrcTimeout] : [mainEl, lastMain, lrcTimeout];
-    if (text == last) { return; }
-    el.style.opacity = "0";
-    clearTimeout(timeout);
-    let id = setTimeout(() => {
+function setElText(text: string, name: string = "main") {
+    let l = lrcInfos[name];
+    if (text == l.last) { return; }
+    l.el.style.opacity = "0";
+    clearTimeout(l.timeout);
+    l.timeout = setTimeout(() => {
         if (!text.replace(/\s/g, '').length) {
-            el.innerHTML = "&nbsp;";
+            l.el.innerHTML = "&nbsp;";
         } else {
-            el.textContent = text;
+            l.el.textContent = text;
         }
-        el.style.opacity = "1";
+        l.el.style.opacity = "1";
     }, 100);
-    if (sub) {lastSub = text;subLrcTimeout = id;} else {lastMain = text;lrcTimeout = id;}
+    l.last = text;
 }
 
 function lyricUpdate() {
@@ -56,11 +82,39 @@ function lyricUpdate() {
         }
     }
     setElText(main);
-    setElText(sub, true);
+    setElText(sub, "sub");
     requestAnimationFrame(lyricUpdate);
 }
 
+let settingsHideTimeout: any;
+function toggleSettings(show?: boolean) {
+    let settings = (<HTMLDivElement>el.querySelector(".penguin-player__lyric-settings"));
+    show = typeof show === "boolean" ? show : settings.style.display != "block";
+    if (show) {
+        clearTimeout(settingsHideTimeout);
+        settings.style.display = "block";
+        setTimeout(() => [settings.style.transform, settings.style.opacity] = ["translate(0)", "1"]);
+        settings.classList.add("penguin-player__lyric-settings-shown");
+    } else {
+        [settings.style.transform, settings.style.opacity] = ["translate(10px)", "0"];
+        settingsHideTimeout = setTimeout(() => settings.style.display = "none", 200);
+        settings.classList.remove("penguin-player__lyric-settings-shown");
+    }
+}
+
+function setLyricStatus(icon: "error" | "tick", text: string, tIcon?: "error" | "tick", tText?: string) {
+    el.querySelector(".penguin-player__lyric-settings--status-lrc-icon").innerHTML = icon == "error" ? errorIcon : tickIcon;
+    el.querySelector(".penguin-player__lyric-settings--status-lrc-text").textContent = text;
+    if (tIcon && tText) {
+        el.querySelector(".penguin-player__lyric-settings--status-tlrc-icon").innerHTML = tIcon == "error" ? errorIcon : tickIcon;
+        el.querySelector(".penguin-player__lyric-settings--status-tlrc-text").textContent = tText;
+    } else {
+        [el.querySelector(".penguin-player__lyric-settings--status-tlrc-icon").innerHTML, el.querySelector(".penguin-player__lyric-settings--status-tlrc-text").textContent] = "";
+    }
+}
+
 export function getLyric(song: Song) {
+    setLyricStatus("error", "歌词加载中");
     lrc = tLrc = null;
     lrcOffset = tLrcOffset = 0;
     clearTimeout(retryTimeout);
@@ -69,6 +123,7 @@ export function getLyric(song: Song) {
         let lyric = result.data?.lyric;
         lrc = lyric?.lrc;
         tLrc = lyric?.tlrc;
+        setLyricStatus.apply(null, lrc ? ["tick", "歌词已加载"].concat(tLrc ? ["tick", "翻译歌词已加载"] : ["error", "无翻译歌词"]) : ["error", "无歌词"]);
     }).catch(() => {
         print("Cannot fetch lyric");
         retryTimeout = setTimeout(getLyric, 5000, song);

@@ -1,19 +1,13 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Compile the player
 
-# Controls when the action will run. 
 on:
-  # Triggers the workflow on "push" or pull request events but only for the master branch
   "push":
     branches: [ master ]
   pull_request:
     branches: [ master ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   release:
     name: Create Release
@@ -22,17 +16,12 @@ jobs:
     if: ${{ github.event_name == 'push' }}
 
     steps:
-      - id: time
-        uses: nanzm/get-time-action@v1.1
+      - name: Read package version
+        id: version
+        uses: notiz-dev/github-action-json-property@release
         with:
-          timeZone: 8
-          format: "YYYY-MM-DD HH:mm:ss"
-      
-      - id: tagtime
-        uses: nanzm/get-time-action@v1.1
-        with:
-          timeZone: 8
-          format: "YYYYMMDDHHmmss"
+          path: package.json
+          prop_path: version
       
       - name: Create Release
         id: create_release
@@ -40,15 +29,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.tagtime.outputs.time }}
-          release_name: Release ${{ steps.time.outputs.time }}
+          tag_name: ${{ steps.version.outputs.prop }}
+          release_name: Release v${{ steps.version.outputs.prop }}
           draft: false
           prerelease: false
 
       - name: Output Release Data
         run: |
           echo "${{ steps.create_release.outputs.upload_url }}" > rel_url
-          echo "${{ steps.tagtime.outputs.time }}" > rel_tag
+          echo "${{ steps.version.outputs.prop }}" > rel_tag
 
       - name: Upload Release Data
         uses: actions/upload-artifact@v2.2.2
@@ -56,27 +45,22 @@ jobs:
           name: release
           path: rel_*
 
-  # This workflow contains a single job called "build"
   build:
     name: Build the player
 
     needs: release
     if: ${{ success() }}
 
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         include:
-          - file: "player.js"
-          - environment: "--env ie"
-            file: "player.ie.js"
+          - flags: ""
+          - flags: "ie"
             publish: "yes" # Only publish the version that has most functions
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       
       - name: Install Dependencies
@@ -84,7 +68,11 @@ jobs:
 
       - name: Build
         run: |
-          npm run build -- ${{ matrix.environment }}
+          npm run build -- --env flags=${{ matrix.flags }}
+
+      - name: Prepare for publish
+        if: ${{ github.event_name == 'push' }}
+        run: |
           mkdir public
           cp demo/* public
           mkdir public/dist
@@ -101,6 +89,13 @@ jobs:
         run: |
           URL=$(cat release/rel_url)
           echo "RELEASE_URL=$URL" >> $GITHUB_ENV
+      
+      - id: filename
+        uses: haya14busa/action-cond@v1
+        with:
+          cond: ${{ matrix.flags == '' }}
+          if_true: player.js
+          if_false: player.${{ matrix.flags }}.js
           
       - name: Upload Release Asset
         if: ${{ github.event_name == 'push' }}
@@ -110,7 +105,7 @@ jobs:
         with:
           upload_url: ${{ env.RELEASE_URL }}
           asset_path: ./dist/player.js
-          asset_name: ${{ matrix.file }}
+          asset_name: ${{ steps.filename.outputs.value }}
           asset_content_type: text/javascript
       
       - name: Publish to GitHub Pages

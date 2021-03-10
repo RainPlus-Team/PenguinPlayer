@@ -1,8 +1,7 @@
-const webpack = require("webpack");
 const path = require("path");
 const svgo = require("svgo");
 const TerserPlugin = require("terser-webpack-plugin");
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 const svgoFilter = function(text) {
     return svgo.optimize(text, {
@@ -25,7 +24,8 @@ module.exports = env => {
     if (env.production) {mode = "production";}
     console.log("Compilation Mode: " + mode);
     // Compile variables
-    const ENABLE_IE_SUPPORT = env.ie !== undefined;
+    let enabledFlags = typeof env.flags === "string" ? env.flags.split(".") : [];
+    const ENABLE_IE_SUPPORT = enabledFlags.indexOf("ie") !== -1;
     const compileOptions = {
         PRODUCTION: mode === "production",
         IE_SUPPORT: ENABLE_IE_SUPPORT
@@ -38,7 +38,7 @@ module.exports = env => {
     // Plugins
     let plugins = [];
     if (mode == "development") {
-        plugins.push(new BundleAnalyzerPlugin());
+        plugins.push(new BundleAnalyzerPlugin({openAnalyzer: false}));
     }
     // Optimization
     const optimization = {
@@ -115,7 +115,10 @@ module.exports = env => {
                 },
                 {
                     test: /\.svg$/,
-                    use: [ { loader: "svgo-loader", options: { plugins: [ { removeXMLNS: true }, { removeViewBox: false } ] } } ]
+                    use: [
+                        "raw-loader",
+                        { loader: "svgo-loader", options: { plugins: svgo.extendDefaultPlugins([ "removeXMLNS", { name: "removeViewBox", active: false } ]) } }
+                    ]
                 }
             ]
         }
