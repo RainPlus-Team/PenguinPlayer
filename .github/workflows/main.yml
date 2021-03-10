@@ -12,6 +12,7 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
+    continue-on-error: true
 
     if: ${{ github.event_name == 'push' }}
 
@@ -51,7 +52,6 @@ jobs:
     name: Build the player
 
     needs: release
-    if: ${{ success() }}
 
     runs-on: ubuntu-latest
 
@@ -73,7 +73,7 @@ jobs:
           npm run build -- --env flags=${{ matrix.flags }}
 
       - name: Prepare for publish
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' && matrix.publish == 'yes' && success() }}
         run: |
           mkdir public
           cp demo/* public
@@ -81,18 +81,19 @@ jobs:
           cp -R dist public
 
       - name: Download Release URL
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' && success() }}
         uses: actions/download-artifact@v1
         with:
           name: release
       
       - name: Read Release URL
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' && success() }}
         run: |
           URL=$(cat release/rel_url)
           echo "RELEASE_URL=$URL" >> $GITHUB_ENV
       
       - id: filename
+        if: ${{ github.event_name == 'push' && success() }}
         uses: haya14busa/action-cond@v1
         with:
           cond: ${{ matrix.flags == '' }}
@@ -100,7 +101,7 @@ jobs:
           if_false: player.${{ matrix.flags }}.js
           
       - name: Upload Release Asset
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' && success() }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -111,7 +112,7 @@ jobs:
           asset_content_type: text/javascript
       
       - name: Publish to GitHub Pages
-        if: ${{ github.event_name == 'push' && matrix.publish == 'yes' }}
+        if: ${{ github.event_name == 'push' && matrix.publish == 'yes' && success() }}
         uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
           branch: gh-pages

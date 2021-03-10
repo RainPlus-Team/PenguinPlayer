@@ -20,3 +20,6 @@ Then just include the JavaScript file that you just downloaded inside your page!
 
 ### Note
 If you are visiting the demo page, you can use your own playlist by append ```?playlist=[YOUR PLAYLIST ID HERE]``` after the URL
+
+### Donate
+You can buy me a ~~cola~~ coffee at http://afdian.net/@TenmaHiltonWhat ;P
