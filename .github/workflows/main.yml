@@ -12,7 +12,8 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
-    continue-on-error: true
+    outputs:
+      status: ${{ steps.create_release.conclusion }}
 
     if: ${{ github.event_name == 'push' }}
 
@@ -28,6 +29,7 @@ jobs:
       
       - name: Create Release
         id: create_release
+        continue-on-error: true
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -38,13 +40,13 @@ jobs:
           prerelease: false
 
       - name: Output Release Data
-        if: ${{ success() }}
+        if: ${{ steps.create_release.outcome == 'success' }}
         run: |
           echo "${{ steps.create_release.outputs.upload_url }}" > rel_url
           echo "${{ steps.version.outputs.prop }}" > rel_tag
 
       - name: Upload Release Data
-        if: ${{ success() }}
+        if: ${{ steps.create_release.outcome == 'success' }}
         uses: actions/upload-artifact@v2.2.2
         with:
           name: release
