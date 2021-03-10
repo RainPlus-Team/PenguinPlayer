@@ -83,7 +83,6 @@ jobs:
           cp -R dist public
 
       - name: Download Release URL
-        continue-on-error: true
         if: ${{ github.event_name == 'push' }}
         uses: actions/download-artifact@v1
         with:
