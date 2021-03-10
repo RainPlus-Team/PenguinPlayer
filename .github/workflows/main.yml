@@ -38,11 +38,13 @@ jobs:
           prerelease: false
 
       - name: Output Release Data
+        if: ${{ success() }}
         run: |
           echo "${{ steps.create_release.outputs.upload_url }}" > rel_url
           echo "${{ steps.version.outputs.prop }}" > rel_tag
 
       - name: Upload Release Data
+        if: ${{ success() }}
         uses: actions/upload-artifact@v2.2.2
         with:
           name: release
@@ -81,7 +83,8 @@ jobs:
           cp -R dist public
 
       - name: Download Release URL
-        if: ${{ github.event_name == 'push' && success() }}
+        continue-on-error: true
+        if: ${{ github.event_name == 'push' }}
         uses: actions/download-artifact@v1
         with:
           name: release
