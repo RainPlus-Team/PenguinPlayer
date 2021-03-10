@@ -13,7 +13,7 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     outputs:
-      status: ${{ steps.create_release.conclusion }}
+      status: ${{ steps.create_release.outcome }}
 
     if: ${{ github.event_name == 'push' }}
 
@@ -86,7 +86,7 @@ jobs:
 
       - name: Download Release URL
         id: downloadrel
-        if: ${{ needs.release.result == 'success' }}
+        if: ${{ needs.release.outputs.status == 'success' }}
         uses: actions/download-artifact@v1
         with:
           name: release
@@ -129,7 +129,7 @@ jobs:
     name: Delete Release
 
     needs: [release, build]
-    if: ${{ failure() && needs.release.result == 'success' }}
+    if: ${{ failure() && needs.release.outputs.status == 'success' }}
 
     steps:
       - name: Download Release Data
