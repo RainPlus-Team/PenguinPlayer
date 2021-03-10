@@ -83,19 +83,20 @@ jobs:
           cp -R dist public
 
       - name: Download Release URL
-        if: ${{ github.event_name == 'push' }}
+        id: downloadrel
+        if: ${{ needs.release.result == 'success' }}
         uses: actions/download-artifact@v1
         with:
           name: release
       
       - name: Read Release URL
-        if: ${{ github.event_name == 'push' && success() }}
+        if: ${{ steps.downloadrel.outcome == 'success' }}
         run: |
           URL=$(cat release/rel_url)
           echo "RELEASE_URL=$URL" >> $GITHUB_ENV
       
       - id: filename
-        if: ${{ github.event_name == 'push' && success() }}
+        if: ${{ steps.downloadrel.outcome == 'success' }}
         uses: haya14busa/action-cond@v1
         with:
           cond: ${{ matrix.flags == '' }}
@@ -103,7 +104,7 @@ jobs:
           if_false: player.${{ matrix.flags }}.js
           
       - name: Upload Release Asset
-        if: ${{ github.event_name == 'push' && success() }}
+        if: ${{ steps.downloadrel.outcome == 'success' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -114,7 +115,7 @@ jobs:
           asset_content_type: text/javascript
       
       - name: Publish to GitHub Pages
-        if: ${{ github.event_name == 'push' && matrix.publish == 'yes' && success() }}
+        if: ${{ matrix.publish == 'yes' && steps.downloadrel.outcome == 'success' }}
         uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
           branch: gh-pages
@@ -126,7 +127,7 @@ jobs:
     name: Delete Release
 
     needs: [release, build]
-    if: ${{ failure() && github.event_name == 'push' }}
+    if: ${{ failure() && needs.release.result == 'success' }}
 
     steps:
       - name: Download Release Data
