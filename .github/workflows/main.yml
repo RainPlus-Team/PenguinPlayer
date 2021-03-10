@@ -16,6 +16,8 @@ jobs:
     if: ${{ github.event_name == 'push' }}
 
     steps:
+      - uses: actions/checkout@v2
+
       - name: Read package version
         id: version
         uses: notiz-dev/github-action-json-property@release
