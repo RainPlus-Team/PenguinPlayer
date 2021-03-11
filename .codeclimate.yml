@@ -1,2 +1,4 @@
 exclude_patterns:
 - "vendor/"
+- "src/typescript/modules/cookie.ts"
+- "src/typescript/polyfill.ts"

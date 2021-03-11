@@ -112,7 +112,7 @@ function setLyricStatus(icon: "error" | "tick", text: string, tIcon?: "error" | 
         el.querySelector(".penguin-player__lyric-settings--status-tlrc-icon").innerHTML = tIcon == "error" ? errorIcon : tickIcon;
         el.querySelector(".penguin-player__lyric-settings--status-tlrc-text").textContent = tText;
     } else {
-        [el.querySelector(".penguin-player__lyric-settings--status-tlrc-icon").innerHTML, el.querySelector(".penguin-player__lyric-settings--status-tlrc-text").textContent] = "";
+        [el.querySelector(".penguin-player__lyric-settings--status-tlrc-icon").innerHTML, el.querySelector(".penguin-player__lyric-settings--status-tlrc-text").textContent] = ["", ""];
     }
 }
 
