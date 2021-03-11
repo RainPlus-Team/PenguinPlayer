@@ -21,6 +21,9 @@ window.addEventListener("penguininitialized", () => {
         lyricUpdate();
     });
     window.addEventListener("click", (e: MouseEvent) => {
+        if (e.target instanceof HTMLElement && el.querySelector(".penguin-player__lyric-settings").classList.contains("penguin-player__lyric-settings-shown") && (<HTMLElement>e.target).closest(".penguin-player__lyric-settings") == null) {
+            toggleSettings();
+        }
         if (e.pageY >= window.innerHeight - 60 && e.pageX >= 56 + 20 && el.querySelector(".penguin-player__player").clientWidth <= 56 && window.innerWidth <= 700) {
             lyricTap();
             e.preventDefault();
@@ -45,7 +48,7 @@ let lyricReq: AjaxPromise, retryTimeout: any;
 let lrc: LyricLine[], tLrc: LyricLine[], lrcOffset = 0, tLrcOffset = 0;
 
 function findLrcPos(lrc: LyricLine[], time: number, offset = 0): number {
-    if (!lrc) {return;}
+    if (!lrc) {return -1;}
     for (let i = offset;i < lrc.length;i++) {
         if (lrc[i + 1] == null || lrc[i + 1].time > time * 1000) {
             return i;
@@ -73,9 +76,9 @@ function setElText(text: string, name: string = "main") {
 function lyricUpdate() {
     if (audio.paused) { return; }
     let [main, sub] = ["", ""];
-    if (!isNaN(audio.currentTime) && lrc && (lrcOffset = findLrcPos(lrc, getCurrentTime(), lrcOffset)) != -1) {
+    if (!isNaN(audio.currentTime) && (lrcOffset = findLrcPos(lrc, getCurrentTime(), lrcOffset)) != -1) {
         main = lrc[lrcOffset].value;
-        if (tLrc && (tLrcOffset = findLrcPos(tLrc, getCurrentTime(), tLrcOffset)) != -1) {
+        if ((tLrcOffset = findLrcPos(tLrc, getCurrentTime(), tLrcOffset)) != -1) {
             sub = tLrc[tLrcOffset].value;
         } else {
             sub = lrc[lrcOffset + 1]?.value || "";

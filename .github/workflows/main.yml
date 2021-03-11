@@ -76,20 +76,20 @@ jobs:
         run: |
           npm run build -- --env flags=${{ matrix.flags }}
 
+      - name: Download Release URL
+        id: downloadrel
+        if: ${{ needs.release.result == 'success' && needs.release.outputs.status == 'success' }}
+        uses: actions/download-artifact@v1
+        with:
+          name: release
+
       - name: Prepare for publish
-        if: ${{ github.event_name == 'push' && matrix.publish == 'yes' && success() }}
+        if: ${{ steps.downloadrel.outcome == 'success' && matrix.publish == 'yes' }}
         run: |
           mkdir public
           cp demo/* public
           mkdir public/dist
           cp -R dist public
-
-      - name: Download Release URL
-        id: downloadrel
-        if: ${{ needs.release.outputs.status == 'success' }}
-        uses: actions/download-artifact@v1
-        with:
-          name: release
       
       - name: Read Release URL
         if: ${{ steps.downloadrel.outcome == 'success' }}
@@ -129,7 +129,7 @@ jobs:
     name: Delete Release
 
     needs: [release, build]
-    if: ${{ failure() && needs.release.outputs.status == 'success' }}
+    if: ${{ failure() && needs.release.result == 'success' && needs.release.outputs.status == 'success' }}
 
     steps:
       - name: Download Release Data

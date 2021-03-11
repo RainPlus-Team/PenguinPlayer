@@ -68,15 +68,15 @@ export function play(id?: number) {
         reset();
         setMediaSession(song);
         (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-duration")).textContent = formatTime(song.duration);
-        if (currentUrlReq) { currentUrlReq.cancel(); }
-        currentUrlReq = ajax(`https://gcm.tenmahw.com/song/url?id=${song.id}`).send().then((result) => {
+        currentUrlReq?.cancel();
+        currentUrlReq = ajax(`https://gcm.tenmahw.com/song/url?id=${song.id}`).send().then((result: AjaxResponse) => {
             if (result.data.code == 200) {
                 let track = result.data.data[0];
-                if (track.url == null) {
+                if (track.url) {
+                    playTrack(track);
+                } else {
                     print(`${song.name} is unavailable`);
                     next();
-                } else {
-                    playTrack(track);
                 }
             } else { playFailedHandler(); }
         }).catch(playFailedHandler);

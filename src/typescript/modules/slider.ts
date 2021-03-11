@@ -1,5 +1,5 @@
 import { container as el } from "../player";
-import { deepEventHandler, getOffsetLeft } from "../helper";
+import { deepEventHandler, getPropertySum } from "../helper";
 import { callHandlers } from "./event";
 
 export default class Slider {
@@ -57,7 +57,7 @@ export default class Slider {
             cx = e.touches[0].pageX;
         }
         let width = this.barEl.clientWidth;
-        let left = Math.min(Math.max(0, cx - getOffsetLeft(this.barEl)), width);
+        let left = Math.min(Math.max(0, cx - getPropertySum(this.barEl, "offsetLeft")), width);
         let progress = left / width;
         progress = Math.max(Math.min(progress, this.maxValue || 1), this.minValue || 0);
         if (progress != this.value) {

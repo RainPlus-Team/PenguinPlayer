@@ -1,6 +1,6 @@
 {
   "name": "@m4tec/penguinplayer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple player based on Netease Cloud Music",
   "main": "dist/player.js",
   "scripts": {
