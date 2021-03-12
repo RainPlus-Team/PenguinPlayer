@@ -10,7 +10,6 @@ import { findHighContrastColor } from "./modules/color";
 import { print, formatTime } from "./helper";
 import { songs, currentSong, play, pause, prev, next, setVolume, getCurrentTime } from "./controller";
 import { setCircleProgress, setThemeColor, rotateToggle } from "./ui";
-import cookie from "./modules/cookie";
 
 import "../sass/player.sass";
 
@@ -80,11 +79,11 @@ const colorthief = new ColorThief();
         // Volume setup
         setVolume(1);
         try {
-            if (cookie.hasItem("penguin_volume")) {
-                let volume = parseInt(cookie.getItem("penguin_volume"));
+            if (localStorage.hasItem("penguinplayer_volume")) {
+                let volume = parseInt(localStorage.getItem("penguinplayer_volume"));
                 setVolume(volume);
             }
-        } catch { print("Invalid volume cookie"); }
+        } catch { print("Invalid volume storage"); }
     });
 }
 

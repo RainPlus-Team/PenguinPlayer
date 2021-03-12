@@ -1,7 +1,6 @@
 import Scrollbar from "smooth-scrollbar";
 
 import { findHighContrastColor } from "./modules/color";
-import cookie from "./modules/cookie";
 import { dispatchEvent } from "./modules/event";
 import { container as el } from "./player";
 import Slider from "./modules/slider";
@@ -44,7 +43,7 @@ window.addEventListener("penguininitialized", () => {
     });
     volumeSlider.addEventHandler("valuechange", (value: number) => {
         audio.volume = value;
-        cookie.setItem("penguin_volume", value, Infinity);
+        localStorage.setItem("penguin_volume", value);
     });
     // Lyric overlay setup
     window.addEventListener("mousemove", (e) => {
