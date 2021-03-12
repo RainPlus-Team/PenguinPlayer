@@ -1,7 +1,14 @@
 [中文README](README-zh_CN.md)
 
 # PenguinPlayer
-[![Maintainability](https://api.codeclimate.com/v1/badges/d9903fe9ee1f24a780be/maintainability)](https://codeclimate.com/github/M4TEC/PenguinPlayer/maintainability)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/M4TEC/PenguinPlayer/Compile%20the%20player)
+[![Maintainability](https://img.shields.io/codeclimate/maintainability/M4TEC/PenguinPlayer)](https://codeclimate.com/github/M4TEC/PenguinPlayer/maintainability)
+![Code size in bytes](https://img.shields.io/github/languages/code-size/M4TEC/PenguinPlayer)
+[![License](https://img.shields.io/github/license/M4TEC/PenguinPlayer)](https://github.com/M4TEC/PenguinPlayer/blob/master/LICENSE)
+![Downloads](https://img.shields.io/github/downloads/M4TEC/PenguinPlayer/total)
+![Version](https://img.shields.io/github/package-json/v/M4TEC/PenguinPlayer)
+[![GitHub issues](https://img.shields.io/github/issues/M4TEC/PenguinPlayer)](https://github.com/M4TEC/PenguinPlayer/issues)
+[![GitHub stars](https://img.shields.io/github/stars/M4TEC/PenguinPlayer)](https://github.com/M4TEC/PenguinPlayer/stargazers)
 
 A simple player based on Netease Cloud Music, and it only needs to load ONE JavaScript file!
 

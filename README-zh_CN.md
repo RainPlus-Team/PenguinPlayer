@@ -1,5 +1,12 @@
 # PenguinPlayer
-[![Maintainability](https://api.codeclimate.com/v1/badges/d9903fe9ee1f24a780be/maintainability)](https://codeclimate.com/github/M4TEC/PenguinPlayer/maintainability)
+![GitHub Workflow状态](https://img.shields.io/github/workflow/status/M4TEC/PenguinPlayer/Compile%20the%20player)
+[![可维护性](https://img.shields.io/codeclimate/maintainability/M4TEC/PenguinPlayer)](https://codeclimate.com/github/M4TEC/PenguinPlayer/maintainability)
+![代码大小](https://img.shields.io/github/languages/code-size/M4TEC/PenguinPlayer)
+[![License](https://img.shields.io/github/license/M4TEC/PenguinPlayer)](https://github.com/M4TEC/PenguinPlayer/blob/master/LICENSE)
+![下载次数](https://img.shields.io/github/downloads/M4TEC/PenguinPlayer/total)
+![版本](https://img.shields.io/github/package-json/v/M4TEC/PenguinPlayer)
+[![GitHub issues](https://img.shields.io/github/issues/M4TEC/PenguinPlayer)](https://github.com/M4TEC/PenguinPlayer/issues)
+[![GitHub stars](https://img.shields.io/github/stars/M4TEC/PenguinPlayer)](https://github.com/M4TEC/PenguinPlayer/stargazers)
 
 一个基于网易云音乐的简易播放器，而且它仅仅是**一个**JavaScript文件！
 

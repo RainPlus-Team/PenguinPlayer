@@ -5,6 +5,6 @@
         "moduleResolution": "node",
         "removeComments": true
     },
-    "include": ["src/**/*", "vendors/modernizr.js"],
+    "include": ["src/**/*", "vendor/modernizr.js"],
     "exclude": ["node_modules"]
 }
