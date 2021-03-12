@@ -1,5 +1,5 @@
-import { container as el } from "./player";
-import { play, pause, next, prev } from "./controller";
+import { container as el } from "../player";
+import { play, pause, next, prev } from "../controller";
 
 if ("mediaSession" in navigator) {
     (<any>navigator).mediaSession.setActionHandler("play", play);

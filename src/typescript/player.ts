@@ -1,5 +1,5 @@
 /// #if IE_SUPPORT
-import "./polyfill";
+import "./modules/polyfill";
 import "../sass/ie.sass";
 /// #endif
 

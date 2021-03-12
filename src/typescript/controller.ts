@@ -1,6 +1,6 @@
 import { formatTime, print } from "./modules/helper";
 import { container as el } from "./player";
-import { setSong as setMediaSession } from "./mediaSession";
+import { setSong as setMediaSession } from "./modules/mediaSession";
 import { getLyric } from "./lyric";
 import { progressSlider, resetRotate, setThemeColor, volumeSlider } from "./ui";
 import { dispatchEvent } from "./modules/event";
