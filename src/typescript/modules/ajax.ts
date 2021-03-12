@@ -14,7 +14,7 @@ function makeRequest(ajax: any) {
     ajax._xmlHttp.send();
 }
 
-function ajax(url?: string): AjaxPromise {
+export default function ajax(url?: string): AjaxPromise {
     let _resolve: any, _reject: any;
     let promise: any = new Promise<AjaxResponse>(function(resolve, reject) { _resolve = resolve; _reject = reject });
     promise._resolve = _resolve; promise._reject = _reject;
@@ -36,5 +36,3 @@ function ajax(url?: string): AjaxPromise {
     }
     return promise;
 }
-
-export default ajax;

@@ -1,5 +1,5 @@
 import { container as el } from "../player";
-import { deepEventHandler, getPropertySum } from "../helper";
+import { deepEventHandler, getPropertySum } from "./helper";
 import { callHandlers } from "./event";
 
 export default class Slider {

@@ -7,7 +7,7 @@ import ColorThief from "colorthief";
 import LazyLoad, { ILazyLoadInstance } from "vanilla-lazyload";
 
 import { findHighContrastColor } from "./modules/color";
-import { print, formatTime } from "./helper";
+import { print, formatTime } from "./modules/helper";
 import { songs, currentSong, play, pause, prev, next, setVolume, getCurrentTime } from "./controller";
 import { setCircleProgress, setThemeColor, rotateToggle } from "./ui";
 

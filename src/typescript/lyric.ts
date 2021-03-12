@@ -1,5 +1,5 @@
 import { getCurrentTime } from "./controller";
-import { print } from "./helper";
+import { print } from "./modules/helper";
 import ajax from "./modules/ajax";
 import { container as el } from "./player";
 

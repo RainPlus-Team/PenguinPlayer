@@ -5,7 +5,7 @@ import { dispatchEvent } from "./modules/event";
 import { container as el } from "./player";
 import Slider from "./modules/slider";
 import { currentSong, getRealDuration, songs, trialInfo } from "./controller";
-import { isBlurSupported } from "./helper";
+import { isBlurSupported } from "./modules/helper";
 
 export let volumeSlider: Slider;
 export let progressSlider: Slider;
@@ -43,7 +43,7 @@ window.addEventListener("penguininitialized", () => {
     });
     volumeSlider.addEventHandler("valuechange", (value: number) => {
         audio.volume = value;
-        localStorage.setItem("penguin_volume", value);
+        localStorage.setItem("penguinplayer_volume", value.toString());
     });
     // Lyric overlay setup
     window.addEventListener("mousemove", (e) => {
@@ -74,6 +74,7 @@ export function setCircleProgress(progress: number) {
 export function setThemeColor(color: Color, palette: Color[]) {
     let backgroundRgba = `rgba(${color.join(", ")}, 0.5)`;
     /// #if IE_SUPPORT
+    // TODO: Replace with a blur version of thumbnail
     backgroundRgba = `rgba(${color.join(", ")}, ${isBlurSupported() ? 0.5 : 0.8})`; // Increase opacity if blur is not supported
     /// #endif
     let foregroundRgb = `rgb(${findHighContrastColor(color, palette).join(", ")})`;

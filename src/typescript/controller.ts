@@ -1,4 +1,4 @@
-import { formatTime, print } from "./helper";
+import { formatTime, print } from "./modules/helper";
 import { container as el } from "./player";
 import { setSong as setMediaSession } from "./mediaSession";
 import { getLyric } from "./lyric";
