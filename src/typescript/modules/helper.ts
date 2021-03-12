@@ -1,5 +1,5 @@
 /// #if IE_SUPPORT
-const Modernizr = require("../../vendor/modernizr");
+const Modernizr = require("../../../vendor/modernizr");
 /// #endif
 
 export function getPropertySum(element: HTMLElement, name: string): number {
