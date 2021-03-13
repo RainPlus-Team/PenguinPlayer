@@ -1,4 +1,7 @@
 import Scrollbar from "smooth-scrollbar";
+/// #if IE_SUPPORT
+const StackBlur = require('stackblur-canvas');
+/// #endif
 
 import { findHighContrastColor } from "./modules/color";
 import { dispatchEvent } from "./modules/event";
@@ -29,7 +32,7 @@ window.addEventListener("penguininitialized", () => {
     });
     progressSlider.addEventHandler("valuechange", (value: number) => {
         let fullTime = songs[currentSong].duration * value;
-        if (trialInfo?.start > fullTime || trialInfo?.end < fullTime) {
+        if (trialInfo?.start > fullTime || trialInfo?.end < fullTime) { // TODO: Fix slider range problem
             return true;
         } else {
             audio.currentTime = getRealDuration() * value;
@@ -54,6 +57,14 @@ window.addEventListener("penguininitialized", () => {
         }
     });
     Scrollbar.init(el.querySelector(".penguin-player__player--playlist"), { damping: 0.15 });
+    /// #if IE_SUPPORT
+    // IE 11 Blur Fallback
+    if (!isBlurSupported()) {
+        let cel = document.createElement("canvas");
+        cel.classList.add("penguin-player__player--canvas-background");
+        el.querySelector(".penguin-player__player").appendChild(cel);
+    }
+    /// #endif
 });
 
 export function setCircleProgress(progress: number) {
@@ -74,8 +85,12 @@ export function setCircleProgress(progress: number) {
 export function setThemeColor(color: Color, palette: Color[]) {
     let backgroundRgba = `rgba(${color.join(", ")}, 0.5)`;
     /// #if IE_SUPPORT
-    // TODO: Replace with a blur version of thumbnail
-    backgroundRgba = `rgba(${color.join(", ")}, ${isBlurSupported() ? 0.5 : 0.8})`; // Increase opacity if blur is not supported
+    if (!isBlurSupported()) {
+        let img = new Image(window.innerWidth / 4, window.innerHeight / 2);
+        img.crossOrigin = "anonymous";
+        img.src = songs[currentSong].thumbnail + `?param=${img.width}y${img.height}`;
+        img.addEventListener("load", () => StackBlur.image(img, <HTMLCanvasElement>el.querySelector(".penguin-player__player--canvas-background"), 20));
+    }
     /// #endif
     let foregroundRgb = `rgb(${findHighContrastColor(color, palette).join(", ")})`;
     let player: HTMLDivElement = el.querySelector(".penguin-player__player");

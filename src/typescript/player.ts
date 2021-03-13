@@ -82,7 +82,7 @@ const colorthief = new ColorThief();
         // Volume setup
         setVolume(1);
         try {
-            if (localStorage.hasItem("penguinplayer_volume")) {
+            if (localStorage.getItem("penguinplayer_volume") !== null) {
                 let volume = parseInt(localStorage.getItem("penguinplayer_volume"));
                 setVolume(volume);
             }
@@ -118,10 +118,12 @@ function onPlaylistSongLoaded(el: HTMLElement) {
     /// #if IE_SUPPORT
     schedule(() => {
     /// #endif
-        let color = colorthief.getColor(el), palette = colorthief.getPalette(el);
-        let song = <HTMLElement>el.parentNode;
-        song.style.backgroundColor = `rgba(${color.join(", ")}, 0.6)`;
-        song.style.color = `rgb(${findHighContrastColor(color, palette).join(", ")})`;
+        try{
+            let color = colorthief.getColor(el), palette = colorthief.getPalette(el);
+            let song = <HTMLElement>el.parentNode;
+            song.style.backgroundColor = `rgba(${color.join(", ")}, 0.6)`;
+            song.style.color = `rgb(${findHighContrastColor(color, palette).join(", ")})`;
+        } catch {}
     /// #if IE_SUPPORT
     });
     /// #endif

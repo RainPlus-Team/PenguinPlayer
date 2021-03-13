@@ -6,8 +6,8 @@ function runTask(func: () => void, delay: number) {
     setTimeout(() => {
         try {
             func();
-        } catch {
-            console.error("Failed to run task", func);
+        } catch(ex) {
+            console.error("Failed to run task", ex);
         }
         running--;
         updateTasks();
@@ -15,8 +15,7 @@ function runTask(func: () => void, delay: number) {
 }
 
 function updateTasks() {
-    console.log(running);
-    while (running < 1 && waiting.length > 0) {
+    while (running < 2 && waiting.length > 0) {
         running++;
         setTimeout(runTask, 0, ...waiting.shift());
     }
