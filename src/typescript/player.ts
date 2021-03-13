@@ -16,6 +16,9 @@ import "../sass/player.sass";
 import template from "../template.pug";
 import { dispatchEvent } from "./modules/event";
 import ajax from "./modules/ajax";
+/// #if IE_SUPPORT
+import { schedule } from "./modules/task";
+/// #endif
 
 let el = document.createElement("div");
 el.className = "penguin-player";
@@ -112,10 +115,16 @@ function createSongElement(song: Song, click: () => void): HTMLElement {
 }
 
 function onPlaylistSongLoaded(el: HTMLElement) {
-    let color = colorthief.getColor(el), palette = colorthief.getPalette(el);
-    let song = <HTMLElement>el.parentNode;
-    song.style.backgroundColor = `rgba(${color.join(", ")}, 0.6)`;
-    song.style.color = `rgb(${findHighContrastColor(color, palette).join(", ")})`;
+    /// #if IE_SUPPORT
+    schedule(() => {
+    /// #endif
+        let color = colorthief.getColor(el), palette = colorthief.getPalette(el);
+        let song = <HTMLElement>el.parentNode;
+        song.style.backgroundColor = `rgba(${color.join(", ")}, 0.6)`;
+        song.style.color = `rgb(${findHighContrastColor(color, palette).join(", ")})`;
+    /// #if IE_SUPPORT
+    });
+    /// #endif
 }
 
 function initialize(list: any) { // TODO: Refactor initialize
@@ -131,7 +140,7 @@ function initialize(list: any) { // TODO: Refactor initialize
     lazyLoad = new LazyLoad({
         container: playlist,
         elements_selector: ".penguin-player--lazy",
-        callback_loaded: onPlaylistSongLoaded // TODO: Fix performance problem when lazy load is not working
+        callback_loaded: onPlaylistSongLoaded
     });
     document.body.appendChild(el);
     dispatchEvent("penguininitialized");
