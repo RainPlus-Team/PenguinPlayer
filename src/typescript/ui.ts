@@ -89,7 +89,7 @@ export function setThemeColor(color: Color, palette: Color[]) {
         let img = new Image(window.innerWidth / 4, window.innerHeight / 2);
         img.crossOrigin = "anonymous";
         img.src = songs[currentSong].thumbnail + `?param=${img.width}y${img.height}`;
-        img.addEventListener("load", () => StackBlur.image(img, <HTMLCanvasElement>el.querySelector(".penguin-player__player--canvas-background"), 20));
+        img.addEventListener("load", () => StackBlur.image(img, <HTMLCanvasElement>el.querySelector(".penguin-player__player--canvas-background"), 30));
     }
     /// #endif
     let foregroundRgb = `rgb(${findHighContrastColor(color, palette).join(", ")})`;

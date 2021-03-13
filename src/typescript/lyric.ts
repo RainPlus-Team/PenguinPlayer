@@ -122,11 +122,12 @@ export function getLyric(song: Song) {
     lrcOffset = tLrcOffset = 0;
     clearTimeout(retryTimeout);
     if (lyricReq) { lyricReq.cancel(); }
-    lyricReq = ajax(`https://gcm.tenmahw.com/resolve/lyric?id=${song.id}`).send().then((result) => {
+    lyricReq = ajax(`https://gcm.tenmahw.com/resolve/lyric?id=${song.id}`).send().then((result: AjaxResponse) => {
         let lyric = result.data?.lyric;
         lrc = lyric?.lrc;
         tLrc = lyric?.tlrc;
         setLyricStatus.apply(null, lrc ? ["tick", "歌词已加载"].concat(tLrc ? ["tick", "翻译歌词已加载"] : ["error", "无翻译歌词"]) : ["error", "无歌词"]);
+        (<HTMLDivElement>el.querySelector(".penguin-player__lyric--background")).style.bottom = lrc ? "" : "-60px";
     }).catch(() => {
         print("Cannot fetch lyric");
         retryTimeout = setTimeout(getLyric, 5000, song);
