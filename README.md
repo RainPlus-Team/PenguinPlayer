@@ -31,15 +31,15 @@ Then just include the JavaScript file that you just downloaded inside your page!
 Every API of the player is exposed in ```PPlayer``` object of ```window``` context.
 | Property | Description |
 | -------- | ----------- |
-| initialize(id: string) | Initialize the player |
-| play(index?: number) | Play. If ```index``` is specified, the player will play the song in the song in corresponding position in the playlist |
+| initialize(```id: string```) | Initialize the player |
+| play(```index?: number```) | Play. If ```index``` is specified, the player will play the song in the song in corresponding position in the playlist |
 | pause() | Pause |
 | next() | Next song |
 | previous() | Previous song |
-| volume: number | Volume. Valid values are between ```0-1``` |
-| currentTime: number | Current time position |
-| duration: number | ```getter``` Song duration |
-| paused: boolean | ```getter``` Is paused |
+| volume: ```number``` | Volume. Valid values are between ```0-1``` |
+| currentTime: ```number``` | Current time position |
+| duration: ```number``` | ```getter``` Song duration |
+| paused: ```boolean``` | ```getter``` Is paused |
 | song: ```Song``` | Current song |
 | playlist: ```Song[]``` | Current playlist |
 

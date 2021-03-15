@@ -13,7 +13,7 @@
 ## 用法
 首先，下载[最新版本](https://github.com/M4TEC/PenguinPlayer/releases/latest/download/player.js)的播放器。
 
-现在，在```window```上下文中设置```penguin_id```来使用你的歌单，比如```window.penguin_id = "440401494"```。播放器会使用你所提供的歌单ID自动初始化。
+现在，在```window```上下文中设置```penguinplayer_id```来使用你的歌单，比如```window.penguinplayer_id = "440401494"```。播放器会使用你所提供的歌单ID自动初始化。
 
 你也可以在之后通过调用```window.PPlayer.initialize("[你的歌单ID]")```来进行初始化。
 
@@ -29,15 +29,15 @@
 播放器的所有接口都暴露在```window```上下文的```PPlayer```对象中
 | 属性名 | 描述 |
 | ----- | ---- |
-| initialize(id: string) | 初始化播放器 |
-| play(index?: number) | 播放。如果指定```index```的值则会播放歌单相应位置的歌曲 |
+| initialize(```id: string```) | 初始化播放器 |
+| play(```index?: number```) | 播放。如果指定```index```的值则会播放歌单相应位置的歌曲 |
 | pause() | 暂停 |
 | next() | 下一首 |
 | previous() | 上一首 |
-| volume: number | 音量。有效值在```0-1```之间 |
-| currentTime: number | 当前时间位置 |
-| duration: number | ```getter``` 歌曲时长 |
-| paused: boolean | ```getter``` 是否暂停 |
+| volume: ```number``` | 音量。有效值在```0-1```之间 |
+| currentTime: ```number``` | 当前时间位置 |
+| duration: ```number``` | ```getter``` 歌曲时长 |
+| paused: ```boolean``` | ```getter``` 是否暂停 |
 | song: ```Song``` | 当前歌曲 |
 | playlist: ```Song[]``` | 歌单 |
 
