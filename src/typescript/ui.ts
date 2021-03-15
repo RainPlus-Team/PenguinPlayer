@@ -95,22 +95,16 @@ export function setThemeColor(color: Color, palette: Color[]) {
     let foregroundRgb = `rgb(${findHighContrastColor(color, palette).join(", ")})`;
     let player: HTMLDivElement = el.querySelector(".penguin-player__player");
     player.style.backgroundColor = backgroundRgba;
-    player.style.color = foregroundRgb;
-    player.style.fill = foregroundRgb;
-    (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-left")).style.borderColor = foregroundRgb;
-    (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-right")).style.borderColor = foregroundRgb;
+    player.style.color = player.style.fill = foregroundRgb;
+    (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-left")).style.borderColor = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-right")).style.borderColor = foregroundRgb;
     let fullContent: HTMLDivElement = el.querySelector(".penguin-player__player--full-content");
     foregroundRgb = `rgb(${findHighContrastColor([255, 255, 255], palette).join(", ")})`;
-    fullContent.style.color = foregroundRgb;
-    fullContent.style.fill = foregroundRgb;
+    fullContent.style.color = fullContent.style.fill = foregroundRgb;
     let highContrastToWhiteAlpha = `rgba(${findHighContrastColor([255, 255, 255], palette).join(", ")}, 0.5)`;
-    (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-bar")).style.backgroundColor = highContrastToWhiteAlpha;
-    (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-inner")).style.backgroundColor = foregroundRgb;
-    (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-dot")).style.backgroundColor = foregroundRgb;
-    (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume-bar")).style.backgroundColor = highContrastToWhiteAlpha;
-    (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume-inner")).style.backgroundColor = foregroundRgb;
-    (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume-dot")).style.backgroundColor = foregroundRgb;
-    (<HTMLDivElement>el.querySelector(".penguin-player__lyric")).style.color = highContrastToWhiteAlpha;
+    (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-bar")).style.backgroundColor = (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume-bar")).style.backgroundColor = (<HTMLDivElement>el.querySelector(".penguin-player__lyric")).style.color = highContrastToWhiteAlpha;
+    el.querySelectorAll(".penguin-player__player--progress-inner, .penguin-player__player--progress-dot, .penguin-player__player--controls-volume-inner, .penguin-player__player--controls-volume-dot").forEach((el) => {
+        (<HTMLDivElement>el).style.backgroundColor = foregroundRgb;
+    });
     dispatchEvent("penguinthemecolorchange", { color, palette });
 }
 
