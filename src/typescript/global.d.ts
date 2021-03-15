@@ -69,3 +69,17 @@ interface AjaxResponse {
     code: number
     data: any
 }
+
+interface PenguinPlayerAPI {
+    initialize(id: string): void
+    play(id: number): void
+    pause(): void
+    next(): void
+    previous(): void
+    readonly paused: boolean
+    readonly song: Song
+    readonly duration: number
+    currentTime: number
+    volume: number
+    readonly playlist: Song[]
+}
