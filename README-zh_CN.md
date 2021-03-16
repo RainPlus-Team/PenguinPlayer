@@ -4,7 +4,7 @@
 ![代码大小](https://img.shields.io/github/languages/code-size/M4TEC/PenguinPlayer?label=%E4%BB%A3%E7%A0%81%E5%A4%A7%E5%B0%8F)
 [![许可证](https://img.shields.io/github/license/M4TEC/PenguinPlayer?label=%E8%AE%B8%E5%8F%AF%E8%AF%81)](https://github.com/M4TEC/PenguinPlayer/blob/master/LICENSE)
 ![下载次数](https://img.shields.io/github/downloads/M4TEC/PenguinPlayer/total?label=%E4%B8%8B%E8%BD%BD%E6%AC%A1%E6%95%B0)
-![版本](https://img.shields.io/github/package-json/v/M4TEC/PenguinPlayer)
+![版本](https://img.shields.io/github/package-json/v/M4TEC/PenguinPlayer?label=%E7%89%88%E6%9C%AC)
 [![GitHub issues](https://img.shields.io/github/issues/M4TEC/PenguinPlayer)](https://github.com/M4TEC/PenguinPlayer/issues)
 [![GitHub stars](https://img.shields.io/github/stars/M4TEC/PenguinPlayer)](https://github.com/M4TEC/PenguinPlayer/stargazers)
 

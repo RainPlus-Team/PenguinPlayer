@@ -56,7 +56,6 @@ addEventListener("setup", () => {
             el.querySelector(".penguin-player__lyric").classList.remove("penguin-player__lyric-hover");
         }
     });
-    Scrollbar.init(el.querySelector(".penguin-player__player--playlist"), { damping: 0.15 });
     /// #if IE_SUPPORT
     // IE 11 Blur Fallback
     if (!isBlurSupported()) {
@@ -66,6 +65,7 @@ addEventListener("setup", () => {
     }
     /// #endif
 });
+addEventListener("initialized", () => Scrollbar.init(el.querySelector(".penguin-player__player--playlist"), { damping: 0.15 }));
 
 export function setCircleProgress(progress: number) {
     let prog = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress"));
