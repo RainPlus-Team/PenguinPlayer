@@ -150,6 +150,7 @@ function initialize(list: any) {
     }
     print("Playlist processed");
     let playlist: HTMLElement = el.querySelector(".penguin-player__player--playlist");
+    playlist = playlist.querySelector(".scroll-content") || playlist;
     for (let i = 0;i<songs.length;i++) { playlist.appendChild(createSongElement(songs[i], () => {play(i);})); }
     lazyLoad = new LazyLoad({
         container: playlist,
