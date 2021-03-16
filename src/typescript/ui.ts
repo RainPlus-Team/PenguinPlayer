@@ -4,7 +4,7 @@ const StackBlur = require('stackblur-canvas');
 /// #endif
 
 import { findHighContrastColor } from "./modules/color";
-import { dispatchEvent } from "./modules/event";
+import { addEventListener, dispatchEvent } from "./modules/event";
 import { container as el } from "./player";
 import Slider from "./modules/slider";
 import { currentSong, getRealDuration, songs, trialInfo } from "./controller";
@@ -13,7 +13,7 @@ import { isBlurSupported } from "./modules/helper";
 export let volumeSlider: Slider;
 export let progressSlider: Slider;
 
-window.addEventListener("penguininitialized", () => {
+addEventListener("setup", () => {
     let audio: HTMLAudioElement = el.querySelector(".penguin-player__audio");
     // Progress bar setup
     let playerOldState: boolean;
@@ -105,7 +105,7 @@ export function setThemeColor(color: Color, palette: Color[]) {
     el.querySelectorAll(".penguin-player__player--progress-inner, .penguin-player__player--progress-dot, .penguin-player__player--controls-volume-inner, .penguin-player__player--controls-volume-dot").forEach((el) => {
         (<HTMLDivElement>el).style.backgroundColor = foregroundRgb;
     });
-    dispatchEvent("penguinthemecolorchange", { color, palette });
+    dispatchEvent("themecolorchange", { color, palette });
 }
 
 export function rotateToggle(rotate: boolean) {

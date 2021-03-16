@@ -76,6 +76,8 @@ interface PenguinPlayerAPI {
     pause(): void
     next(): void
     previous(): void
+    addEventListener(name: string, handler: Function): void
+    removeEventListener(name: string, handler: Function): void
     readonly paused: boolean
     readonly song: Song
     readonly duration: number

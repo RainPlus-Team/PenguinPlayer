@@ -1,4 +1,26 @@
-export function dispatchEvent(name: string, detail?: object) {
+let events = {};
+
+export function addEventListener(name: string, handler: Function) {
+    events[name] = events[name]?.concat([handler]) || [handler];
+}
+
+export function removeEventListener(name: string, handler: Function) {
+    if (events[name] && events[name].indexOf(handler) != -1) {
+        events[name].splice(events[name].indexOf(handler), 1);
+    }
+}
+
+export function dispatchEvent(name: string, ...parameters: any) {
+    for (let handler of (events[name] || [])) {
+        try {
+            handler.apply(null, parameters);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+}
+
+export function dispatchWindowEvent(name: string, detail?: object) {
     let event: Event;
     if (typeof(Event) === "function") {
         event = detail == undefined ? new Event(name) : new CustomEvent(name, detail);

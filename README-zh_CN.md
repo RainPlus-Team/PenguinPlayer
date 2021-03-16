@@ -34,12 +34,24 @@
 | pause() | 暂停 |
 | next() | 下一首 |
 | previous() | 上一首 |
+| addEventListener(```name: string, handler: Function```) | 添加一个事件监听器 |
+| removeEventListener(```name: string, handler: Function```) | 移除一个事件监听器 |
 | volume: ```number``` | 音量。有效值在```0-1```之间 |
 | currentTime: ```number``` | 当前时间位置 |
 | duration: ```number``` | ```getter``` 歌曲时长 |
 | paused: ```boolean``` | ```getter``` 是否暂停 |
 | song: ```Song``` | 当前歌曲 |
 | playlist: ```Song[]``` | 歌单 |
+
+## 事件
+所有在此表格内声明的事件除特殊声明外都需要通过```PPlayer.addEventListener()```来监听。
+| 事件名称 | 描述 | 参数 |
+| ---------- | ----------- | --------- |
+| penguinready | 在```window.PPlayer```上下文可用时被触发。 **此事件在```window.addEventListener```中监听** | *无参数* |
+| setup | 在播放器开始准备时触发 | *无参数* |
+| initialized | 在播放器初始化完毕时触发 | *无参数* |
+| songchange | 在音乐改变时触发 | song: ```Song``` |
+| themecolorchange | 在主题颜色改变时触发 | color: ```Color```, palette: ```Color[]``` |
 
 ### 提示
 如果你正在查看预览页面，你可以通过在网址后面添加```?playlist=[你的歌单ID]```来使用你自己的歌单。

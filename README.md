@@ -36,12 +36,24 @@ Every API of the player is exposed in ```PPlayer``` object of ```window``` conte
 | pause() | Pause |
 | next() | Next song |
 | previous() | Previous song |
+| addEventListener(```name: string, handler: Function```) | Add a event listener |
+| removeEventListener(```name: string, handler: Function```) | Remove a event listener |
 | volume: ```number``` | Volume. Valid values are between ```0-1``` |
 | currentTime: ```number``` | Current time position |
 | duration: ```number``` | ```getter``` Song duration |
 | paused: ```boolean``` | ```getter``` Is paused |
 | song: ```Song``` | Current song |
 | playlist: ```Song[]``` | Current playlist |
+
+## Events
+All events declared in this table needed to be listened by using ```PPlayer.addEventListener()``` unless there is a special note.
+| Event name | Description | Parameter |
+| ---------- | ----------- | --------- |
+| penguinready | Triggered when ```window.PPlayer``` context is ready. **This is triggered in ```window.addEventListener```** | *No parameter* |
+| setup | Triggered when the player starts setting up | *No parameter* |
+| initialized | Trigger when the player is initialized | *No parameter* |
+| songchange | Triggered when the song has changed | song: ```Song``` |
+| themecolorchange | Trigger when the theme color has changed | color: ```Color```, palette: ```Color[]``` |
 
 ### Note
 If you are visiting the demo page, you can use your own playlist by append ```?playlist=[YOUR PLAYLIST ID HERE]``` after the URL

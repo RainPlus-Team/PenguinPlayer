@@ -5,12 +5,13 @@ import { container as el } from "./player";
 
 import tickIcon from "../icons/tick.svg";
 import errorIcon from "../icons/error.svg";
+import { addEventListener } from "./modules/event";
 
 let audio: HTMLAudioElement, lrcInfos = {
     main: <any>{},
     sub: <any>{}
 };
-window.addEventListener("penguininitialized", () => {
+addEventListener("setup", () => {
     audio = <HTMLAudioElement>el.querySelector(".penguin-player__audio");
     [lrcInfos.main.el, lrcInfos.sub.el] = [
         <HTMLHeadingElement>el.querySelector(".penguin-player__lyric--line[line-name=main]"),

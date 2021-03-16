@@ -3,7 +3,7 @@ import { container as el } from "./player";
 import { setSong as setMediaSession } from "./modules/mediaSession";
 import { getLyric } from "./lyric";
 import { progressSlider, resetRotate, setThemeColor, volumeSlider } from "./ui";
-import { dispatchEvent } from "./modules/event";
+import { addEventListener, dispatchEvent } from "./modules/event";
 import ajax from "./modules/ajax";
 
 export let songs: Song[] = [];
@@ -23,7 +23,7 @@ const playFailedHandler = () => {
 
 let audio: HTMLAudioElement;
 
-window.addEventListener("penguininitialized", () => {
+addEventListener("setup", () => {
     audio = (<HTMLAudioElement>el.querySelector(".penguin-player__audio"));
     audio.addEventListener("playing", () => errorAmount = 0);
     audio.addEventListener("error", playFailedHandler);
@@ -81,7 +81,7 @@ export function play(id?: number) {
             } else { playFailedHandler(); }
         }).catch(playFailedHandler);
         getLyric(song);
-        dispatchEvent("penguinsongchange", { detail: song });
+        dispatchEvent("songchange", song);
     } else { audio.play(); }
 }
 

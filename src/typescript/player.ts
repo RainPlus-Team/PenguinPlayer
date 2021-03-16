@@ -21,7 +21,7 @@ import { setCircleProgress, setThemeColor, rotateToggle } from "./ui";
 import "../sass/player.sass";
 
 import template from "../template.pug";
-import { dispatchEvent } from "./modules/event";
+import { addEventListener, removeEventListener, dispatchEvent, dispatchWindowEvent } from "./modules/event";
 import ajax from "./modules/ajax";
 /// #if IE_SUPPORT
 import { schedule } from "./modules/task";
@@ -84,7 +84,7 @@ const colorthief = new ColorThief();
             player.classList.add("penguin-player__player-playlist");
         }
     });
-    window.addEventListener("penguininitialized", () => {
+    addEventListener("initialized", () => {
         // Volume setup
         setVolume(1);
         try {
@@ -94,6 +94,7 @@ const colorthief = new ColorThief();
             }
         } catch { print("Invalid volume storage"); }
     });
+    dispatchEvent("setup");
 }
 
 let lazyLoad: ILazyLoadInstance;
@@ -156,7 +157,7 @@ function initialize(list: any) {
         callback_loaded: onPlaylistSongLoaded
     });
     document.body.appendChild(el);
-    dispatchEvent("penguininitialized");
+    dispatchEvent("initialized");
     play(Math.floor(Math.random() * songs.length));
     print("Player ready");
 }
@@ -193,6 +194,8 @@ window.PPlayer = {
     initialize: (playlist) => {
         fetchPlaylist(playlist);
     }, play, pause, next, previous: prev,
+    addEventListener,
+    removeEventListener,
     get volume() {
         return (<HTMLAudioElement>el.querySelector(".penguin-player__audio")).volume;
     },
@@ -218,6 +221,8 @@ window.PPlayer = {
         return songs;
     }
 }
+
+dispatchWindowEvent("penguineventready");
 
 print("https://github.com/M4TEC/PenguinPlayer");
 print("Player loaded");
