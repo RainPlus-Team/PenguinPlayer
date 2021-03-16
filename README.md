@@ -46,7 +46,7 @@ Every API of the player is exposed in ```PPlayer``` object of ```window``` conte
 | playlist: ```Song[]``` | Current playlist |
 
 ## Events
-All events declared in this table needed to be listened by using ```PPlayer.addEventListener()``` unless there is a special note.
+All events declared in this table needed to be listened using ```PPlayer.addEventListener()``` unless there is a special note.
 | Event name | Description | Parameter |
 | ---------- | ----------- | --------- |
 | penguinready | Triggered when ```window.PPlayer``` context is ready. **This is triggered in ```window.addEventListener```** | *No parameter* |
