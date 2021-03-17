@@ -11,29 +11,23 @@ import "../sass/ie.sass";
 /// #endif
 
 import ColorThief from "colorthief";
-import LazyLoad, { ILazyLoadInstance } from "vanilla-lazyload";
 
-import { findHighContrastColor } from "./modules/color";
 import { print, formatTime } from "./modules/helper";
 import { songs, currentSong, play, pause, prev, next, setVolume, getCurrentTime } from "./controller";
-import { setCircleProgress, setThemeColor, rotateToggle } from "./ui";
+import { setCircleProgress, setThemeColor, rotateToggle, handlePlaylist } from "./ui";
 
 import "../sass/player.sass";
 
 import template from "../template.pug";
 import { addEventListener, removeEventListener, dispatchEvent, dispatchWindowEvent } from "./modules/event";
 import ajax from "./modules/ajax";
-/// #if IE_SUPPORT
-import { schedule } from "./modules/task";
-/// #endif
 
 let el = document.createElement("div");
 el.className = "penguin-player";
 el.innerHTML = template;
 
 export const container = el;
-
-const colorthief = new ColorThief();
+export const colorthief = new ColorThief();
 
 // Setup
 {
@@ -97,45 +91,6 @@ const colorthief = new ColorThief();
     dispatchEvent("setup");
 }
 
-let lazyLoad: ILazyLoadInstance;
-
-function createSongElement(song: Song, click: () => void): HTMLElement {
-    let songEl = document.createElement("div");
-    songEl.classList.add("penguin-player__player--playlist-song");
-    songEl.setAttribute("role", "listitem");
-    songEl.addEventListener("click", click);
-    let img = document.createElement("img");
-    img.classList.add("penguin-player__player--playlist-thumbnail");
-    img.classList.add("penguin-player--lazy");
-    img.crossOrigin = "anonymous";
-    img.setAttribute("data-src", song.thumbnail + "?param=36y36");
-    songEl.appendChild(img);
-    let title = document.createElement("h1");
-    title.classList.add("penguin-player__player--playlist-title");
-    title.textContent = song.name;
-    songEl.appendChild(title);
-    let artists = document.createElement("p");
-    artists.classList.add("penguin-player__player--playlist-artists");
-    artists.textContent = song.artists;
-    songEl.appendChild(artists);
-    return songEl;
-}
-
-function onPlaylistSongLoaded(el: HTMLElement) {
-    /// #if IE_SUPPORT
-    schedule(() => {
-    /// #endif
-        try{
-            let color = colorthief.getColor(el), palette = colorthief.getPalette(el);
-            let song = <HTMLElement>el.parentNode;
-            song.style.backgroundColor = `rgba(${color.join(", ")}, 0.6)`;
-            song.style.color = `rgb(${findHighContrastColor(color, palette).join(", ")})`;
-        } catch {}
-    /// #if IE_SUPPORT
-    });
-    /// #endif
-}
-
 function initialize(list: any) {
     print("Initializing...");
     if (document.querySelector(".penguin-player") != null) {
@@ -149,14 +104,7 @@ function initialize(list: any) {
         songs.push({ id: track.id, name: track.name, artists: artists.substring(2), album: track.al.name, thumbnail: track.al.picUrl.replace("http:", "https:"), duration: track.dt / 1000 });
     }
     print("Playlist processed");
-    let playlist: HTMLElement = el.querySelector(".penguin-player__player--playlist");
-    playlist = playlist.querySelector(".scroll-content") || playlist;
-    for (let i = 0;i<songs.length;i++) { playlist.appendChild(createSongElement(songs[i], () => {play(i);})); }
-    lazyLoad = new LazyLoad({
-        container: playlist,
-        elements_selector: ".penguin-player--lazy",
-        callback_loaded: onPlaylistSongLoaded
-    });
+    handlePlaylist(songs);
     document.body.appendChild(el);
     dispatchEvent("initialized");
     play(Math.floor(Math.random() * songs.length));

@@ -1,6 +1,4 @@
-export {};
-
-interface IMusicProvider {
+export interface IMusicProvider {
     readonly name: string
     getPlaylist(options: any): Promise<ISong[]>
     getLyric(song: ISong): Promise<ILyric>
@@ -15,18 +13,18 @@ interface IMusicProvider {
     destroy(): void
 }
 
-interface ISong {
+export interface ISong {
     platformID: string
     name: string
     artists: string[]
 }
 
-interface ILyric {
+export interface ILyric {
     lyric: ILyricLine
     translateLyric: ILyricLine
 }
 
-interface ILyricLine {
+export interface ILyricLine {
     time: number,
     value: string
 }
@@ -37,22 +35,22 @@ declare global {
     }
 }
 
-interface ISongLocation {
+export interface ISongLocation {
     playlistID: string
 
 }
 
-interface IPlaylist {
+export interface IPlaylist {
     platformID: string
     playlistID: string
     data: any
 }
 
-interface PenguinPlayerOptions {
+export interface PenguinPlayerOptions {
     playlists: string | (IPlaylist | string)[]
 }
 
-interface PenguinPlayerAPI {
+export interface PenguinPlayerAPI {
     initialize(options: PenguinPlayerOptions): Promise<boolean>
     play(song?: ISongLocation): void
     pause(): void
@@ -64,17 +62,4 @@ interface PenguinPlayerAPI {
     getProvider(id: string): IMusicProvider
     addProvider(id: string, provider: IMusicProvider, iconHtml?: string): Promise<boolean>
     addPlaylist(providerID: string, options: any): Promise<boolean>
-}
-
-// Netease //
-interface INeteaseTrialInfo {
-    startTime: number
-    endTime: number
-}
-
-interface NeteaseSong extends ISong {
-    id: string
-    duration: number
-    thumbnail: string
-    trialInfo?: INeteaseTrialInfo
 }

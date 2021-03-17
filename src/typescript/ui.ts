@@ -1,17 +1,22 @@
 import Scrollbar from "smooth-scrollbar";
+import LazyLoad, { ILazyLoadInstance } from "vanilla-lazyload";
 /// #if IE_SUPPORT
 const StackBlur = require('stackblur-canvas');
 /// #endif
 
 import { findHighContrastColor } from "./modules/color";
 import { addEventListener, dispatchEvent } from "./modules/event";
-import { container as el } from "./player";
+import { colorthief, container as el } from "./player";
 import Slider from "./modules/slider";
-import { currentSong, getRealDuration, songs, trialInfo } from "./controller";
+import { currentSong, getRealDuration, play, songs, trialInfo } from "./controller";
 import { isBlurSupported } from "./modules/helper";
+/// #if IE_SUPPORT
+import { schedule } from "./modules/task";
+/// #endif
 
 export let volumeSlider: Slider;
 export let progressSlider: Slider;
+export let lazyLoad: ILazyLoadInstance;
 
 addEventListener("setup", () => {
     let audio: HTMLAudioElement = el.querySelector(".penguin-player__audio");
@@ -123,4 +128,52 @@ export function resetRotate() {
     setTimeout(() => {
         thumbnail.style.animation = "";
     });
+}
+
+export function handlePlaylist(list: Song[]) {
+    let playlist: HTMLElement = el.querySelector(".penguin-player__player--playlist");
+    playlist = playlist.querySelector(".scroll-content") || playlist;
+    for (let i = 0;i<songs.length;i++) { playlist.appendChild(createSongElement(songs[i], () => {play(i);})); }
+    lazyLoad = new LazyLoad({
+        container: playlist,
+        elements_selector: ".penguin-player--lazy",
+        callback_loaded: onPlaylistSongLoaded
+    });
+}
+
+function createSongElement(song: Song, click: () => void): HTMLElement {
+    let songEl = document.createElement("div");
+    songEl.classList.add("penguin-player__player--playlist-song");
+    songEl.setAttribute("role", "listitem");
+    songEl.addEventListener("click", click);
+    let img = document.createElement("img");
+    img.classList.add("penguin-player__player--playlist-thumbnail");
+    img.classList.add("penguin-player--lazy");
+    img.crossOrigin = "anonymous";
+    img.setAttribute("data-src", song.thumbnail + "?param=36y36");
+    songEl.appendChild(img);
+    let title = document.createElement("h1");
+    title.classList.add("penguin-player__player--playlist-title");
+    title.textContent = song.name;
+    songEl.appendChild(title);
+    let artists = document.createElement("p");
+    artists.classList.add("penguin-player__player--playlist-artists");
+    artists.textContent = song.artists;
+    songEl.appendChild(artists);
+    return songEl;
+}
+
+function onPlaylistSongLoaded(el: HTMLElement) {
+    /// #if IE_SUPPORT
+    schedule(() => {
+    /// #endif
+        try{
+            let color = colorthief.getColor(el), palette = colorthief.getPalette(el);
+            let song = <HTMLElement>el.parentNode;
+            song.style.backgroundColor = `rgba(${color.join(", ")}, 0.6)`;
+            song.style.color = `rgb(${findHighContrastColor(color, palette).join(", ")})`;
+        } catch {}
+    /// #if IE_SUPPORT
+    });
+    /// #endif
 }
