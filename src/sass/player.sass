@@ -178,6 +178,22 @@
                         cursor: pointer
                         &:hover
                             background-color: rgba(0, 0, 0, 0.1)
+                .penguin-player__player--controls-playmode
+                    position: relative
+                    &::after
+                        content: attr(data-mode)
+                        text-align: center
+                        font-size: 12px
+                        position: absolute
+                        top: 100%
+                        left: 50%
+                        transform: translate(-50%)
+                        opacity: 0
+                        pointer-events: none
+                        transition: opacity .1s linear
+                        white-space: nowrap
+                    &:hover::after
+                        opacity: 1
                 .penguin-player__player--controls-volume
                     width: 30%
                     .penguin-player__player--controls-volume-bar

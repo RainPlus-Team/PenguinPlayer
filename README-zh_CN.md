@@ -23,7 +23,9 @@
 | 文件名 | 描述 |
 | ----- | ---- |
 | player.js | ```推荐``` 这个版本能在现代浏览器中使用 |
+| player.no-style.js | 不包含样式的版本 |
 | player.ie.js | 一个包含为```Internet Explorer```准备的兼容代码的版本，如果你使用IE请使用本版本 |
+| player.no-style.ie.js | ```player.no-style.js```和```player.ie.js```的缝合怪 |
 
 ## 接口
 播放器的所有接口都暴露在```window```上下文的```PPlayer```对象中

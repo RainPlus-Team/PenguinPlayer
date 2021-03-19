@@ -48,6 +48,9 @@ export interface IPlaylist {
 
 export interface PenguinPlayerOptions {
     playlists: string | (IPlaylist | string)[]
+    acrossPlaylists?: boolean
+    overrideVolume?: number
+    overridePlaymode?: "list" | "list-loop" | "single-loop" | "random"
 }
 
 export interface PenguinPlayerAPI {

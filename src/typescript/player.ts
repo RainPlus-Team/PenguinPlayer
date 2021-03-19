@@ -16,7 +16,9 @@ import { print, formatTime } from "./modules/helper";
 import { songs, currentSong, play, pause, prev, next, setVolume, getCurrentTime } from "./controller";
 import { setCircleProgress, setThemeColor, rotateToggle, handlePlaylist } from "./ui";
 
+/// #if !NO_STYLE
 import "../sass/player.sass";
+/// #endif
 
 import template from "../template.pug";
 import { addEventListener, removeEventListener, dispatchEvent, dispatchWindowEvent } from "./modules/event";
@@ -38,7 +40,6 @@ export const colorthief = new ColorThief();
     audio.addEventListener("pause", () => stateChange(false));
     audio.addEventListener("playing", updatePlayPauseButton);
     audio.addEventListener("pause", updatePlayPauseButton);
-    audio.addEventListener("ended", next);
     audio.addEventListener("timeupdate", function() {
         setCircleProgress(getCurrentTime() / songs[currentSong].duration * 100);
         (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-current")).textContent = formatTime(getCurrentTime());

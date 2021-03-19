@@ -6,10 +6,24 @@ import { progressSlider, resetRotate, setThemeColor, volumeSlider } from "./ui";
 import { addEventListener, dispatchEvent } from "./modules/event";
 import ajax from "./modules/ajax";
 
+import list from "../icons/list-play.svg";
+import listLoop from "../icons/list-loop.svg";
+import singleLoop from "../icons/single-loop.svg";
+import random from "../icons/random.svg";
+
 export let songs: Song[] = [];
 export let currentSong: number;
+export function mode(newMode?: "list" | "list-loop" | "single-loop" | "random"): "list" | "list-loop" | "single-loop" | "random" | undefined {
+    if (newMode) {
+        playmode = newMode;
+        localStorage.setItem("penguinplayer_playmode", playmode);
+        updatePlaymodeButton();
+    } else {
+        return playmode;
+    }
+}
 
-let errorAmount = 0, currentUrlReq: AjaxPromise;
+let playmode: "list" | "list-loop" | "single-loop" | "random" = "list-loop", errorAmount = 0, currentUrlReq: AjaxPromise;
 
 const playFailedHandler = () => {
     errorAmount++;
@@ -27,7 +41,40 @@ addEventListener("setup", () => {
     audio = (<HTMLAudioElement>el.querySelector(".penguin-player__audio"));
     audio.addEventListener("playing", () => errorAmount = 0);
     audio.addEventListener("error", playFailedHandler);
+    audio.addEventListener("ended", handleEnded);
+    let playmodeEl = <HTMLDivElement>el.querySelector(".penguin-player__player--controls-playmode");
+    playmodeEl.addEventListener("click", () => {
+        switch (playmode) {
+            case "list": mode("list-loop"); break;
+            case "list-loop": mode("single-loop"); break;
+            case "single-loop": mode("random"); break;
+            case "random": mode("list"); break;
+        }
+    });
+    if (localStorage.getItem("penguinplayer_playmode") !== null) {
+        mode(<"list" | "list-loop" | "single-loop" | "random">localStorage.getItem("penguinplayer_playmode"));
+    }
+    updatePlaymodeButton();
 });
+
+function handleEnded() {
+    switch (playmode) {
+        case "list": currentSong == songs.length-1 ? "" : next(); break;
+        case "list-loop": next(); break;
+        case "single-loop": play(); break;
+        case "random": play(Math.floor(songs.length * Math.random())); break;
+    }
+}
+
+function updatePlaymodeButton() {
+    let playmodeEl = <HTMLDivElement>el.querySelector(".penguin-player__player--controls-playmode");
+    switch (playmode) {
+        case "list": playmodeEl.innerHTML = list; playmodeEl.setAttribute("data-mode", "列表播放"); break;
+        case "list-loop": playmodeEl.innerHTML = listLoop; playmodeEl.setAttribute("data-mode", "列表循环"); break;
+        case "single-loop": playmodeEl.innerHTML = singleLoop; playmodeEl.setAttribute("data-mode", "单曲循环"); break;
+        case "random": playmodeEl.innerHTML = random; playmodeEl.setAttribute("data-mode", "随机播放"); break;
+    }
+}
 
 function playTrack(track: any) {
     progressSlider.maxValue = progressSlider.minValue = null;

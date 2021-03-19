@@ -61,8 +61,8 @@ jobs:
 
     strategy:
       matrix:
+        flags: ["", "no-style", "ie.no-style"]
         include:
-          - flags: ""
           - flags: "ie"
             publish: "yes" # Only publish the version that has most functions
 
