@@ -29,7 +29,7 @@ module.exports = env => {
     const compileOptions = {
         PRODUCTION: mode === "production",
         IE_SUPPORT: ENABLE_IE_SUPPORT,
-        NO_STYLE: typeof enabledFlags.indexOf("no-style") === -1
+        NO_STYLE: enabledFlags.indexOf("no-style") !== -1
     }
     // Compile targets
     let targets = {
