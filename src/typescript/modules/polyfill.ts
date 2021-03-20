@@ -20,6 +20,10 @@ if (!Element.prototype.closest) {
     };
 }
 
+if (typeof NodeList !== "undefined" && NodeList.prototype && !NodeList.prototype.forEach) {
+    (<any>NodeList).prototype.forEach = Array.prototype.forEach;
+}
+
 // Required by Smooth Scrollbar
 import 'core-js/es/map';
 import 'core-js/es/set';

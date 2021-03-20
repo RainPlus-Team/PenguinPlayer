@@ -90,6 +90,7 @@ jobs:
           cp demo/* public
           mkdir public/dist
           cp -R dist public
+          echo pplayer.js.org > public/CNAME
       
       - name: Read Release URL
         if: ${{ steps.downloadrel.outcome == 'success' }}
