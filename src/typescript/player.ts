@@ -7,7 +7,9 @@ declare global {
 
 /// #if IE_SUPPORT
 import "./modules/polyfill";
+/// #if !NO_STYLE
 import "../sass/ie.sass";
+/// #endif
 /// #endif
 
 import ColorThief from "colorthief";
