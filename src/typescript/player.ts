@@ -33,6 +33,8 @@ el.innerHTML = template;
 export const container = el;
 export const colorthief = new ColorThief();
 
+export let playerOptions: PenguinPlayerOptions;
+
 // Setup
 {
     const stateChange = (state: boolean) => {rotateToggle(state);(<HTMLDivElement>el.querySelector(".penguin-player__lyric")).style.opacity = state ? "1" : "0";}
@@ -84,17 +86,28 @@ export const colorthief = new ColorThief();
     addEventListener("initialized", () => {
         // Volume setup
         setVolume(1);
-        try {
-            if (localStorage.getItem("penguinplayer_volume") !== null) {
-                let volume = parseInt(localStorage.getItem("penguinplayer_volume"));
-                setVolume(volume);
-            }
-        } catch { print("Invalid volume storage"); }
+        if (typeof playerOptions.overrideVolume === "number") {
+            setVolume(playerOptions.overrideVolume);
+        } else {
+            try {
+                if (localStorage.getItem("penguinplayer_volume") !== null) {
+                    let volume = parseInt(localStorage.getItem("penguinplayer_volume"));
+                    setVolume(volume);
+                }
+            } catch { print("Invalid volume storage"); }
+        }
     });
     dispatchEvent("setup");
 }
 
-function initialize(list: any) {
+function initialize(options: string | PenguinPlayerOptions) {
+    playerOptions = typeof options === "string" ? {
+        playlist: options
+    } : options;
+    fetchPlaylist(playerOptions.playlist);
+}
+
+function initializeWithPlaylist(list: any) {
     print("Initializing...");
     if (document.querySelector(".penguin-player") != null) {
         print("Initialize cancelled! Already initialized");
@@ -115,13 +128,14 @@ function initialize(list: any) {
 }
 
 function fetchPlaylist(id: string) {
+    print("Fetching playlist...");
     ajax(`https://gcm.tenmahw.com/resolve/playlist?id=${id}`).send().then((result: AjaxResponse) => {
         if (result.data == null || result.data.code != 200) {
             print("Cannot fetch playlist");
             setTimeout(fetchPlaylist, 3000);
         } else {
             try {
-                initialize(result.data.playlist);
+                initializeWithPlaylist(result.data.playlist);
             } catch(e) {console.error(e);}
         }
     }).catch(() => {
@@ -143,9 +157,7 @@ function updatePlayPauseButton() {
 }
 
 window.PPlayer = {
-    initialize: (playlist) => {
-        fetchPlaylist(playlist);
-    }, play, pause, next, previous: prev,
+    initialize, play, pause, next, previous: prev,
     addEventListener,
     removeEventListener,
     get volume() {
@@ -180,5 +192,5 @@ print("https://github.com/M4TEC/PenguinPlayer");
 print("Player loaded");
 if (typeof window.penguinplayer_id === "string") {
     print("Auto initializing...");
-    window.PPlayer.initialize(window.penguinplayer_id);
+    initialize(window.penguinplayer_id);
 }

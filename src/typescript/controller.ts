@@ -11,19 +11,26 @@ import listLoop from "../icons/list-loop.svg";
 import singleLoop from "../icons/single-loop.svg";
 import random from "../icons/random.svg";
 
+export enum Playmodes {
+    List,
+    ListLoop,
+    SingleLoop,
+    Random
+}
+
 export let songs: Song[] = [];
 export let currentSong: number;
-export function mode(newMode?: "list" | "list-loop" | "single-loop" | "random"): "list" | "list-loop" | "single-loop" | "random" | undefined {
-    if (newMode) {
+export function mode(newMode?: Playmodes): Playmodes | undefined {
+    if (newMode !== undefined) {
         playmode = newMode;
-        localStorage.setItem("penguinplayer_playmode", playmode);
+        localStorage.setItem("penguinplayer_playmode", playmode.toString());
         updatePlaymodeButton();
     } else {
         return playmode;
     }
 }
 
-let playmode: "list" | "list-loop" | "single-loop" | "random" = "list-loop", errorAmount = 0, currentUrlReq: AjaxPromise;
+let playmode: Playmodes = Playmodes.ListLoop, errorAmount = 0, currentUrlReq: AjaxPromise;
 
 const playFailedHandler = () => {
     errorAmount++;
@@ -44,35 +51,30 @@ addEventListener("setup", () => {
     audio.addEventListener("ended", handleEnded);
     let playmodeEl = <HTMLDivElement>el.querySelector(".penguin-player__player--controls-playmode");
     playmodeEl.addEventListener("click", () => {
-        switch (playmode) {
-            case "list": mode("list-loop"); break;
-            case "list-loop": mode("single-loop"); break;
-            case "single-loop": mode("random"); break;
-            case "random": mode("list"); break;
-        }
+        mode(Object.values(Playmodes).includes(playmode + 1) ? playmode + 1 : 0);
     });
-    if (localStorage.getItem("penguinplayer_playmode") !== null) {
-        mode(<"list" | "list-loop" | "single-loop" | "random">localStorage.getItem("penguinplayer_playmode"));
+    if (localStorage.getItem("penguinplayer_playmode") !== null && !isNaN(parseInt(localStorage.getItem("penguinplayer_playmode")))) {
+        mode(parseInt(localStorage.getItem("penguinplayer_playmode")));
     }
     updatePlaymodeButton();
 });
 
 function handleEnded() {
     switch (playmode) {
-        case "list": currentSong == songs.length-1 ? "" : next(); break;
-        case "list-loop": next(); break;
-        case "single-loop": play(); break;
-        case "random": play(Math.floor(songs.length * Math.random())); break;
+        case Playmodes.List: currentSong == songs.length-1 ? "" : next(); break;
+        case Playmodes.ListLoop: next(); break;
+        case Playmodes.SingleLoop: play(); break;
+        case Playmodes.Random: play(Math.floor(songs.length * Math.random())); break;
     }
 }
 
 function updatePlaymodeButton() {
     let playmodeEl = <HTMLDivElement>el.querySelector(".penguin-player__player--controls-playmode");
     switch (playmode) {
-        case "list": playmodeEl.innerHTML = list; playmodeEl.setAttribute("data-mode", "列表播放"); break;
-        case "list-loop": playmodeEl.innerHTML = listLoop; playmodeEl.setAttribute("data-mode", "列表循环"); break;
-        case "single-loop": playmodeEl.innerHTML = singleLoop; playmodeEl.setAttribute("data-mode", "单曲循环"); break;
-        case "random": playmodeEl.innerHTML = random; playmodeEl.setAttribute("data-mode", "随机播放"); break;
+        case Playmodes.List: playmodeEl.innerHTML = list; playmodeEl.setAttribute("data-mode", "列表播放"); break;
+        case Playmodes.ListLoop: playmodeEl.innerHTML = listLoop; playmodeEl.setAttribute("data-mode", "列表循环"); break;
+        case Playmodes.SingleLoop: playmodeEl.innerHTML = singleLoop; playmodeEl.setAttribute("data-mode", "单曲循环"); break;
+        case Playmodes.Random: playmodeEl.innerHTML = random; playmodeEl.setAttribute("data-mode", "随机播放"); break;
     }
 }
 
