@@ -5,14 +5,55 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Penguin Player</title>
+    <style>
+        .control-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            padding: 10px;
+            border-radius: 6px;
+            box-shadow: 1px -1px 3px #000;
+
+        }
+        .control-panel > h1, .control-panel > p {
+            margin: 0;
+        }
+        .control-panel > h1 {
+            font-size: 24px;
+        }
+        @media only screen and (max-width: 700px) {
+            .control-panel {
+                left: 10px;
+            }
+        }
+    </style>
 </head>
 <body style="background: url(background.jpg) no-repeat;background-size: cover;background-attachment: fixed;">
+    <div class="control-panel">
+        <h1>Penguin Player Demo Page / 演示页</h1>
+        <p><a href="https://github.com/M4TEC/PenguinPlayer">GitHub repository / GitHub库</a></p>
+        <form method="get">
+            <input type="text" name="playlist" id="playlist" placeholder="Playlist ID / 歌单ID">
+            <button type="submit">Use this / 使用此ID</button>
+        </form>
+    </div>
     <script>
         window.penguinplayer_id = "2717890285";
         var match = location.href.match(/playlist=([0-9]+)/);
         if (match != null) {
             window.penguinplayer_id = match[1];
+            document.querySelector("#playlist").value = window.penguinplayer_id;
         }
+        window.addEventListener("penguinplayerapiready", () => {
+            window.PPlayer.addEventListener("themecolorchange", (color, foreground) => {
+                console.log("color changed");
+                var el = document.querySelector(".control-panel");
+                el.style.backgroundColor = "rgba(" + color.join(", ") + ", 0.5)";
+                el.style.color = "rgb(" + foreground.join(", ") + ")";
+            });
+        });
     </script>
     <script src="dist/player.js" onerror="var s = document.createElement('script');s.src = '../dist/player.js';document.body.appendChild(s);this.parentNode.removeChild(this);"></script>
 </body>
