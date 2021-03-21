@@ -1,5 +1,5 @@
 import { formatTime, print } from "./modules/helper";
-import { container as el } from "./player";
+import { container as el, playerOptions } from "./player";
 import { setSong as setMediaSession } from "./modules/mediaSession";
 import { getLyric } from "./lyric";
 import { progressSlider, resetRotate, setThemeColor, volumeSlider } from "./ui";
@@ -53,10 +53,14 @@ addEventListener("setup", () => {
     playmodeEl.addEventListener("click", () => {
         mode(Object.values(Playmodes).includes(playmode + 1) ? playmode + 1 : 0);
     });
-    if (localStorage.getItem("penguinplayer_playmode") !== null && !isNaN(parseInt(localStorage.getItem("penguinplayer_playmode")))) {
-        mode(parseInt(localStorage.getItem("penguinplayer_playmode")));
-    }
-    updatePlaymodeButton();
+    addEventListener("initialized", () => {
+        if (Object.values(Playmodes).includes(playerOptions.overridePlaymode)) {
+            mode(playerOptions.overridePlaymode);
+        } else if (localStorage.getItem("penguinplayer_playmode") !== null && !isNaN(parseInt(localStorage.getItem("penguinplayer_playmode")))) {
+            mode(parseInt(localStorage.getItem("penguinplayer_playmode")));
+        }
+        updatePlaymodeButton();
+    });
 });
 
 function handleEnded() {

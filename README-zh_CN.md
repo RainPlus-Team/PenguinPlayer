@@ -19,6 +19,18 @@
 
 然后只需要将你刚刚下载的JavaScript文件引入到你的页面里！
 
+### 高级用法
+你可以用一个更复杂的方法来使用它。
+
+通过```window.PPlayer.initialize(options: PenguinPlayerOptions)```来初始化。
+
+下面的表格包含所有可用选项。
+| 属性 | 描述 |
+| ---- | ---- |
+| playlist: ```string``` | 播放列表ID |
+| overrideVolume?: ```number``` | 使用提供的音量而不使用默认或已保存的 |
+| overridePlaymode?: ```Playmodes``` | 使用提供的播放模式而不使用默认或已保存的 |
+
 ## 版本
 | 文件名 | 描述 |
 | ----- | ---- |
@@ -49,11 +61,11 @@
 所有在此表格内声明的事件除特殊声明外都需要通过```PPlayer.addEventListener()```来监听。
 | 事件名称 | 描述 | 参数 |
 | ---------- | ----------- | --------- |
-| penguinready | 在```window.PPlayer```上下文可用时被触发。 **此事件在```window.addEventListener```中监听** | *无参数* |
+| penguinplayerapiready | 在```window.PPlayer```上下文可用时被触发。 **此事件在```window.addEventListener```中监听** | *无参数* |
 | setup | 在播放器开始准备时触发 | *无参数* |
 | initialized | 在播放器初始化完毕时触发 | *无参数* |
 | songchange | 在音乐改变时触发 | song: ```Song``` |
-| themecolorchange | 在主题颜色改变时触发 | color: ```Color```, palette: ```Color[]``` |
+| themecolorchange | 在主题颜色改变时触发 | color: ```Color```, foregroundColor: ```Color```, whiteForgroundColor: ```Color```, palette: ```Color[]``` |
 
 ### 提示
 如果你正在查看预览页面，你可以通过在网址后面添加```?playlist=[你的歌单ID]```来使用你自己的歌单。

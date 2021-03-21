@@ -86,15 +86,8 @@ interface PenguinPlayerAPI {
     readonly playlist: Song[]
 }
 
-declare enum Playmodes {
-    List,
-    ListLoop,
-    SingleLoop,
-    Random
-}
-
 interface PenguinPlayerOptions {
     playlist: string
     overrideVolume?: number
-    overridePlaymode?: Playmodes
+    overridePlaymode?: import("./controller").Playmodes
 }

@@ -110,7 +110,7 @@ export function setThemeColor(color: Color, palette: Color[]) {
     el.querySelectorAll(".penguin-player__player--progress-inner, .penguin-player__player--progress-dot, .penguin-player__player--controls-volume-inner, .penguin-player__player--controls-volume-dot").forEach((el) => {
         (<HTMLDivElement>el).style.backgroundColor = foregroundRgb;
     });
-    dispatchEvent("themecolorchange", { color, palette });
+    dispatchEvent("themecolorchange", color, findHighContrastColor(color, palette), findHighContrastColor([255, 255, 255], palette), findHighContrastColor([0, 0, 0], palette), palette);
 }
 
 export function rotateToggle(rotate: boolean) {

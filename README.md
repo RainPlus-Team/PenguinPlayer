@@ -21,6 +21,18 @@ Or you can initialize it anytime later by calling ```window.PPlayer.initialize("
 
 Then just include the JavaScript file that you just downloaded inside your page!
 
+### Advanced usage
+You can use it with a more complex way.
+
+Initialize it with ```window.PPlayer.initialize(options: PenguinPlayerOptions)```.
+
+Following table contains all available options.
+| Property | Description |
+| -------- | ----------- |
+| playlist: ```string``` | Playlist ID |
+| overrideVolume?: ```number``` | Use provided volume instead using default or saved one |
+| overridePlaymode?: ```Playmodes``` | Use provided playmode instead using default or saved one |
+
 ## Versions
 | File Name | Description |
 | --------- | ----------- |
@@ -51,11 +63,11 @@ Every API of the player is exposed in ```PPlayer``` object of ```window``` conte
 All events declared in this table needed to be listened using ```PPlayer.addEventListener()``` unless there is a special note.
 | Event name | Description | Parameter |
 | ---------- | ----------- | --------- |
-| penguinready | Triggered when ```window.PPlayer``` context is ready. **This is triggered in ```window.addEventListener```** | *No parameter* |
+| penguinplayerapiready | Triggered when ```window.PPlayer``` context is ready. **This is triggered in ```window.addEventListener```** | *No parameter* |
 | setup | Triggered when the player starts setting up | *No parameter* |
 | initialized | Trigger when the player is initialized | *No parameter* |
 | songchange | Triggered when the song has changed | song: ```Song``` |
-| themecolorchange | Trigger when the theme color has changed | color: ```Color```, palette: ```Color[]``` |
+| themecolorchange | Trigger when the theme color has changed | color: ```Color```, foregroundColor: ```Color```, whiteForgroundColor: ```Color```, palette: ```Color[]``` |
 
 ### Note
 If you are visiting the demo page, you can use your own playlist by append ```?playlist=[YOUR PLAYLIST ID HERE]``` after the URL

@@ -186,7 +186,7 @@ window.PPlayer = {
     }
 }
 
-dispatchWindowEvent("penguineventready");
+dispatchWindowEvent("penguinplayerapiready");
 
 print("https://github.com/M4TEC/PenguinPlayer");
 print("Player loaded");
