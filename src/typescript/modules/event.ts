@@ -2,7 +2,6 @@ let events = {};
 
 export function addEventListener(name: string, handler: Function) {
     events[name] = events[name]?.concat([handler]) || [handler];
-    console.log("handler added", events);
 }
 
 export function removeEventListener(name: string, handler: Function) {
@@ -12,7 +11,6 @@ export function removeEventListener(name: string, handler: Function) {
 }
 
 export function dispatchEvent(name: string, ...parameters: any) {
-    console.log("event fired", name);
     for (let handler of (events[name] || [])) {
         try {
             handler.apply(null, parameters);

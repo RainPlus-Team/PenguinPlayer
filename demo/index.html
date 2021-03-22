@@ -69,7 +69,6 @@
         }
         window.addEventListener("penguinplayerapiready", () => {
             window.PPlayer.addEventListener("themecolorchange", (color, foreground) => {
-                console.log("color changed");
                 var el = document.querySelector(".control-panel");
                 el.style.backgroundColor = "rgba(" + color.join(", ") + ", 0.5)";
                 el.style.color = "rgb(" + foreground.join(", ") + ")";
