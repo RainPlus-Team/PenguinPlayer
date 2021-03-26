@@ -18,60 +18,6 @@ export let volumeSlider: Slider;
 export let progressSlider: Slider;
 export let lazyLoad: ILazyLoadInstance;
 
-addEventListener("setup", () => {
-    let audio: HTMLAudioElement = el.querySelector(".penguin-player__audio");
-    // Progress bar setup
-    let playerOldState: boolean;
-    progressSlider = new Slider({
-        activeSelector: ".penguin-player__player--progress",
-        barSelector: ".penguin-player__player--progress-bar",
-        innerSelector: ".penguin-player__player--progress-inner",
-        value: 0
-    });
-    progressSlider.addEventHandler("begindrag", () => {
-        playerOldState = audio.paused;
-        audio.pause();
-    });
-    progressSlider.addEventHandler("enddrag", () => {
-        if (!playerOldState) {audio.play();}
-    });
-    progressSlider.addEventHandler("valuechange", (value: number) => {
-        let fullTime = songs[currentSong].duration * value;
-        if (trialInfo?.start > fullTime || trialInfo?.end < fullTime) { // TODO: Fix slider range problem
-            return true;
-        } else {
-            audio.currentTime = getRealDuration() * value;
-        }
-    });
-    // Volume bar setup
-    volumeSlider = new Slider({
-        activeSelector: ".penguin-player__player--controls-volume",
-        barSelector: ".penguin-player__player--controls-volume-bar",
-        innerSelector: ".penguin-player__player--controls-volume-inner"
-    });
-    volumeSlider.addEventHandler("valuechange", (value: number) => {
-        audio.volume = value;
-        localStorage.setItem("penguinplayer_volume", value.toString());
-    });
-    // Lyric overlay setup
-    window.addEventListener("mousemove", (e) => {
-        if (e.pageY >= window.innerHeight - 60) {
-            el.querySelector(".penguin-player__lyric").classList.add("penguin-player__lyric-hover");
-        } else {
-            el.querySelector(".penguin-player__lyric").classList.remove("penguin-player__lyric-hover");
-        }
-    });
-    Scrollbar.init(el.querySelector(".penguin-player__player--playlist"), { damping: 0.15 });
-    /// #if IE_SUPPORT
-    // IE 11 Blur Fallback
-    if (!isBlurSupported()) {
-        let cel = document.createElement("canvas");
-        cel.classList.add("penguin-player__player--canvas-background");
-        el.querySelector(".penguin-player__player").appendChild(cel);
-    }
-    /// #endif
-});
-
 export function setCircleProgress(progress: number) {
     let prog = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress"));
     let left = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-left"));
@@ -177,3 +123,55 @@ function onPlaylistSongLoaded(el: HTMLElement) {
     });
     /// #endif
 }
+
+addEventListener("setup", () => {
+    let audio: HTMLAudioElement = el.querySelector(".penguin-player__audio");
+    // Progress bar setup
+    let playerOldState: boolean;
+    progressSlider = new Slider({
+        activeSelector: ".penguin-player__player--progress",
+        barSelector: ".penguin-player__player--progress-bar",
+        innerSelector: ".penguin-player__player--progress-inner",
+        value: 0
+    });
+    progressSlider.addEventHandler("begindrag", () => {
+        playerOldState = audio.paused;
+        audio.pause();
+    });
+    progressSlider.addEventHandler("enddrag", () => {
+        if (!playerOldState) {audio.play();}
+    });
+    progressSlider.addEventHandler("valuechange", (value: number) => {
+        let songDura = songs[currentSong].duration;
+        let fullTime = songDura * value;
+        audio.currentTime = fullTime - (trialInfo?.start || 0);
+        return value < trialInfo?.start / songDura || value > trialInfo?.end / songDura;
+    });
+    // Volume bar setup
+    volumeSlider = new Slider({
+        activeSelector: ".penguin-player__player--controls-volume",
+        barSelector: ".penguin-player__player--controls-volume-bar",
+        innerSelector: ".penguin-player__player--controls-volume-inner"
+    });
+    volumeSlider.addEventHandler("valuechange", (value: number) => {
+        audio.volume = value;
+        localStorage.setItem("penguinplayer_volume", value.toString());
+    });
+    // Lyric overlay setup
+    window.addEventListener("mousemove", (e) => {
+        if (e.pageY >= window.innerHeight - 60) {
+            el.querySelector(".penguin-player__lyric").classList.add("penguin-player__lyric-hover");
+        } else {
+            el.querySelector(".penguin-player__lyric").classList.remove("penguin-player__lyric-hover");
+        }
+    });
+    Scrollbar.init(el.querySelector(".penguin-player__player--playlist"), { damping: 0.15 });
+    /// #if IE_SUPPORT
+    // IE 11 Blur Fallback
+    if (!isBlurSupported()) {
+        let cel = document.createElement("canvas");
+        cel.classList.add("penguin-player__player--canvas-background");
+        el.querySelector(".penguin-player__player").appendChild(cel);
+    }
+    /// #endif
+});

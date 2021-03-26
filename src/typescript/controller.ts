@@ -45,7 +45,7 @@ const playFailedHandler = () => {
 let audio: HTMLAudioElement;
 
 addEventListener("setup", () => {
-    audio = (<HTMLAudioElement>el.querySelector(".penguin-player__audio"));
+    audio = el.querySelector(".penguin-player__audio");
     audio.addEventListener("playing", () => errorAmount = 0);
     audio.addEventListener("error", playFailedHandler);
     audio.addEventListener("ended", handleEnded);
@@ -86,8 +86,8 @@ function playTrack(track: any) {
     progressSlider.maxValue = progressSlider.minValue = null;
     if (track.freeTrialInfo) {
         trialInfo = track.freeTrialInfo;
-        progressSlider.minValue = trialInfo.start / Math.floor(songs[currentSong].duration);
-        progressSlider.maxValue = trialInfo.end / songs[currentSong].duration;
+        //progressSlider.minValue = trialInfo.start / Math.floor(songs[currentSong].duration);
+        //progressSlider.maxValue = trialInfo.end / songs[currentSong].duration;
     }
     audio.src = track.url.replace("http:", "https:");
     play();
@@ -110,7 +110,7 @@ export function getCurrentTime(): number {
 }
 
 export function getRealDuration(): number {
-    return (trialInfo?.end - trialInfo?.start) || songs[currentSong].duration;
+    return audio.duration;
 }
 
 export function play(id?: number) {
