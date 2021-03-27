@@ -15,13 +15,34 @@
             padding: 10px;
             border-radius: 6px;
             box-shadow: 1px -1px 3px #000;
-
         }
         .control-panel > h1, .control-panel > p {
             margin: 0;
         }
         .control-panel > h1 {
             font-size: 24px;
+        }
+        .control-panel a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .control-panel a::before {
+            content: "> ";
+        }
+        .control-panel a::after {
+            content: " <";
+        }
+        .control-panel a:hover {
+            text-decoration: underline;
+        }
+        .control-panel .id-form {
+            width: 100%;
+        }
+        .control-panel .id-form > input, .control-panel .id-form > button {
+            margin: 3px;
+            width: 100%;
+            box-sizing: border-box;
+            outline: none;
         }
         @media only screen and (max-width: 700px) {
             .control-panel {
@@ -34,7 +55,7 @@
     <div class="control-panel">
         <h1>Penguin Player Demo Page / 演示页</h1>
         <p><a href="https://github.com/M4TEC/PenguinPlayer">GitHub repository / GitHub库</a></p>
-        <form method="get">
+        <form class="id-form" method="get">
             <input type="text" name="playlist" id="playlist" placeholder="Playlist ID / 歌单ID">
             <button type="submit">Use this / 使用此ID</button>
         </form>
@@ -46,9 +67,8 @@
             window.penguinplayer_id = match[1];
             document.querySelector("#playlist").value = window.penguinplayer_id;
         }
-        window.addEventListener("penguinplayerapiready", () => {
-            window.PPlayer.addEventListener("themecolorchange", (color, foreground) => {
-                console.log("color changed");
+        window.addEventListener("penguinplayerapiready", function() {
+            window.PPlayer.addEventListener("themecolorchange", function(color, foreground) {
                 var el = document.querySelector(".control-panel");
                 el.style.backgroundColor = "rgba(" + color.join(", ") + ", 0.5)";
                 el.style.color = "rgb(" + foreground.join(", ") + ")";
