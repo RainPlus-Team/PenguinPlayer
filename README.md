@@ -12,6 +12,12 @@
 
 A simple player based on Netease Cloud Music, and it only needs to load ONE JavaScript file!
 
+## Features
+- Mobile / touch support
+- Internet Explorer 10+ support
+- Simple, beautiful & powerful
+- Easy to use
+
 ## Usage
 First, download the [latest release](https://github.com/M4TEC/PenguinPlayer/releases/latest) of the player from Releases.
 

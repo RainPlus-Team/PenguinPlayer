@@ -1,6 +1,4 @@
-let running = 0;
-
-let waiting = [];
+let running = 0, waiting = [];
 
 function runTask(func: () => void, delay: number) {
     setTimeout(() => {

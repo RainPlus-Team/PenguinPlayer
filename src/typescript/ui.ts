@@ -8,9 +8,9 @@ import { findHighContrastColor } from "./modules/color";
 import { addEventListener, dispatchEvent } from "./modules/event";
 import { colorthief, container as el } from "./player";
 import Slider from "./modules/slider";
-import { currentSong, getRealDuration, play, songs, trialInfo } from "./controller";
-import { isBlurSupported } from "./modules/helper";
+import { currentSong, play, songs, trialInfo } from "./controller";
 /// #if IE_SUPPORT
+import { isBlurSupported } from "./modules/helper";
 import { schedule } from "./modules/task";
 /// #endif
 
@@ -40,7 +40,7 @@ export function setThemeColor(color: Color, palette: Color[]) {
         let img = new Image(window.innerWidth / 4, window.innerHeight / 2);
         img.crossOrigin = "anonymous";
         img.src = songs[currentSong].thumbnail + `?param=${img.width}y${img.height}`;
-        img.addEventListener("load", () => StackBlur.image(img, <HTMLCanvasElement>el.querySelector(".penguin-player__player--canvas-background"), 30));
+        img.addEventListener("load", () => StackBlur.image(img, el.querySelector(".penguin-player__player--canvas-background"), 30));
     }
     /// #endif
     let foregroundRgb = `rgb(${findHighContrastColor(color, palette).join(", ")})`;
@@ -79,10 +79,11 @@ export function resetRotate() {
 export function handlePlaylist(list: Song[]) {
     let playlist: HTMLElement = el.querySelector(".penguin-player__player--playlist");
     playlist = playlist.querySelector(".scroll-content") || playlist;
-    for (let i = 0;i<songs.length;i++) { playlist.appendChild(createSongElement(songs[i], () => {play(i);})); }
+    for (let i = 0;i<list.length;i++) { playlist.appendChild(createSongElement(list[i], () => {play(i);})); }
     lazyLoad = new LazyLoad({
         container: playlist,
         elements_selector: ".penguin-player--lazy",
+        unobserve_entered: true,
         callback_loaded: onPlaylistSongLoaded
     });
 }
@@ -111,9 +112,9 @@ function createSongElement(song: Song, click: () => void): HTMLElement {
 
 function onPlaylistSongLoaded(el: HTMLElement) {
     /// #if IE_SUPPORT
-    schedule(() => {
+    ((<any>window.document).documentMode ? schedule : (func: Function) => func())(() => {
     /// #endif
-        try{
+        try {
             let color = colorthief.getColor(el), palette = colorthief.getPalette(el);
             let song = <HTMLElement>el.parentNode;
             song.style.backgroundColor = `rgba(${color.join(", ")}, 0.6)`;

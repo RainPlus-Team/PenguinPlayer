@@ -244,11 +244,14 @@
             .penguin-player__player--playlist-song
                 position: relative
                 height: 36px
-                padding-left: 40px
+                padding: 5px
+                padding-left: 45px
                 cursor: pointer
+                transition: transform .1s ease-in-out
                 .penguin-player__player--playlist-thumbnail
                     position: absolute
-                    left: 0
+                    left: 5px
+                    border-radius: 50%
                 .penguin-player__player--playlist-title, .penguin-player__player--playlist-artists
                     white-space: nowrap
                     overflow: hidden
@@ -259,23 +262,11 @@
                     font-size: 16px
                 .penguin-player__player--playlist-artists
                     font-size: 12px
-                &::after
-                    content: ''
-                    display: block
-                    position: absolute
-                    top: 0
-                    right: 0
-                    bottom: 0
-                    background: linear-gradient(to left, rgba(0, 0, 0, 0.3), transparent)
-                    width: 0
-                    transition: width .3s linear
-                    z-index: 2
-                    pointer-events: none
-                &:hover::after
-                    width: 30%
+                &:hover
+                    transform: translate(5px)
         &.penguin-player__player-full, &:hover
             min-width: 300px
-            width: #{variables.$expand-width}
+            width: variables.$expand-width
             &+.penguin-player__lyric
                 padding-left: calc(20px + min(calc(100vw - 20px), max(#{variables.$expand-width}, 300px)))
         &.penguin-player__player-full

@@ -10,6 +10,12 @@
 
 一个基于网易云音乐的简易播放器，而且它仅仅是**一个**JavaScript文件！
 
+## 亮点
+- 移动/触控设备支持
+- Internet Explorer 10+支持
+- 简洁，好看还好用
+- 使用简单
+
 ## 用法
 首先，下载[最新版本](https://github.com/M4TEC/PenguinPlayer/releases/latest/download/player.js)的播放器。
 

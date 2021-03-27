@@ -1,6 +1,8 @@
 // Polyfills for Internet Explorer
 import "core-js/features/promise";
 import "core-js/features/number/is-integer";
+import "core-js/features/object/values";
+import "core-js/features/array/includes";
 
 if (!Element.prototype.matches) {
     Element.prototype.matches =
@@ -30,3 +32,6 @@ import 'core-js/es/set';
 import 'core-js/es/weak-map';
 import 'core-js/es/array/from';
 import 'core-js/es/object/assign';
+
+// Required by Lazy Load
+import 'intersection-observer';

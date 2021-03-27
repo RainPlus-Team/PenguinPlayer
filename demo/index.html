@@ -67,8 +67,8 @@
             window.penguinplayer_id = match[1];
             document.querySelector("#playlist").value = window.penguinplayer_id;
         }
-        window.addEventListener("penguinplayerapiready", () => {
-            window.PPlayer.addEventListener("themecolorchange", (color, foreground) => {
+        window.addEventListener("penguinplayerapiready", function() {
+            window.PPlayer.addEventListener("themecolorchange", function(color, foreground) {
                 var el = document.querySelector(".control-panel");
                 el.style.backgroundColor = "rgba(" + color.join(", ") + ", 0.5)";
                 el.style.color = "rgb(" + foreground.join(", ") + ")";
