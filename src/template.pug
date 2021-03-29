@@ -12,7 +12,10 @@ audio.penguin-player__audio
                 .penguin-player__player--thumbnail-progress-left
                 .penguin-player__player--thumbnail-progress-right
         .penguin-player__player--expanded-content
-            h1.penguin-player__player--name
+            h1.penguin-player__player--title
+                span.penguin-player__player--trial-icon
+                    include:svgo icons/trial.svg
+                span.penguin-player__player--name
             p.penguin-player__player--artists
             button.penguin-player__player--full-toggle(role="button")
                 .penguin-player__player--full-toggle-menu

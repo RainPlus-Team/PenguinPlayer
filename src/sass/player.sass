@@ -93,14 +93,18 @@
             .penguin-player__player--expanded-content
                 padding-right: variables.$thumbnail-size
                 position: relative
-                .penguin-player__player--name, .penguin-player__player--artists
+                .penguin-player__player--title, .penguin-player__player--artists
                     margin: 0
                     overflow: hidden
                     white-space: nowrap
                     text-overflow: ellipsis
                     line-height: 24px
-                .penguin-player__player--name
+                .penguin-player__player--title
                     font-size: 24px
+                    .penguin-player__player--trial-icon
+                        display: none
+                        svg
+                            vertical-align: middle
                 .penguin-player__player--artists
                     font-size: 12px
                 .penguin-player__player--full-toggle

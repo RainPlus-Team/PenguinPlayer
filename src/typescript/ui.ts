@@ -8,14 +8,14 @@ import { findHighContrastColor } from "./modules/color";
 import { addEventListener, dispatchEvent } from "./modules/event";
 import { colorthief, container as el } from "./player";
 import Slider from "./modules/slider";
-import { currentSong, play, songs, trialInfo } from "./controller";
+import { currentSong, getCurrentTime, next, play, prev, songs, trialInfo } from "./controller";
+import { formatTime } from "./modules/helper";
 /// #if IE_SUPPORT
 import { isBlurSupported } from "./modules/helper";
 import { schedule } from "./modules/task";
 /// #endif
 
-export let volumeSlider: Slider;
-export let progressSlider: Slider;
+export let volumeSlider: Slider, progressSlider: Slider;
 export let lazyLoad: ILazyLoadInstance;
 
 export function setCircleProgress(progress: number) {
@@ -125,8 +125,52 @@ function onPlaylistSongLoaded(el: HTMLElement) {
     /// #endif
 }
 
+function thumbState(state: boolean) {rotateToggle(state);(<HTMLDivElement>el.querySelector(".penguin-player__lyric")).style.opacity = state ? "1" : "0";}
+
 addEventListener("setup", () => {
     let audio: HTMLAudioElement = el.querySelector(".penguin-player__audio");
+    // Audio setup
+    audio.addEventListener("playing", () => thumbState(true));
+    audio.addEventListener("pause", () => thumbState(false));
+    audio.addEventListener("timeupdate", function() {
+        setCircleProgress(getCurrentTime() / songs[currentSong].duration * 100);
+        (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-current")).textContent = formatTime(getCurrentTime());
+        (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-inner")).style.width = (getCurrentTime() / songs[currentSong].duration * 100) + "%";
+    });
+    // Controls setup
+    (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-previous")).addEventListener("click", prev);
+    (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-next")).addEventListener("click", next);
+    // Toggles setup
+    (<HTMLButtonElement>el.querySelector(".penguin-player__player--full-toggle")).addEventListener("click", function() {
+        let player = (<HTMLDivElement>el.querySelector(".penguin-player__player"));
+        if (player.classList.contains("penguin-player__player-full")) {
+            player.classList.remove("penguin-player__player-playlist");
+            player.classList.remove("penguin-player__player-full");
+        } else {
+            player.classList.add("penguin-player__player-full");
+        }
+    });
+    (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-playlist")).addEventListener("click", () => {
+        let player = (<HTMLDivElement>el.querySelector(".penguin-player__player"));
+        if (player.classList.contains("penguin-player__player-playlist")) {
+            player.classList.remove("penguin-player__player-playlist");
+        } else {
+            player.classList.add("penguin-player__player-playlist");
+        }
+    });
+    // Thumbnail setup
+    (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img")).addEventListener("load", function() {
+        setThemeColor(colorthief.getColor(this), colorthief.getPalette(this));
+    });
+    (<HTMLButtonElement>el.querySelector(".penguin-player__player--thumbnail-play-pause")).addEventListener("click", (e: MouseEvent) => {
+        if (el.querySelector(".penguin-player__player").clientWidth == 56) {return;}
+        let audio = (<HTMLAudioElement>el.querySelector(".penguin-player__audio"));
+        if (audio.paused) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
+    });
     // Progress bar setup
     let playerOldState: boolean;
     progressSlider = new Slider({
@@ -175,4 +219,8 @@ addEventListener("setup", () => {
         el.querySelector(".penguin-player__player").appendChild(cel);
     }
     /// #endif
+});
+
+addEventListener("playtrack", () => {
+    (<HTMLSpanElement>el.querySelector(".penguin-player__player--trial-icon")).style.display = trialInfo ? "inline-block" : "none";
 });

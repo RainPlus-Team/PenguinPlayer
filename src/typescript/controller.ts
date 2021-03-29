@@ -84,13 +84,10 @@ function updatePlaymodeButton() {
 
 function playTrack(track: any) {
     progressSlider.maxValue = progressSlider.minValue = null;
-    if (track.freeTrialInfo) {
-        trialInfo = track.freeTrialInfo;
-        //progressSlider.minValue = trialInfo.start / Math.floor(songs[currentSong].duration);
-        //progressSlider.maxValue = trialInfo.end / songs[currentSong].duration;
-    }
+    trialInfo = track.freeTrialInfo;
     audio.src = track.url.replace("http:", "https:");
     play();
+    dispatchEvent("playtrack", track);
 }
 
 function reset() {

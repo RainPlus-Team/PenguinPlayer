@@ -28,7 +28,7 @@ Or you can initialize it anytime later by calling ```window.PPlayer.initialize("
 Then just include the JavaScript file that you just downloaded inside your page!
 
 ### Advanced usage
-You can use it with a more complex way.
+You can use it in a more complex way.
 
 Initialize it with ```window.PPlayer.initialize(options: PenguinPlayerOptions)```.
 

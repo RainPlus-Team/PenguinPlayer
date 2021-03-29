@@ -14,9 +14,9 @@ import "../sass/ie.sass";
 
 import ColorThief from "colorthief";
 
-import { print, formatTime } from "./modules/helper";
-import { songs, currentSong, play, pause, prev, next, setVolume, getCurrentTime } from "./controller";
-import { setCircleProgress, setThemeColor, rotateToggle, handlePlaylist } from "./ui";
+import { print } from "./modules/helper";
+import { songs, currentSong, play, pause, prev, next, setVolume } from "./controller";
+import { handlePlaylist } from "./ui";
 
 /// #if !NO_STYLE
 import "../sass/player.sass";
@@ -37,52 +37,11 @@ export let playerOptions: PenguinPlayerOptions;
 
 // Setup
 {
-    const stateChange = (state: boolean) => {rotateToggle(state);(<HTMLDivElement>el.querySelector(".penguin-player__lyric")).style.opacity = state ? "1" : "0";}
     // Audio element setup
     let audio = (<HTMLAudioElement>el.querySelector(".penguin-player__audio"));
-    audio.addEventListener("playing", () => stateChange(true));
-    audio.addEventListener("pause", () => stateChange(false));
     audio.addEventListener("playing", updatePlayPauseButton);
     audio.addEventListener("pause", updatePlayPauseButton);
-    audio.addEventListener("timeupdate", function() {
-        setCircleProgress(getCurrentTime() / songs[currentSong].duration * 100);
-        (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-current")).textContent = formatTime(getCurrentTime());
-        (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-inner")).style.width = (getCurrentTime() / songs[currentSong].duration * 100) + "%";
-    });
     audio.addEventListener("error", () => {print("Cannot play " + songs[currentSong].name);next();});
-    // Controls setup
-    (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-previous")).addEventListener("click", prev);
-    (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-next")).addEventListener("click", next);
-    // Others setup
-    (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img")).addEventListener("load", function() {
-        setThemeColor(colorthief.getColor(this), colorthief.getPalette(this));
-    });
-    (<HTMLButtonElement>el.querySelector(".penguin-player__player--thumbnail-play-pause")).addEventListener("click", (e: MouseEvent) => {
-        if (el.querySelector(".penguin-player__player").clientWidth == 56) {return;}
-        let audio = (<HTMLAudioElement>el.querySelector(".penguin-player__audio"));
-        if (audio.paused) {
-            audio.play();
-        } else {
-            audio.pause();
-        }
-    });
-    (<HTMLButtonElement>el.querySelector(".penguin-player__player--full-toggle")).addEventListener("click", function() {
-        let player = (<HTMLDivElement>el.querySelector(".penguin-player__player"));
-        if (player.classList.contains("penguin-player__player-full")) {
-            player.classList.remove("penguin-player__player-playlist");
-            player.classList.remove("penguin-player__player-full");
-        } else {
-            player.classList.add("penguin-player__player-full");
-        }
-    });
-    (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-playlist")).addEventListener("click", () => {
-        let player = (<HTMLDivElement>el.querySelector(".penguin-player__player"));
-        if (player.classList.contains("penguin-player__player-playlist")) {
-            player.classList.remove("penguin-player__player-playlist");
-        } else {
-            player.classList.add("penguin-player__player-playlist");
-        }
-    });
     addEventListener("initialized", () => {
         // Volume setup
         setVolume(1);
