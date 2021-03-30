@@ -48,9 +48,10 @@ export function setThemeColor(color: Color, palette: Color[]) {
     player.style.backgroundColor = backgroundRgba;
     player.style.color = player.style.fill = foregroundRgb;
     (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-left")).style.borderColor = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-right")).style.borderColor = foregroundRgb;
-    let fullContent: HTMLDivElement = el.querySelector(".penguin-player__player--full-content");
+    let fullContent: HTMLDivElement = el.querySelector(".penguin-player__player--full-content"),
+        playlist: HTMLDivElement = el.querySelector(".penguin-player__player--playlist");
     foregroundRgb = `rgb(${findHighContrastColor([255, 255, 255], palette).join(", ")})`;
-    fullContent.style.color = fullContent.style.fill = foregroundRgb;
+    playlist.style.color = playlist.style.fill = fullContent.style.color = fullContent.style.fill = foregroundRgb;
     let highContrastToWhiteAlpha = `rgba(${findHighContrastColor([255, 255, 255], palette).join(", ")}, 0.5)`;
     (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-bar")).style.backgroundColor = (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume-bar")).style.backgroundColor = (<HTMLDivElement>el.querySelector(".penguin-player__lyric")).style.color = highContrastToWhiteAlpha;
     el.querySelectorAll(".penguin-player__player--progress-inner, .penguin-player__player--progress-dot, .penguin-player__player--controls-volume-inner, .penguin-player__player--controls-volume-dot").forEach((el) => {
@@ -83,8 +84,7 @@ export function handlePlaylist(list: Song[]) {
     lazyLoad = new LazyLoad({
         container: playlist,
         elements_selector: ".penguin-player--lazy",
-        unobserve_entered: true,
-        callback_loaded: onPlaylistSongLoaded
+        unobserve_entered: true
     });
 }
 
@@ -110,7 +110,7 @@ function createSongElement(song: Song, click: () => void): HTMLElement {
     return songEl;
 }
 
-function onPlaylistSongLoaded(el: HTMLElement) {
+/*function onPlaylistSongLoaded(el: HTMLElement) {
     /// #if IE_SUPPORT
     ((<any>window.document).documentMode ? schedule : (func: Function) => func())(() => {
     /// #endif
@@ -123,7 +123,7 @@ function onPlaylistSongLoaded(el: HTMLElement) {
     /// #if IE_SUPPORT
     });
     /// #endif
-}
+}*/
 
 function thumbState(state: boolean) {rotateToggle(state);(<HTMLDivElement>el.querySelector(".penguin-player__lyric")).style.opacity = state ? "1" : "0";}
 

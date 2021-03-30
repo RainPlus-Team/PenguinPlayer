@@ -245,13 +245,15 @@
             height: 0
             transition: min-height .2s ease-in-out, height .2s ease-in-out
             min-height: 0
+            background-color: white
             .penguin-player__player--playlist-song
                 position: relative
                 height: 36px
                 padding: 5px
                 padding-left: 45px
                 cursor: pointer
-                transition: transform .1s ease-in-out
+                background-color: white
+                transition: padding-left .1s ease-in-out, background-color .1s ease-in-out
                 .penguin-player__player--playlist-thumbnail
                     position: absolute
                     left: 5px
@@ -267,7 +269,8 @@
                 .penguin-player__player--playlist-artists
                     font-size: 12px
                 &:hover
-                    transform: translate(5px)
+                    padding-left: 50px
+                    background-color: rgba(0, 0, 0, 0.2)
         &.penguin-player__player-full, &:hover
             min-width: 300px
             width: variables.$expand-width
