@@ -12,7 +12,6 @@ import { currentSong, getCurrentTime, next, play, prev, songs, trialInfo } from 
 import { formatTime } from "./modules/helper";
 /// #if IE_SUPPORT
 import { isBlurSupported } from "./modules/helper";
-import { schedule } from "./modules/task";
 /// #endif
 
 export let volumeSlider: Slider, progressSlider: Slider;
@@ -110,21 +109,6 @@ function createSongElement(song: Song, click: () => void): HTMLElement {
     return songEl;
 }
 
-/*function onPlaylistSongLoaded(el: HTMLElement) {
-    /// #if IE_SUPPORT
-    ((<any>window.document).documentMode ? schedule : (func: Function) => func())(() => {
-    /// #endif
-        try {
-            let color = colorthief.getColor(el), palette = colorthief.getPalette(el);
-            let song = <HTMLElement>el.parentNode;
-            song.style.backgroundColor = `rgba(${color.join(", ")}, 0.6)`;
-            song.style.color = `rgb(${findHighContrastColor(color, palette).join(", ")})`;
-        } catch {}
-    /// #if IE_SUPPORT
-    });
-    /// #endif
-}*/
-
 function thumbState(state: boolean) {rotateToggle(state);(<HTMLDivElement>el.querySelector(".penguin-player__lyric")).style.opacity = state ? "1" : "0";}
 
 addEventListener("setup", () => {
@@ -132,6 +116,10 @@ addEventListener("setup", () => {
     // Audio setup
     audio.addEventListener("playing", () => thumbState(true));
     audio.addEventListener("pause", () => thumbState(false));
+    audio.addEventListener("progress", function() {
+        if (this.buffered.length <= 0) {return;}
+        (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-buffered")).style.width = ((this.buffered.end(this.buffered.length - 1) + (trialInfo?.start || 0)) / songs[currentSong].duration * 100) + "%";
+    });
     audio.addEventListener("timeupdate", function() {
         setCircleProgress(getCurrentTime() / songs[currentSong].duration * 100);
         (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-current")).textContent = formatTime(getCurrentTime());

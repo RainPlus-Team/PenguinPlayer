@@ -131,15 +131,20 @@
             .penguin-player__player--progress
                 width: 100%
                 .penguin-player__player--progress-bar
+                    position: relative
                     background-color: rgba(0, 0, 0, 0.3)
                     border-radius: 1.5px
                     height: 3px
-                    .penguin-player__player--progress-inner
-                        position: relative
-                        background-color: #d7d7d7
+                    .penguin-player__player--progress-buffered, .penguin-player__player--progress-inner
                         border-radius: 1.5px
                         width: 0
                         height: 3px
+                    .penguin-player__player--progress-buffered
+                        position: absolute
+                        background-color: rgba(0, 0, 0, 0.4)
+                    .penguin-player__player--progress-inner
+                        position: relative
+                        background-color: #d7d7d7
                         .penguin-player__player--progress-dot
                             width: 10px
                             height: 10px
