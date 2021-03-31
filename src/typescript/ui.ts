@@ -18,15 +18,15 @@ export let volumeSlider: Slider, progressSlider: Slider;
 export let lazyLoad: ILazyLoadInstance;
 
 export function setCircleProgress(progress: number) {
-    let prog = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress"));
+    let progressEl = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress"));
     let left = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-left"));
     let right = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-right"));
     if (progress <= 50) {
-        prog.style.clip = "";
+        progressEl.style.clip = "";
         left.style.transform = "rotate(0deg)";
         right.style.transform = `rotate(${progress / 50 * 180}deg)`;
     } else {
-        prog.style.clip = "auto";
+        progressEl.style.clip = "auto";
         left.style.transform = `rotate(${progress / 100 * 360}deg)`;
         right.style.transform = "rotate(180deg)";
     }
@@ -150,11 +150,11 @@ addEventListener("setup", () => {
     (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img")).addEventListener("load", function() {
         setThemeColor(colorthief.getColor(this), colorthief.getPalette(this));
     });
-    (<HTMLButtonElement>el.querySelector(".penguin-player__player--thumbnail-play-pause")).addEventListener("click", (e: MouseEvent) => {
+    (<HTMLButtonElement>el.querySelector(".penguin-player__player--thumbnail-play-pause")).addEventListener("click", () => {
         if (el.querySelector(".penguin-player__player").clientWidth == 56) {return;}
         let audio = (<HTMLAudioElement>el.querySelector(".penguin-player__audio"));
         if (audio.paused) {
-            audio.play();
+            audio.play().catch();
         } else {
             audio.pause();
         }
@@ -172,7 +172,7 @@ addEventListener("setup", () => {
         audio.pause();
     });
     progressSlider.addEventHandler("enddrag", () => {
-        if (!playerOldState) {audio.play();}
+        if (!playerOldState) {audio.play().catch();}
     });
     progressSlider.addEventHandler("valuechange", (value: number) => {
         let songDura = songs[currentSong].duration;

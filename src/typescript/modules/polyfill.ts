@@ -12,7 +12,7 @@ if (!Element.prototype.matches) {
 
 if (!Element.prototype.closest) {
     Element.prototype.closest = function (s: string) {
-        var el = this;
+        let el = this;
 
         do {
             if (Element.prototype.matches.call(el, s)) return el;

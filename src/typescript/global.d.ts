@@ -51,11 +51,6 @@ interface SliderOptions {
     value?: number
 }
 
-interface ThemeColorChangeEvent {
-    color: Color
-    palette: Color[]
-}
-
 interface AjaxPromise extends Promise<AjaxResponse> {
     method(method: "GET" | "POST"): AjaxPromise
     url(url: string): AjaxPromise

@@ -3,9 +3,9 @@ import { deepEventHandler, getPropertySum } from "./helper";
 import { callHandlers } from "./event";
 
 export default class Slider {
-    private activeEl: HTMLElement
-    private barEl: HTMLElement
-    private innerEl: HTMLElement
+    private readonly activeEl: HTMLElement
+    private readonly barEl: HTMLElement
+    private readonly innerEl: HTMLElement
     
     private value: number
     private dragging = false
@@ -50,7 +50,7 @@ export default class Slider {
 
     private update(e: MouseEvent | TouchEvent) {
         if (!this.dragging) { return; }
-        let cx = 0;
+        let cx: number;
         if (e instanceof MouseEvent) {
             cx = e.pageX;
         } else {

@@ -65,7 +65,7 @@ addEventListener("setup", () => {
 
 function handleEnded() {
     switch (playmode) {
-        case Playmodes.List: currentSong == songs.length-1 ? "" : next(); break;
+        case Playmodes.List: currentSong == songs.length - 1 ? "" : next(); break;
         case Playmodes.ListLoop: next(); break;
         case Playmodes.SingleLoop: play(); break;
         case Playmodes.Random: play(Math.floor(songs.length * Math.random())); break;
@@ -132,7 +132,7 @@ export function play(id?: number) {
         }).catch(playFailedHandler);
         getLyric(song);
         dispatchEvent("songchange", song);
-    } else { audio.play(); }
+    } else { audio.play().catch(); }
 }
 
 export function pause() {

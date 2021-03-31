@@ -36,8 +36,8 @@ addEventListener("setup", () => {
 
 let lastTap: number;
 function lyricTap() {
-    var now = new Date().getTime();
-    var timesince = now - lastTap;
+    let now = new Date().getTime();
+    let timesince = now - lastTap;
     if ((timesince < 600) && (timesince > 0)) {
         toggleSettings();
     }
