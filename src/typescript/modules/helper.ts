@@ -33,4 +33,16 @@ export function deepEventHandler(element: HTMLElement, ...args: any[]) {
 export function isBlurSupported() {
     return Modernizr.testAllProps("backdropFilter", "blur(5px)");
 }
+
+function getStep(el: HTMLInputElement): number {
+    let step = Number(el.getAttribute("step"));
+    return isNaN(step) ? 1 : step;
+}
+
+export function inputStep(el: HTMLInputElement, dir: "up" | "down" = "up") {
+    let val = Number(el.value);
+    if (!isNaN(val)) {
+        el.value = (val + getStep(el) * (dir == "up" ? 1 : -1)).toString();
+    }
+}
 /// #endif

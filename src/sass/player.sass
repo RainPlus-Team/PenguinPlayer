@@ -374,6 +374,29 @@
                 svg
                     width: 14px
                     height: 14px
+        .penguin-player__lyric-settings--lyric-offset
+            position: absolute
+            left: 10px
+            bottom: 10px
+            > span
+                display: inline-block
+                width: 24px
+                height: 24px
+                cursor: pointer
+                border-radius: 5px
+                &:hover
+                    background-color: rgba(0, 0, 0, 0.1)
+                svg
+                    vertical-align: middle
+            .penguin-player__lyric-settings--lyric-offset-value
+                outline: none
+                border: none
+                width: 40px
+                text-align: center
+                -moz-appearance: textfield
+                &::-webkit-outer-spin-button,
+                &::-webkit-inner-spin-button
+                    -webkit-appearance: none
     .penguin-player__lyric-settings--overlay
         position: fixed
         top: 0

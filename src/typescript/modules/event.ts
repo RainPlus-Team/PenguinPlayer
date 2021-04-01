@@ -20,7 +20,7 @@ export function dispatchEvent(name: string, ...parameters: any) {
     }
 }
 
-export function dispatchWindowEvent(name: string, detail?: object) {
+function createEvent(name: string, detail?: object) {
     let event: Event;
     if (typeof(Event) === "function") {
         event = detail == undefined ? new Event(name) : new CustomEvent(name, detail);
@@ -28,7 +28,19 @@ export function dispatchWindowEvent(name: string, detail?: object) {
         event = document.createEvent("Event");
         event.initEvent(name, true, true);
     }
-    window.dispatchEvent(event);
+    return event;
+}
+
+export function dispatchWindowEvent(name: string, detail?: object) {
+    window.dispatchEvent(createEvent(name, detail));
+}
+
+export function fireEvent(target: EventTarget, name: string, ...args: any) {
+    if ("dispatchEvent" in target) {
+        target.dispatchEvent(createEvent(name, args));
+    } else {
+        (<any>target).fireEvent(createEvent(name, args));
+    }
 }
 
 export function callHandlers(handlers: Array<(e: any) => void>, ...args: any): boolean {

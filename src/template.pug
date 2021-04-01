@@ -59,6 +59,10 @@ audio.penguin-player__audio
         |&nbsp;&nbsp;
         span.penguin-player__lyric-settings--status-tlrc-icon
         span.penguin-player__lyric-settings--status-tlrc-text
-    //-
-        TODO: Add lyric offset adjustment
+    .penguin-player__lyric-settings--lyric-offset
+        span.penguin-player__lyric-settings--lyric-offset-up
+            include:svgo icons/up.svg
+        input.penguin-player__lyric-settings--lyric-offset-value(type="number", value="0", step="0.5")
+        span.penguin-player__lyric-settings--lyric-offset-down
+            include:svgo icons/down.svg
 .penguin-player__lyric-settings--overlay

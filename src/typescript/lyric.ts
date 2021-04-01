@@ -5,7 +5,12 @@ import { container as el } from "./player";
 
 import tickIcon from "../icons/tick.svg";
 import errorIcon from "../icons/error.svg";
-import { addEventListener } from "./modules/event";
+import { addEventListener, fireEvent } from "./modules/event";
+/// #if IE_SUPPORT
+import { inputStep } from "./modules/helper";
+/// #endif
+
+export let lyricOffset = 0;
 
 let audio: HTMLAudioElement, lrcInfos = {
     main: <any>{},
@@ -21,17 +26,45 @@ addEventListener("setup", () => {
         lrcOffset = tLrcOffset = 0;
         lyricUpdate();
     });
-    window.addEventListener("click", (e: MouseEvent) => {
-        if (e.target instanceof HTMLElement && el.querySelector(".penguin-player__lyric-settings").classList.contains("penguin-player__lyric-settings-shown") && (<HTMLElement>e.target).closest(".penguin-player__lyric-settings") == null) {
-            toggleSettings();
-        }
-        if (e.pageY >= window.innerHeight - 60 && e.pageX >= 56 + 20 && el.querySelector(".penguin-player__player").clientWidth <= 56 && window.innerWidth <= 700) {
-            lyricTap();
-            e.preventDefault();
+    window.addEventListener("mousedown", (e: MouseEvent) => {
+        if (el.querySelector(".penguin-player__lyric-settings").classList.contains("penguin-player__lyric-settings-shown")) {
+            if (e.target instanceof HTMLElement && (<HTMLElement>e.target).closest(".penguin-player__lyric-settings") == null) {
+                toggleSettings();
+            }
+        } else {
+            if (e.pageY >= window.innerHeight - 60 && e.pageX >= 56 + 20 && el.querySelector(".penguin-player__player").clientWidth <= 56 && window.innerWidth <= 700) {
+                lyricTap();
+                e.preventDefault();
+            }
         }
     });
+    // Lyric settings menu setup
     (<HTMLDivElement>el.querySelector(".penguin-player__lyric--expand-button")).addEventListener("click", () => toggleSettings());
     el.querySelector(".penguin-player__lyric-settings--overlay").addEventListener("click", () => toggleSettings(false));
+    let offsetField: HTMLInputElement = el.querySelector(".penguin-player__lyric-settings--lyric-offset-value");
+    /// #if IE_SUPPORT
+    el.querySelector(".penguin-player__lyric-settings--lyric-offset-up").addEventListener("click", () => {inputStep(offsetField); fireEvent(offsetField, "change");});
+    el.querySelector(".penguin-player__lyric-settings--lyric-offset-down").addEventListener("click", () => {inputStep(offsetField, "down"); fireEvent(offsetField, "change");});
+    /// #else
+    el.querySelector(".penguin-player__lyric-settings--lyric-offset-up").addEventListener("click", () => {offsetField.stepUp(); fireEvent(offsetField, "change");});
+    el.querySelector(".penguin-player__lyric-settings--lyric-offset-down").addEventListener("click", () => {offsetField.stepDown(); fireEvent(offsetField, "change");});
+    /// #endif
+    offsetField.addEventListener("change", function() {
+        let offset = Number(this.value);
+        lyricOffset = isNaN(offset) ? lyricOffset : offset;
+        lrcOffset = tLrcOffset = 0;
+        //localStorage.setItem("penguinplayer_lyric_offset", offset.toString());
+    });
+    addEventListener("songchange", () => {lyricOffset = (<any>offsetField.value) = 0;});
+    // Well, this shouldn't be saved
+    /*if (localStorage.getItem("penguinplayer_lyric_offset") != null) {
+        let offset = Number(localStorage.getItem("penguinplayer_lyric_offset"));
+        if (isNaN(offset)) {
+            localStorage.setItem("penguinplayer_lyric_offset", "0");
+        } else {
+            lyricOffset = (<any>offsetField.value) = offset;
+        }
+    }*/
 });
 
 let lastTap: number;
@@ -77,9 +110,9 @@ function setElText(text: string, name: string = "main") {
 function lyricUpdate() {
     if (audio.paused) { return; }
     let [main, sub] = ["", ""];
-    if (!isNaN(audio.currentTime) && (lrcOffset = findLrcPos(lrc, getCurrentTime(), lrcOffset)) != -1) {
+    if (!isNaN(audio.currentTime) && (lrcOffset = findLrcPos(lrc, getCurrentTime() + lyricOffset, lrcOffset)) != -1) {
         main = lrc[lrcOffset].value;
-        if ((tLrcOffset = findLrcPos(tLrc, getCurrentTime(), tLrcOffset)) != -1) {
+        if ((tLrcOffset = findLrcPos(tLrc, getCurrentTime() + lyricOffset, tLrcOffset)) != -1) {
             sub = tLrc[tLrcOffset].value;
         } else {
             sub = lrc[lrcOffset + 1]?.value || "";
