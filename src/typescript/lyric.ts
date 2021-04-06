@@ -120,6 +120,7 @@ function lyricUpdate() {
     }
     setElText(main);
     setElText(sub, "sub");
+    (<HTMLDivElement>el.querySelector(".penguin-player__lyric--background")).style.bottom = (main != "" || sub != "") ? "" : "-60px";
     requestAnimationFrame(lyricUpdate);
 }
 
