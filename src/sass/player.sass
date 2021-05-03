@@ -6,14 +6,16 @@
     to
         transform: rotate(360deg)
 
+$least-zindex: 100
+
 .penguin-player
-    font-family: "Microsoft YaHei UI", "Microsoft YaHei", "黑体"
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans", "Source Han Sans", "Microsoft Yahei UI", "Microsoft Yahei", sans-serif
     .penguin-player__player
         padding: 4px 0
         width: variables.$thumbnail-size + 8px
         height: variables.$thumbnail-size + 8px
         position: fixed
-        z-index: 2
+        z-index: $least-zindex + 2
         border-radius: 36px
         box-sizing: border-box
         box-shadow: -1px 1px 4px black
@@ -50,7 +52,7 @@
                     right: 0
                     bottom: 0
                     opacity: 0
-                    z-index: 2
+                    z-index: $least-zindex + 2
                     background-color: rgba(0, 0, 0, 0.3)
                     transition: opacity .1s linear
                     .penguin-player__player--thumbnail-play, .penguin-player__player--thumbnail-pause
@@ -74,7 +76,7 @@
                     left: 0
                     right: 0
                     bottom: 0
-                    z-index: 3
+                    z-index: $least-zindex + 3
                     clip: rect(0px, #{variables.$thumbnail-size}, #{variables.$thumbnail-size}, #{variables.$thumbnail-size / 2})
                     .penguin-player__player--thumbnail-progress-left, .penguin-player__player--thumbnail-progress-right
                         width: variables.$thumbnail-size - 6px
@@ -279,6 +281,8 @@
         &.penguin-player__player-full
             border-radius: variables.$thumbnail-size / 2
             height: variables.$thumbnail-size + 8px + 92px
+            .penguin-player__player--full-toggle-menu
+                boarder-radius: 5px
             .penguin-player__player--mini
                 .penguin-player__player--full-toggle
                     border-bottom-right-radius: 0
@@ -322,7 +326,7 @@
             height: 60px
             transition: bottom .2s ease-in-out
             background: linear-gradient(to top, black, transparent)
-            z-index: -1
+            z-index: $least-zindex - 1
         .penguin-player__lyric--expand-button
             position: absolute
             right: 0
@@ -349,7 +353,7 @@
     .penguin-player__lyric-settings
         color: #333
         position: fixed
-        z-index: 6
+        z-index: $least-zindex + 6
         bottom: 60px
         display: none
         transform: translate(10px)
@@ -405,7 +409,7 @@
         left: 0
         right: 0
         bottom: 0
-        z-index: 5
+        z-index: $least-zindex + 5
         background-color: rgba(0, 0, 0, 0.5)
         display: none
 @media only screen and (max-width: 700px)
