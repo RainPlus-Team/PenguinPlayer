@@ -35,6 +35,7 @@
 | 属性 | 描述 |
 | ---- | ---- |
 | playlist: ```string``` | 播放列表ID |
+| startIndex?: ```number``` | 指定在初始化后要播放的音乐索引，留空随机 |
 | overrideVolume?: ```number``` | 使用提供的音量而不使用默认或已保存的 |
 | overridePlaymode?: ```Playmodes``` | 使用提供的播放模式而不使用默认或已保存的 |
 

@@ -82,7 +82,7 @@ function initializeWithPlaylist(list: any) {
     handlePlaylist(songs);
     document.body.appendChild(el);
     dispatchEvent("initialized");
-    play(Math.floor(Math.random() * songs.length));
+    play(playerOptions.startIndex || Math.floor(Math.random() * songs.length));
     print("Player ready");
 }
 

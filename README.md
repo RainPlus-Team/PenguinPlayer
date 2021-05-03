@@ -36,6 +36,7 @@ Following table contains all available options.
 | Property | Description |
 | -------- | ----------- |
 | playlist: ```string``` | Playlist ID |
+| startIndex?: ```number``` | Specify a song's index to play after initialized, leave it ```undefined`` to make it random |
 | overrideVolume?: ```number``` | Use provided volume instead using default or saved one |
 | overridePlaymode?: ```Playmodes``` | Use provided playmode instead using default or saved one |
 
@@ -51,7 +52,7 @@ Following table contains all available options.
 Every API of the player is exposed in ```PPlayer``` object of ```window``` context.
 | Property | Description |
 | -------- | ----------- |
-| initialize(```id: string```) | Initialize the player |
+| initialize(```id: string | PenguinPlayerOptions```) | Initialize the player |
 | play(```index?: number```) | Play. If ```index``` is specified, the player will play the song in the song in corresponding position in the playlist |
 | pause() | Pause |
 | next() | Next song |

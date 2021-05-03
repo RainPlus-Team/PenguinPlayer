@@ -82,7 +82,8 @@ interface PenguinPlayerAPI {
 }
 
 interface PenguinPlayerOptions {
-    playlist: string
+    playlist: string,
+    startIndex?: number,
     overrideVolume?: number
     overridePlaymode?: import("./controller").Playmodes
 }
