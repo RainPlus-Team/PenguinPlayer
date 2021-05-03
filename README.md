@@ -9,6 +9,7 @@
 ![Version](https://img.shields.io/github/package-json/v/M4TEC/PenguinPlayer)
 [![GitHub issues](https://img.shields.io/github/issues/M4TEC/PenguinPlayer)](https://github.com/M4TEC/PenguinPlayer/issues)
 [![GitHub stars](https://img.shields.io/github/stars/M4TEC/PenguinPlayer)](https://github.com/M4TEC/PenguinPlayer/stargazers)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FM4TEC%2FPenguinPlayer.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FM4TEC%2FPenguinPlayer?ref=badge_shield)
 
 A simple player based on Netease Cloud Music, and it only needs to load ONE JavaScript file!
 
@@ -75,8 +76,11 @@ All events declared in this table needed to be listened using ```PPlayer.addEven
 | songchange | Triggered when the song has changed | song: ```Song``` |
 | themecolorchange | Trigger when the theme color has changed | color: ```Color```, foregroundColor: ```Color```, whiteForgroundColor: ```Color```, palette: ```Color[]``` |
 
-### Note
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FM4TEC%2FPenguinPlayer.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FM4TEC%2FPenguinPlayer?ref=badge_large)
+
+## Note
 If you are visiting the demo page, you can use your own playlist by append ```?playlist=[YOUR PLAYLIST ID HERE]``` after the URL
 
-### Donate
+## Donate
 You can buy me a ~~cola~~ coffee at http://afdian.net/@TenmaHiltonWhat ;P
