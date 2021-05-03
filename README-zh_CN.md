@@ -7,6 +7,7 @@
 ![版本](https://img.shields.io/github/package-json/v/M4TEC/PenguinPlayer?label=%E7%89%88%E6%9C%AC)
 [![GitHub issues](https://img.shields.io/github/issues/M4TEC/PenguinPlayer)](https://github.com/M4TEC/PenguinPlayer/issues)
 [![GitHub stars](https://img.shields.io/github/stars/M4TEC/PenguinPlayer)](https://github.com/M4TEC/PenguinPlayer/stargazers)
+[![FOSSA状态](https://app.fossa.com/api/projects/git%2Bgithub.com%2FM4TEC%2FPenguinPlayer.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FM4TEC%2FPenguinPlayer?ref=badge_shield)
 
 一个基于网易云音乐的简易播放器，而且它仅仅是**一个**JavaScript文件！
 
@@ -73,8 +74,11 @@
 | songchange | 在音乐改变时触发 | song: ```Song``` |
 | themecolorchange | 在主题颜色改变时触发 | color: ```Color```, foregroundColor: ```Color```, whiteForgroundColor: ```Color```, palette: ```Color[]``` |
 
-### 提示
+## 许可证
+[![FOSSA状态](https://app.fossa.com/api/projects/git%2Bgithub.com%2FM4TEC%2FPenguinPlayer.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FM4TEC%2FPenguinPlayer?ref=badge_large)
+
+## 提示
 如果你正在查看预览页面，你可以通过在网址后面添加```?playlist=[你的歌单ID]```来使用你自己的歌单。
 
-### 捐助
+## 捐助
 你可以在 http://afdian.net/@TenmaHiltonWhat 给我买~~一瓶可乐~~一杯咖啡 ;P
