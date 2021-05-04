@@ -52,7 +52,7 @@ Following table contains all available options.
 Every API of the player is exposed in ```PPlayer``` object of ```window``` context.
 | Property | Description |
 | -------- | ----------- |
-| initialize(```id: string | PenguinPlayerOptions```) | Initialize the player |
+| initialize(```id: string \| PenguinPlayerOptions```) | Initialize the player |
 | play(```index?: number```) | Play. If ```index``` is specified, the player will play the song in the song in corresponding position in the playlist |
 | pause() | Pause |
 | next() | Next song |

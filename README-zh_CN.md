@@ -51,7 +51,7 @@
 播放器的所有接口都暴露在```window```上下文的```PPlayer```对象中
 | 属性名 | 描述 |
 | ----- | ---- |
-| initialize(```id: string```) | 初始化播放器 |
+| initialize(```id: string \| PenguinPlayerOptions```) | 初始化播放器 |
 | play(```index?: number```) | 播放。如果指定```index```的值则会播放歌单相应位置的歌曲 |
 | pause() | 暂停 |
 | next() | 下一首 |
