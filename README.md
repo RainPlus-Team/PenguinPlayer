@@ -85,4 +85,6 @@ If you are visiting the demo page, you can use your own playlist by append ```?p
 ## Donate
 You can buy me a ~~cola~~ coffee at http://afdian.net/@TenmaHiltonWhat ;P
 
+## Development
+You can check the latest development build [here](https://penguin-player.vercel.app/).
 [![Vercel](https://www.datocms-assets.com/31049/1618983297-powered-by-vercel.svg)](https://vercel.com/pplayer/penguin-player?utm_source=pplayer&utm_campaign=oss)
