@@ -6,7 +6,6 @@
     to
         transform: rotate(360deg)
 
-$least-zindex: 100
 
 .penguin-player
     font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans", "Source Han Sans", "Microsoft Yahei UI", "Microsoft Yahei", sans-serif
@@ -15,7 +14,7 @@ $least-zindex: 100
         width: variables.$thumbnail-size + 8px
         height: variables.$thumbnail-size + 8px
         position: fixed
-        z-index: $least-zindex + 2
+        z-index: variables.$least-zindex + 2
         border-radius: 36px
         box-sizing: border-box
         box-shadow: -1px 1px 4px black
@@ -52,7 +51,7 @@ $least-zindex: 100
                     right: 0
                     bottom: 0
                     opacity: 0
-                    z-index: $least-zindex + 2
+                    z-index: variables.$least-zindex + 2
                     background-color: rgba(0, 0, 0, 0.3)
                     transition: opacity .1s linear
                     .penguin-player__player--thumbnail-play, .penguin-player__player--thumbnail-pause
@@ -76,7 +75,7 @@ $least-zindex: 100
                     left: 0
                     right: 0
                     bottom: 0
-                    z-index: $least-zindex + 3
+                    z-index: variables.$least-zindex + 3
                     clip: rect(0px, #{variables.$thumbnail-size}, #{variables.$thumbnail-size}, #{variables.$thumbnail-size / 2})
                     .penguin-player__player--thumbnail-progress-left, .penguin-player__player--thumbnail-progress-right
                         width: variables.$thumbnail-size - 6px
@@ -326,7 +325,7 @@ $least-zindex: 100
             height: 60px
             transition: bottom .2s ease-in-out
             background: linear-gradient(to top, black, transparent)
-            z-index: $least-zindex - 1
+            z-index: variables.$least-zindex - 1
         .penguin-player__lyric--expand-button
             position: absolute
             right: 0
@@ -353,7 +352,7 @@ $least-zindex: 100
     .penguin-player__lyric-settings
         color: #333
         position: fixed
-        z-index: $least-zindex + 6
+        z-index: variables.$least-zindex + 6
         bottom: 60px
         display: none
         transform: translate(10px)
@@ -409,7 +408,7 @@ $least-zindex: 100
         left: 0
         right: 0
         bottom: 0
-        z-index: $least-zindex + 5
+        z-index: variables.$least-zindex + 5
         background-color: rgba(0, 0, 0, 0.5)
         display: none
 @media only screen and (max-width: 700px)
