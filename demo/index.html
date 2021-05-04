@@ -44,6 +44,11 @@
             box-sizing: border-box;
             outline: none;
         }
+        .vercel {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+        }
         @media only screen and (max-width: 700px) {
             .control-panel {
                 left: 10px;
@@ -60,6 +65,7 @@
             <button type="submit">Use this / 使用此ID</button>
         </form>
     </div>
+    <img src="https://www.datocms-assets.com/31049/1618983297-powered-by-vercel.svg" alt="Powered by Vercel" class="vercel">
     <script>
         window.penguinplayer_id = "2717890285";
         var match = location.href.match(/playlist=([0-9]+)/);
