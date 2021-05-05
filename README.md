@@ -9,6 +9,7 @@
 ![Version](https://img.shields.io/github/package-json/v/M4TEC/PenguinPlayer)
 [![GitHub issues](https://img.shields.io/github/issues/M4TEC/PenguinPlayer)](https://github.com/M4TEC/PenguinPlayer/issues)
 [![GitHub stars](https://img.shields.io/github/stars/M4TEC/PenguinPlayer)](https://github.com/M4TEC/PenguinPlayer/stargazers)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FM4TEC%2FPenguinPlayer.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FM4TEC%2FPenguinPlayer?ref=badge_shield)
 
 A simple player based on Netease Cloud Music, and it only needs to load ONE JavaScript file!
 
