@@ -5,10 +5,12 @@ import { container as el } from "./player";
 
 import tickIcon from "../icons/tick.svg";
 import errorIcon from "../icons/error.svg";
-import { addEventListener, fireEvent } from "./modules/event";
+import { addEventListener, dispatchEvent, fireEvent } from "./modules/event";
 /// #if IE_SUPPORT
 import { inputStep } from "./modules/helper";
 /// #endif
+
+import "./lyric-fullview";
 
 export let lyricOffset = 0;
 
@@ -161,10 +163,12 @@ export function getLyric(song: Song) {
         let lyric = result.data?.lyric;
         lrc = lyric?.lrc;
         tLrc = lyric?.tlrc;
+        dispatchEvent("lyricready", song, lrc, tLrc);
         setLyricStatus.apply(null, lrc ? ["tick", "歌词已加载"].concat(tLrc ? ["tick", "翻译歌词已加载"] : ["error", "无翻译歌词"]) : ["error", "无歌词"]);
         (<HTMLDivElement>el.querySelector(".penguin-player__lyric--background")).style.bottom = lrc ? "" : "-60px";
     }).catch(() => {
         print("Cannot fetch lyric");
         retryTimeout = setTimeout(getLyric, 5000, song);
     });
+    dispatchEvent("fetchlyric", song);
 }
