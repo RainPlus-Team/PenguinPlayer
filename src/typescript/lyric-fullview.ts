@@ -3,6 +3,9 @@ import Scrollbar from "smooth-scrollbar";
 import { container as el } from "./player";
 import { addEventListener } from "./modules/event";
 
+export let scrollBar: Scrollbar;
+export let disableAutoScroll = false;
+
 function findLyricByTime(lyric: LyricLine[], time: number): LyricLine {
     for (let line of lyric) {
         if (line.time == time) {return line;}
@@ -13,18 +16,25 @@ function findLyricByTime(lyric: LyricLine[], time: number): LyricLine {
 function createLine(line: LyricLine, tLine?: LyricLine) {
     let l = document.createElement("p");
     l.classList.add("penguin-player__lyric-settings--full-view-line");
-    l.append(line.value);
-    if (tLine) {
-        l.append(document.createElement("br"), tLine.value);
+    if (line.value == "" || line.value == "\n") {
+        l.innerHTML = "&nbsp;";
+    } else {
+        l.append(line.value);
+        if (tLine) {
+            let t = document.createElement("span");
+            t.classList.add("penguin-player__lyric-settings--full-view-line-translate");
+            t.textContent = tLine.value;
+            l.append(document.createElement("br"), t);
+        }
     }
     return l;
 }
 
-addEventListener("fetchlyric", (song: Song) => {
+addEventListener("fetchlyric", (_: Song) => {
     el.querySelector(".penguin-player__lyric-settings--full-view > .scroll-content").innerHTML = "";
 });
 
-addEventListener("lyricready", (song: Song, lrc?: LyricLine[], tLrc?: LyricLine[]) => {
+addEventListener("lyricready", (_: Song, lrc?: LyricLine[], tLrc?: LyricLine[]) => {
     if (lrc) {
         let fullview = el.querySelector(".penguin-player__lyric-settings--full-view > .scroll-content");
         if (tLrc) {
@@ -41,5 +51,11 @@ addEventListener("lyricready", (song: Song, lrc?: LyricLine[], tLrc?: LyricLine[
 
 addEventListener("initialized", () => {
     let fullview: HTMLElement = el.querySelector(".penguin-player__lyric-settings--full-view");
-    Scrollbar.init(fullview);
+    let autoScrollTimeout: number;
+    scrollBar = Scrollbar.init(fullview);
+    scrollBar.addListener(() => {
+        clearTimeout(autoScrollTimeout);
+        setTimeout(() => disableAutoScroll = false, 3000);
+        disableAutoScroll = true;
+    });
 });

@@ -364,6 +364,7 @@
         right: 10px
         bottom: 60px
         padding: 10px
+        padding-bottom: 40px
         border-radius: 5px
         box-shadow: 2px 2px 3px #333
         min-width: 35vw
@@ -383,10 +384,17 @@
                     height: 14px
         .penguin-player__lyric-settings--full-view
             max-height: 150px
-            margin-bottom: 30px
             text-align: center
+            overflow-x: hidden
             .penguin-player__lyric-settings--full-view-line
-                font-size: 16px
+                font-size: 14px
+                margin: 5px
+                transition: font-size .1s linear, font-weight .1s linear
+                &.penguin-player__lyric-settings--full-view-line-active
+                    font-weight: bold
+                    font-size: 18px
+                .penguin-player__lyric-settings--full-view-line-translate
+                    font-size: small
         .penguin-player__lyric-settings--lyric-offset
             position: absolute
             left: 10px

@@ -10,7 +10,7 @@ import { addEventListener, dispatchEvent, fireEvent } from "./modules/event";
 import { inputStep } from "./modules/helper";
 /// #endif
 
-import "./lyric-fullview";
+import { disableAutoScroll, scrollBar as fullviewScrollbar } from "./lyric-fullview";
 
 export let lyricOffset = 0;
 
@@ -81,7 +81,7 @@ function lyricTap() {
 
 let lyricReq: AjaxPromise, retryTimeout: any;
 
-let lrc: LyricLine[], tLrc: LyricLine[], lrcOffset = 0, tLrcOffset = 0;
+let lrc: LyricLine[], tLrc: LyricLine[], lrcOffset = 0, lastLrcOffset = -1, tLrcOffset = 0;
 
 function findLrcPos(lrc: LyricLine[], time: number, offset = 0): number {
     if (!lrc) {return -1;}
@@ -122,6 +122,22 @@ function lyricUpdate() {
     }
     setElText(main);
     setElText(sub, "sub");
+    if (lrcOffset != lastLrcOffset) {
+        let fullview = el.querySelector(".penguin-player__lyric-settings--full-view > .scroll-content");
+        fullview.querySelectorAll(".penguin-player__lyric-settings--full-view-line-active").forEach((el) => {
+            el.classList.remove("penguin-player__lyric-settings--full-view-line-active");
+        });
+        let line = <HTMLElement>fullview.children[lrcOffset];
+        if (line) {
+            line.classList.add("penguin-player__lyric-settings--full-view-line-active");
+            if (!disableAutoScroll) {
+                fullviewScrollbar.scrollIntoView(line, {
+                    offsetTop: el.querySelector(".penguin-player__lyric-settings--full-view").clientHeight / 2 - line.clientHeight / 2
+                });
+            }
+        }
+        lastLrcOffset = lrcOffset;
+    }
     (<HTMLDivElement>el.querySelector(".penguin-player__lyric--background")).style.bottom = (main != "" || sub != "") ? "" : "-60px";
     requestAnimationFrame(lyricUpdate);
 }
@@ -135,6 +151,7 @@ function toggleSettings(show?: boolean) {
         settings.style.display = "block";
         setTimeout(() => [settings.style.transform, settings.style.opacity] = ["translate(0)", "1"]);
         settings.classList.add("penguin-player__lyric-settings-shown");
+        fullviewScrollbar.update();
     } else {
         [settings.style.transform, settings.style.opacity] = ["translate(10px)", "0"];
         settingsHideTimeout = setTimeout(() => settings.style.display = "none", 200);
@@ -157,6 +174,7 @@ export function getLyric(song: Song) {
     setLyricStatus("error", "歌词加载中");
     lrc = tLrc = null;
     lrcOffset = tLrcOffset = 0;
+    lastLrcOffset = -1;
     clearTimeout(retryTimeout);
     if (lyricReq) { lyricReq.cancel(); }
     lyricReq = ajax(`https://gcm.tenmahw.com/resolve/lyric?id=${song.id}`).send().then((result: AjaxResponse) => {
