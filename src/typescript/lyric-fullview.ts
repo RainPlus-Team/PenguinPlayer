@@ -1,7 +1,7 @@
 import Scrollbar from "smooth-scrollbar";
 
 import { container as el } from "./player";
-import { addEventListener } from "./modules/event";
+import { addEventListener, addEventListeners } from "./modules/event";
 
 export let scrollBar: Scrollbar;
 export let disableAutoScroll = false;
@@ -47,15 +47,32 @@ addEventListener("lyricready", (_: Song, lrc?: LyricLine[], tLrc?: LyricLine[]) 
             }
         }
     }
+    scrollBar.update();
 });
 
 addEventListener("initialized", () => {
     let fullview: HTMLElement = el.querySelector(".penguin-player__lyric-settings--full-view");
     let autoScrollTimeout: number;
     scrollBar = Scrollbar.init(fullview);
-    scrollBar.addListener(() => {
+    addEventListeners(fullview, "keydown keyup click mousedown mouseup blur selectstart scroll touchstart touchcancel touchend wheel mousewheel", (e) => {
         clearTimeout(autoScrollTimeout);
-        setTimeout(() => disableAutoScroll = false, 3000);
-        disableAutoScroll = true;
+        switch (e.type) {
+            case "touchstart":
+            case "mousedown":
+            case "keydown":
+                disableAutoScroll = true;
+                break;
+            case "touchend":
+            case "touchcancel":
+            case "mouseup":
+            case "keyup":
+            case "blur":
+                disableAutoScroll = false;
+                break;
+            default:
+                autoScrollTimeout = window.setTimeout(() => disableAutoScroll = false, 3000);
+                disableAutoScroll = true;
+                break;
+        }
     });
 });

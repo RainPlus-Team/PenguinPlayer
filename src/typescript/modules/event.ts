@@ -1,5 +1,12 @@
 let events = {};
 
+export function addEventListeners(el: HTMLElement, name: string, listener: EventListener) {
+    let types = name.split(" ");
+    for (let type of types) {
+        el.addEventListener(type, listener, false);
+    }
+}
+
 export function addEventListener(name: string, handler: Function) {
     events[name] = events[name]?.concat([handler]) || [handler];
 }
