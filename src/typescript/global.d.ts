@@ -8,13 +8,22 @@ declare module "*.svg" {
 }
 
 interface Song {
-    id: number,
+    provider: "file" | "netease",
     name: string,
     artists: string,
+    album?: string,
+    thumbnail?: string,
+}
+interface NeteaseSong extends Song {
+    id: number,
     album: string,
     thumbnail: string,
     duration: number
 }
+interface FileSong extends Song {
+    url: string
+}
+
 interface LyricLine {
     time: number,
     value: string
@@ -82,8 +91,28 @@ interface PenguinPlayerAPI {
 }
 
 interface PenguinPlayerOptions {
-    playlist: string,
+    playlist: string | PlaylistProvider[],
+    autoplay?: boolean,
     startIndex?: number,
     overrideVolume?: number
     overridePlaymode?: import("./controller").Playmodes
 }
+
+interface FileProviderItem {
+    name: string,
+    artists: string[],
+    url: string,
+    thumbnail?: string,
+    album?: string
+}
+
+type FileProvider = {
+    type: "file",
+    files: FileProviderItem[]
+}
+type NeteaseProvider = {
+    type: "netease",
+    id: string
+}
+
+type PlaylistProvider = FileProvider | NeteaseProvider;

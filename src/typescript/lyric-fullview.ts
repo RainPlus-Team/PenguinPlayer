@@ -53,7 +53,9 @@ addEventListener("lyricready", (_: Song, lrc?: LyricLine[], tLrc?: LyricLine[]) 
 addEventListener("initialized", () => {
     let fullview: HTMLElement = el.querySelector(".penguin-player__lyric-settings--full-view");
     let autoScrollTimeout: number;
-    scrollBar = Scrollbar.init(fullview);
+    scrollBar = Scrollbar.init(fullview, {
+        alwaysShowTracks: true
+    });
     addEventListeners(fullview, "keydown keyup click mousedown mouseup blur selectstart scroll touchstart touchcancel touchend wheel mousewheel", (e) => {
         clearTimeout(autoScrollTimeout);
         switch (e.type) {

@@ -82,18 +82,15 @@ function updatePlaymodeButton() {
     }
 }
 
-function playTrack(track: any) {
-    progressSlider.maxValue = progressSlider.minValue = null;
-    trialInfo = track.freeTrialInfo;
-    audio.src = track.url.replace("http:", "https:");
-    play();
-    dispatchEvent("playtrack", track);
-}
-
 function reset() {
     setThemeColor([255, 255, 255], [[0, 0, 0]]);
     resetRotate();
-    trialInfo = null;
+    audio.removeEventListener("load", fileSongLoaded);
+    trialInfo = progressSlider.maxValue = progressSlider.minValue = null;
+}
+
+function fileSongLoaded() {
+    (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-duration")).textContent = formatTime(audio.duration);
 }
 
 export let trialInfo: TrialInfo;
@@ -117,20 +114,28 @@ export function play(id?: number) {
         let song = songs[currentSong = id];
         reset();
         setMediaSession(song);
-        (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-duration")).textContent = formatTime(song.duration);
-        currentUrlReq?.cancel();
-        currentUrlReq = ajax(`https://gcm.tenmahw.com/song/url?id=${song.id}`).send().then((result: AjaxResponse) => {
-            if (result.data.code == 200) {
-                let track = result.data.data[0];
-                if (track.url) {
-                    playTrack(track);
-                } else {
-                    print(`${song.name} is unavailable`);
-                    next();
-                }
-            } else { playFailedHandler(); }
-        }).catch(playFailedHandler);
         getLyric(song);
+        if (song.provider == "netease") {
+            (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-duration")).textContent = formatTime((song as NeteaseSong).duration);
+            currentUrlReq?.cancel();
+            currentUrlReq = ajax(`https://gcm.tenmahw.com/song/url?id=${(song as NeteaseSong).id}`).send().then((result: AjaxResponse) => {
+                if (result.data.code == 200) {
+                    let track = result.data.data[0];
+                    if (track.url) {
+                        trialInfo = track.freeTrialInfo;
+                        audio.src = track.url.replace("http:", "https:");
+                        play();
+                    } else {
+                        print(`${song.name} is unavailable`);
+                        next();
+                    }
+                } else { playFailedHandler(); }
+            }).catch(playFailedHandler);
+        } else {
+            audio.addEventListener("load", fileSongLoaded);
+            audio.src = (song as FileSong).url;
+            play();
+        }
         dispatchEvent("songchange", song);
     } else { audio.play().catch(); }
 }

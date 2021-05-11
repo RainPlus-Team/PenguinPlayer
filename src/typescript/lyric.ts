@@ -171,13 +171,17 @@ function setLyricStatus(icon: "error" | "tick", text: string, tIcon?: "error" | 
 }
 
 export function getLyric(song: Song) {
-    setLyricStatus("error", "歌词加载中");
     lrc = tLrc = null;
     lrcOffset = tLrcOffset = 0;
     lastLrcOffset = -1;
+    if (song.provider != "netease") {
+        setLyricStatus("error", "非网易云音乐曲目");
+        return;
+    }
     clearTimeout(retryTimeout);
+    setLyricStatus("error", "歌词加载中");
     if (lyricReq) { lyricReq.cancel(); }
-    lyricReq = ajax(`https://gcm.tenmahw.com/resolve/lyric?id=${song.id}`).send().then((result: AjaxResponse) => {
+    lyricReq = ajax(`https://gcm.tenmahw.com/resolve/lyric?id=${(song as NeteaseSong).id}`).send().then((result: AjaxResponse) => {
         let lyric = result.data?.lyric;
         lrc = lyric?.lrc;
         tLrc = lyric?.tlrc;

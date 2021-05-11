@@ -25,6 +25,7 @@ import "../sass/player.sass";
 import template from "../template.pug";
 import { addEventListener, removeEventListener, dispatchEvent, dispatchWindowEvent } from "./modules/event";
 import ajax from "./modules/ajax";
+import { getPlaylist } from "./modules/netease";
 
 let el = document.createElement("div");
 el.className = "penguin-player";
@@ -41,7 +42,7 @@ export let playerOptions: PenguinPlayerOptions;
     let audio = (<HTMLAudioElement>el.querySelector(".penguin-player__audio"));
     audio.addEventListener("playing", updatePlayPauseButton);
     audio.addEventListener("pause", updatePlayPauseButton);
-    audio.addEventListener("error", () => {print("Cannot play " + songs[currentSong].name);next();});
+    audio.addEventListener("error", () => print("Cannot play " + songs[currentSong].name));
     addEventListener("initialized", () => {
         // Volume setup
         setVolume(1);
@@ -63,10 +64,53 @@ function initialize(options: string | PenguinPlayerOptions) {
     playerOptions = typeof options === "string" ? {
         playlist: options
     } : options;
-    fetchPlaylist(playerOptions.playlist);
+    if (typeof playerOptions.playlist === "string") {
+        playerOptions.playlist = [
+            {
+                type: "netease",
+                id: playerOptions.playlist
+            }
+        ]
+    }
+    let waitPromises: Promise<any>[] = [];
+    for (let provider of playerOptions.playlist) {
+        switch (provider.type) {
+            case "file":
+                for (let item of provider.files) {
+                    let artists = item.artists.join(", ");
+                    if (!item.thumbnail) {
+                        item.thumbnail = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M13,10V12H11V17A2,2 0 0,1 9,19A2,2 0 0,1 7,17A2,2 0 0,1 9,15C9.4,15 9.7,15.1 10,15.3V10H13Z' /%3E%3C/svg%3E";
+                    }
+                    songs.push(<FileSong>{
+                        ...item,
+                        artists,
+                    });
+                }
+            break;
+            case "netease":
+                waitPromises.push(getPlaylist(provider.id).then((list) => {songs.push.apply(songs, list);}).catch(() => {
+                    print("Cannot fetch Netease playlist");
+                }));
+            break;
+        }
+    }
+    Promise.allSettled(waitPromises).then((v) => {
+        if (songs.length <= 0) {
+            print("Cannot initialize, empty playlist");
+            return;
+        }
+        print("Playlist processed");
+        handlePlaylist(songs);
+        document.body.appendChild(el);
+        dispatchEvent("initialized");
+        if (typeof playerOptions.autoplay === "undefined" || playerOptions.autoplay) {
+            play(playerOptions.startIndex || Math.floor(Math.random() * songs.length));
+        }
+        print("Player ready");
+    });
 }
 
-function initializeWithPlaylist(list: any) {
+/*function initializeWithPlaylist(list: any) {
     print("Initializing...");
     if (document.querySelector(".penguin-player") != null) {
         print("Initialize cancelled! Already initialized");
@@ -84,24 +128,7 @@ function initializeWithPlaylist(list: any) {
     dispatchEvent("initialized");
     play(playerOptions.startIndex || Math.floor(Math.random() * songs.length));
     print("Player ready");
-}
-
-function fetchPlaylist(id: string) {
-    print("Fetching playlist...");
-    ajax(`https://gcm.tenmahw.com/resolve/playlist?id=${id}`).send().then((result: AjaxResponse) => {
-        if (result.data == null || result.data.code != 200) {
-            print("Cannot fetch playlist");
-            setTimeout(fetchPlaylist, 3000);
-        } else {
-            try {
-                initializeWithPlaylist(result.data.playlist);
-            } catch(e) {console.error(e);}
-        }
-    }).catch(() => {
-        print("Cannot fetch playlist");
-        setTimeout(fetchPlaylist, 3000);
-    });
-}
+}*/
 
 function updatePlayPauseButton() {
     let [play, pause] = [
@@ -115,7 +142,7 @@ function updatePlayPauseButton() {
     }
 }
 
-window.PPlayer = {
+export const api = {
     initialize, play, pause, next, previous: prev,
     addEventListener,
     removeEventListener,
@@ -132,7 +159,8 @@ window.PPlayer = {
         (<HTMLAudioElement>el.querySelector(".penguin-player__audio")).currentTime = value;
     },
     get duration() {
-        return songs[currentSong].duration;
+        let song = songs[currentSong];
+        return song.provider == "netease" ? (<NeteaseSong>song).duration : (<HTMLAudioElement>el.querySelector(".penguin-player__audio")).duration;
     },
     get paused() {
         return (<HTMLAudioElement>el.querySelector(".penguin-player__audio")).paused;
@@ -144,6 +172,8 @@ window.PPlayer = {
         return songs;
     }
 }
+
+window.PPlayer = api;
 
 dispatchWindowEvent("penguinplayerapiready");
 

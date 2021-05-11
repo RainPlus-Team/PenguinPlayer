@@ -6,7 +6,7 @@ const StackBlur = require('stackblur-canvas');
 
 import { findHighContrastColor } from "./modules/color";
 import { addEventListener, dispatchEvent } from "./modules/event";
-import { colorthief, container as el } from "./player";
+import { api, colorthief, container as el } from "./player";
 import Slider from "./modules/slider";
 import { currentSong, getCurrentTime, next, play, prev, songs, trialInfo } from "./controller";
 import { formatTime } from "./modules/helper";
@@ -96,7 +96,7 @@ function createSongElement(song: Song, click: () => void): HTMLElement {
     img.classList.add("penguin-player__player--playlist-thumbnail");
     img.classList.add("penguin-player--lazy");
     img.crossOrigin = "anonymous";
-    img.setAttribute("data-src", song.thumbnail + "?param=36y36");
+    img.setAttribute("data-src", song.thumbnail + (song.provider == "netease" ? "?param=36y36" : ""));
     songEl.appendChild(img);
     let title = document.createElement("h1");
     title.classList.add("penguin-player__player--playlist-title");
@@ -118,12 +118,12 @@ addEventListener("setup", () => {
     audio.addEventListener("pause", () => thumbState(false));
     audio.addEventListener("progress", function() {
         if (this.buffered.length <= 0) {return;}
-        (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-buffered")).style.width = ((this.buffered.end(this.buffered.length - 1) + (trialInfo?.start || 0)) / songs[currentSong].duration * 100) + "%";
+        (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-buffered")).style.width = ((this.buffered.end(this.buffered.length - 1) + (trialInfo?.start || 0)) / api.duration * 100) + "%";
     });
     audio.addEventListener("timeupdate", function() {
-        setCircleProgress(getCurrentTime() / songs[currentSong].duration * 100);
+        setCircleProgress(getCurrentTime() / api.duration * 100);
         (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-current")).textContent = formatTime(getCurrentTime());
-        (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-inner")).style.width = (getCurrentTime() / songs[currentSong].duration * 100) + "%";
+        (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-inner")).style.width = (getCurrentTime() / api.duration * 100) + "%";
     });
     // Controls setup
     (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-previous")).addEventListener("click", prev);
@@ -175,7 +175,7 @@ addEventListener("setup", () => {
         if (!playerOldState) {audio.play().catch();}
     });
     progressSlider.addEventHandler("valuechange", (value: number) => {
-        let songDura = songs[currentSong].duration;
+        let songDura = api.duration;
         let fullTime = songDura * value;
         audio.currentTime = fullTime - (trialInfo?.start || 0);
         return value < trialInfo?.start / songDura || value > trialInfo?.end / songDura;
