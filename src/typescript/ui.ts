@@ -61,7 +61,7 @@ export function setThemeColor(color: Color, palette: Color[]) {
 
 export function rotateToggle(rotate: boolean) {
     let thumbnail = (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img"));
-    if (rotate) {
+    if (rotate && !(<any>api.song).noThumbnail) {
         thumbnail.classList.add("rotate");
     } else {
         thumbnail.classList.remove("rotate");
@@ -148,7 +148,11 @@ addEventListener("setup", () => {
     });
     // Thumbnail setup
     (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img")).addEventListener("load", function() {
-        setThemeColor(colorthief.getColor(this), colorthief.getPalette(this));
+        if ((<any>api.song).noThumbnail) {
+            setThemeColor([255, 255, 255], [[0, 0, 0]])
+        } else {
+            setThemeColor(colorthief.getColor(this), colorthief.getPalette(this));
+        }
     });
     (<HTMLButtonElement>el.querySelector(".penguin-player__player--thumbnail-play-pause")).addEventListener("click", () => {
         if (el.querySelector(".penguin-player__player").clientWidth == 56) {return;}

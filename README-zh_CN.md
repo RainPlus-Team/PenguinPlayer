@@ -87,4 +87,4 @@
 ## 开发
 你可以[在此](https://penguin-player.vercel.app/)查看最新的开发构建。
 
-[![Vercel](demo/vercel.svg)](https://vercel.com/pplayer/penguin-player?utm_source=pplayer&utm_campaign=oss)
+[![Vercel](demo/vercel-dark.svg)](https://vercel.com/pplayer/penguin-player?utm_source=pplayer&utm_campaign=oss)

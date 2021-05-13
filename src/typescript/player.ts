@@ -14,7 +14,7 @@ import "../sass/ie.sass";
 
 import ColorThief from "colorthief";
 
-import { print } from "./modules/helper";
+import { formatTime, print } from "./modules/helper";
 import { songs, currentSong, play, pause, prev, next, setVolume } from "./controller";
 import { handlePlaylist } from "./ui";
 
@@ -24,7 +24,6 @@ import "../sass/player.sass";
 
 import template from "../template.pug";
 import { addEventListener, removeEventListener, dispatchEvent, dispatchWindowEvent } from "./modules/event";
-import ajax from "./modules/ajax";
 import { getPlaylist } from "./modules/netease";
 
 let el = document.createElement("div");
@@ -43,6 +42,7 @@ export let playerOptions: PenguinPlayerOptions;
     audio.addEventListener("playing", updatePlayPauseButton);
     audio.addEventListener("pause", updatePlayPauseButton);
     audio.addEventListener("error", () => print("Cannot play " + songs[currentSong].name));
+    audio.addEventListener("durationchange", () => (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-duration")).textContent = formatTime(api.duration));
     addEventListener("initialized", () => {
         // Volume setup
         setVolume(1);
@@ -79,6 +79,7 @@ function initialize(options: string | PenguinPlayerOptions) {
                 for (let item of provider.files) {
                     let artists = item.artists.join(", ");
                     if (!item.thumbnail) {
+                        (<any>item).noThumbnail = true;
                         item.thumbnail = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M13,10V12H11V17A2,2 0 0,1 9,19A2,2 0 0,1 7,17A2,2 0 0,1 9,15C9.4,15 9.7,15.1 10,15.3V10H13Z' /%3E%3C/svg%3E";
                     }
                     songs.push(<FileSong>{

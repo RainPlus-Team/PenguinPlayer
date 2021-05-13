@@ -85,12 +85,7 @@ function updatePlaymodeButton() {
 function reset() {
     setThemeColor([255, 255, 255], [[0, 0, 0]]);
     resetRotate();
-    audio.removeEventListener("load", fileSongLoaded);
     trialInfo = progressSlider.maxValue = progressSlider.minValue = null;
-}
-
-function fileSongLoaded() {
-    (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-duration")).textContent = formatTime(audio.duration);
 }
 
 export let trialInfo: TrialInfo;
@@ -112,11 +107,11 @@ export function play(id?: number) {
         if (id < 0 || id >= songs.length) { throw "Invalid song index"; }
         audio.pause();
         let song = songs[currentSong = id];
+        console.log("remove");
         reset();
         setMediaSession(song);
         getLyric(song);
         if (song.provider == "netease") {
-            (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-duration")).textContent = formatTime((song as NeteaseSong).duration);
             currentUrlReq?.cancel();
             currentUrlReq = ajax(`https://gcm.tenmahw.com/song/url?id=${(song as NeteaseSong).id}`).send().then((result: AjaxResponse) => {
                 if (result.data.code == 200) {
@@ -132,7 +127,6 @@ export function play(id?: number) {
                 } else { playFailedHandler(); }
             }).catch(playFailedHandler);
         } else {
-            audio.addEventListener("load", fileSongLoaded);
             audio.src = (song as FileSong).url;
             play();
         }
