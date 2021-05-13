@@ -109,19 +109,7 @@ function setElText(text: string, name: string = "main") {
     l.last = text;
 }
 
-function lyricUpdate() {
-    if (audio.paused) { return; }
-    let [main, sub] = ["", ""];
-    if (!isNaN(audio.currentTime) && (lrcOffset = findLrcPos(lrc, getCurrentTime() + lyricOffset, lrcOffset)) != -1) {
-        main = lrc[lrcOffset].value;
-        if ((tLrcOffset = findLrcPos(tLrc, getCurrentTime() + lyricOffset, tLrcOffset)) != -1) {
-            sub = tLrc[tLrcOffset].value;
-        } else {
-            sub = lrc[lrcOffset + 1]?.value || "";
-        }
-    }
-    setElText(main);
-    setElText(sub, "sub");
+function lyricFullviewUpdate() {
     if (lrcOffset != lastLrcOffset) {
         let fullview = el.querySelector(".penguin-player__lyric-settings--full-view > .scroll-content");
         fullview.querySelectorAll(".penguin-player__lyric-settings--full-view-line-active").forEach((el) => {
@@ -138,6 +126,22 @@ function lyricUpdate() {
         }
         lastLrcOffset = lrcOffset;
     }
+}
+
+function lyricUpdate() {
+    if (audio.paused) { return; }
+    let [main, sub] = ["", ""];
+    if (!isNaN(audio.currentTime) && (lrcOffset = findLrcPos(lrc, getCurrentTime() + lyricOffset, lrcOffset)) != -1) {
+        main = lrc[lrcOffset].value;
+        if ((tLrcOffset = findLrcPos(tLrc, getCurrentTime() + lyricOffset, tLrcOffset)) != -1) {
+            sub = tLrc[tLrcOffset].value;
+        } else {
+            sub = lrc[lrcOffset + 1]?.value || "";
+        }
+    }
+    setElText(main);
+    setElText(sub, "sub");
+    lyricFullviewUpdate();
     (<HTMLDivElement>el.querySelector(".penguin-player__lyric--background")).style.bottom = (main != "" || sub != "") ? "" : "-60px";
     requestAnimationFrame(lyricUpdate);
 }
@@ -152,6 +156,7 @@ function toggleSettings(show?: boolean) {
         setTimeout(() => [settings.style.transform, settings.style.opacity] = ["translate(0)", "1"]);
         settings.classList.add("penguin-player__lyric-settings-shown");
         fullviewScrollbar.update();
+        lyricFullviewUpdate();
     } else {
         [settings.style.transform, settings.style.opacity] = ["translate(10px)", "0"];
         settingsHideTimeout = setTimeout(() => settings.style.display = "none", 200);
@@ -171,6 +176,7 @@ function setLyricStatus(icon: "error" | "tick", text: string, tIcon?: "error" | 
 }
 
 export function getLyric(song: Song) {
+    dispatchEvent("fetchlyric", song);
     lrc = tLrc = null;
     lrcOffset = tLrcOffset = 0;
     lastLrcOffset = -1;
@@ -192,5 +198,4 @@ export function getLyric(song: Song) {
         print("Cannot fetch lyric");
         retryTimeout = setTimeout(getLyric, 5000, song);
     });
-    dispatchEvent("fetchlyric", song);
 }

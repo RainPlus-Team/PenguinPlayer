@@ -1,4 +1,4 @@
-import { formatTime, print } from "./modules/helper";
+import { print } from "./modules/helper";
 import { container as el, playerOptions } from "./player";
 import { setSong as setMediaSession } from "./modules/mediaSession";
 import { getLyric } from "./lyric";
@@ -107,7 +107,6 @@ export function play(id?: number) {
         if (id < 0 || id >= songs.length) { throw "Invalid song index"; }
         audio.pause();
         let song = songs[currentSong = id];
-        console.log("remove");
         reset();
         setMediaSession(song);
         getLyric(song);
