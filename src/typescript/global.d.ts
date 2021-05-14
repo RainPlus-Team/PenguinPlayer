@@ -15,7 +15,7 @@ interface Song {
     thumbnail?: string,
 }
 interface NeteaseSong extends Song {
-    id: number,
+    id: string,
     album: string,
     thumbnail: string,
     duration: number
@@ -27,6 +27,10 @@ interface FileSong extends Song {
 interface LyricLine {
     time: number,
     value: string
+}
+interface Lyric {
+    lrc: LyricLine[],
+    translatedLrc: LyricLine[]
 }
 
 interface Artwork {

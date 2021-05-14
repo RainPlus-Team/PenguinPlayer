@@ -1,5 +1,5 @@
-import { print } from "./modules/helper";
-import { container as el, playerOptions } from "./player";
+import { formatTime, print } from "./modules/helper";
+import { api, container as el, playerOptions } from "./player";
 import { setSong as setMediaSession } from "./modules/mediaSession";
 import { getLyric } from "./lyric";
 import { progressSlider, resetRotate, setThemeColor, volumeSlider } from "./ui";
@@ -20,7 +20,7 @@ export enum Playmodes {
 
 export let songs: Song[] = [];
 export let currentSong: number;
-export function mode(newMode?: Playmodes): Playmodes | undefined {
+export function setPlaymode(newMode?: Playmodes): Playmodes | undefined {
     if (newMode !== undefined) {
         playmode = newMode;
         localStorage.setItem("penguinplayer_playmode", playmode.toString());
@@ -49,15 +49,16 @@ addEventListener("setup", () => {
     audio.addEventListener("playing", () => errorAmount = 0);
     audio.addEventListener("error", playFailedHandler);
     audio.addEventListener("ended", handleEnded);
+    audio.addEventListener("durationchange", () => (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-duration")).textContent = formatTime(api.duration));
     let playmodeEl = <HTMLDivElement>el.querySelector(".penguin-player__player--controls-playmode");
     playmodeEl.addEventListener("click", () => {
-        mode(Object.values(Playmodes).includes(playmode + 1) ? playmode + 1 : 0);
+        setPlaymode(Object.values(Playmodes).includes(playmode + 1) ? playmode + 1 : 0);
     });
     addEventListener("initialized", () => {
         if (Object.values(Playmodes).includes(playerOptions.overridePlaymode)) {
-            mode(playerOptions.overridePlaymode);
+            setPlaymode(playerOptions.overridePlaymode);
         } else if (localStorage.getItem("penguinplayer_playmode") !== null && !isNaN(parseInt(localStorage.getItem("penguinplayer_playmode")))) {
-            mode(parseInt(localStorage.getItem("penguinplayer_playmode")));
+            setPlaymode(parseInt(localStorage.getItem("penguinplayer_playmode")));
         }
         updatePlaymodeButton();
     });

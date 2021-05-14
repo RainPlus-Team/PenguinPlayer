@@ -388,8 +388,10 @@
                     height: 14px
         .penguin-player__lyric-settings--full-view
             max-height: 200px
+            position: relative
             text-align: center
             overflow-x: hidden
+            padding: 20px 0
             .penguin-player__lyric-settings--full-view-line
                 font-size: 14px
                 margin: 5px
@@ -399,6 +401,23 @@
                     font-size: 18px
                 .penguin-player__lyric-settings--full-view-line-translate
                     font-size: small
+                &:first-of-type
+                    margin-top: 0
+                &:last-of-type
+                    margin-bottom: 0
+            &::before, &::after
+                content: ''
+                position: absolute
+                left: 0
+                right: 0
+                height: 20px
+                z-index: 1
+            &::before
+                top: 0
+                background: linear-gradient(to top, transparent, white)
+            &::after
+                bottom: 0
+                background: linear-gradient(to bottom, transparent, white)
         .penguin-player__lyric-settings--lyric-offset
             position: absolute
             left: 10px

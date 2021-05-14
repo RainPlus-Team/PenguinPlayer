@@ -1,4 +1,4 @@
-import ajax from "./ajax";
+import ajax from "../modules/ajax";
 
 export function getPlaylist(id: string): Promise<Song[]> {
     return new Promise((resolve, reject) => {
@@ -15,6 +15,21 @@ export function getPlaylist(id: string): Promise<Song[]> {
             } else {
                 reject(result.data.code);
             }
+        }).catch(reject);
+    });
+}
+
+let lyricReq: AjaxPromise;
+
+export function getLyric(id: string): Promise<Lyric> {
+    return new Promise((resolve, reject) => {
+        if (lyricReq) { lyricReq.cancel(); }
+        lyricReq = ajax(`https://gcm.tenmahw.com/resolve/lyric?id=${id}`).send().then((result: AjaxResponse) => {
+            let lyric = result.data?.lyric;
+            resolve({
+                lrc: lyric?.lrc,
+                translatedLrc: lyric?.tlrc
+            });
         }).catch(reject);
     });
 }

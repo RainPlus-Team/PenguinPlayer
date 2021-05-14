@@ -1,16 +1,15 @@
 import { getCurrentTime } from "./controller";
-import { print } from "./modules/helper";
-import ajax from "./modules/ajax";
 import { container as el } from "./player";
 
-import tickIcon from "../icons/tick.svg";
-import errorIcon from "../icons/error.svg";
+import { getLyric as getNeteaseLyric } from "./provider/netease";
+
 import { addEventListener, dispatchEvent, fireEvent } from "./modules/event";
 /// #if IE_SUPPORT
-import { inputStep } from "./modules/helper";
+import { inputStep, print } from "./modules/helper";
 /// #endif
 
 import { disableAutoScroll, scrollBar as fullviewScrollbar } from "./lyric-fullview";
+import { setLyricStatus, toggleSettings } from "./lyric-settings";
 
 export let lyricOffset = 0;
 
@@ -55,18 +54,8 @@ addEventListener("setup", () => {
         let offset = Number(this.value);
         lyricOffset = isNaN(offset) ? lyricOffset : offset;
         lrcOffset = tLrcOffset = 0;
-        //localStorage.setItem("penguinplayer_lyric_offset", offset.toString());
     });
     addEventListener("songchange", () => {lyricOffset = (<any>offsetField.value) = 0;});
-    // Well, this shouldn't be saved
-    /*if (localStorage.getItem("penguinplayer_lyric_offset") != null) {
-        let offset = Number(localStorage.getItem("penguinplayer_lyric_offset"));
-        if (isNaN(offset)) {
-            localStorage.setItem("penguinplayer_lyric_offset", "0");
-        } else {
-            lyricOffset = (<any>offsetField.value) = offset;
-        }
-    }*/
 });
 
 let lastTap: number;
@@ -79,7 +68,7 @@ function lyricTap() {
     lastTap = new Date().getTime();
 }
 
-let lyricReq: AjaxPromise, retryTimeout: any;
+let retryTimeout: any;
 
 let lrc: LyricLine[], tLrc: LyricLine[], lrcOffset = 0, lastLrcOffset = -1, tLrcOffset = 0;
 
@@ -109,25 +98,6 @@ function setElText(text: string, name: string = "main") {
     l.last = text;
 }
 
-function lyricFullviewUpdate() {
-    if (lrcOffset != lastLrcOffset) {
-        let fullview = el.querySelector(".penguin-player__lyric-settings--full-view > .scroll-content");
-        fullview.querySelectorAll(".penguin-player__lyric-settings--full-view-line-active").forEach((el) => {
-            el.classList.remove("penguin-player__lyric-settings--full-view-line-active");
-        });
-        let line = <HTMLElement>fullview.children[lrcOffset];
-        if (line) {
-            line.classList.add("penguin-player__lyric-settings--full-view-line-active");
-            if (!disableAutoScroll) {
-                fullviewScrollbar.scrollIntoView(line, {
-                    offsetTop: el.querySelector(".penguin-player__lyric-settings--full-view").clientHeight / 2 - line.clientHeight / 2
-                });
-            }
-        }
-        lastLrcOffset = lrcOffset;
-    }
-}
-
 function lyricUpdate() {
     if (audio.paused) { return; }
     let [main, sub] = ["", ""];
@@ -146,32 +116,22 @@ function lyricUpdate() {
     requestAnimationFrame(lyricUpdate);
 }
 
-let settingsHideTimeout: any;
-function toggleSettings(show?: boolean) {
-    let settings = (<HTMLDivElement>el.querySelector(".penguin-player__lyric-settings"));
-    show = typeof show === "boolean" ? show : settings.style.display != "block";
-    if (show) {
-        clearTimeout(settingsHideTimeout);
-        settings.style.display = "block";
-        setTimeout(() => [settings.style.transform, settings.style.opacity] = ["translate(0)", "1"]);
-        settings.classList.add("penguin-player__lyric-settings-shown");
-        fullviewScrollbar.update();
-        lyricFullviewUpdate();
-    } else {
-        [settings.style.transform, settings.style.opacity] = ["translate(10px)", "0"];
-        settingsHideTimeout = setTimeout(() => settings.style.display = "none", 200);
-        settings.classList.remove("penguin-player__lyric-settings-shown");
-    }
-}
-
-function setLyricStatus(icon: "error" | "tick", text: string, tIcon?: "error" | "tick", tText?: string) {
-    el.querySelector(".penguin-player__lyric-settings--status-lrc-icon").innerHTML = icon == "error" ? errorIcon : tickIcon;
-    el.querySelector(".penguin-player__lyric-settings--status-lrc-text").textContent = text;
-    if (tIcon && tText) {
-        el.querySelector(".penguin-player__lyric-settings--status-tlrc-icon").innerHTML = tIcon == "error" ? errorIcon : tickIcon;
-        el.querySelector(".penguin-player__lyric-settings--status-tlrc-text").textContent = tText;
-    } else {
-        [el.querySelector(".penguin-player__lyric-settings--status-tlrc-icon").innerHTML, el.querySelector(".penguin-player__lyric-settings--status-tlrc-text").textContent] = ["", ""];
+export function lyricFullviewUpdate() {
+    if (lrcOffset != lastLrcOffset) {
+        let fullview = el.querySelector(".penguin-player__lyric-settings--full-view > .scroll-content");
+        fullview.querySelectorAll(".penguin-player__lyric-settings--full-view-line-active").forEach((el) => {
+            el.classList.remove("penguin-player__lyric-settings--full-view-line-active");
+        });
+        let line = <HTMLElement>fullview.children[lrcOffset];
+        if (line) {
+            line.classList.add("penguin-player__lyric-settings--full-view-line-active");
+            if (!disableAutoScroll) {
+                fullviewScrollbar.scrollIntoView(line, {
+                    offsetTop: el.querySelector(".penguin-player__lyric-settings--full-view").clientHeight / 2 - line.clientHeight / 2
+                });
+            }
+        }
+        lastLrcOffset = lrcOffset;
     }
 }
 
@@ -186,16 +146,13 @@ export function getLyric(song: Song) {
     }
     clearTimeout(retryTimeout);
     setLyricStatus("error", "歌词加载中");
-    if (lyricReq) { lyricReq.cancel(); }
-    lyricReq = ajax(`https://gcm.tenmahw.com/resolve/lyric?id=${(song as NeteaseSong).id}`).send().then((result: AjaxResponse) => {
-        let lyric = result.data?.lyric;
-        lrc = lyric?.lrc;
-        tLrc = lyric?.tlrc;
-        dispatchEvent("lyricready", song, lrc, tLrc);
+    getNeteaseLyric((song as NeteaseSong).id).then((res) => {
+        [lrc, tLrc] = [res.lrc, res.translatedLrc];
         setLyricStatus.apply(null, lrc ? ["tick", "歌词已加载"].concat(tLrc ? ["tick", "翻译歌词已加载"] : ["error", "无翻译歌词"]) : ["error", "无歌词"]);
+        dispatchEvent("lyricready", song, lrc, tLrc);
         (<HTMLDivElement>el.querySelector(".penguin-player__lyric--background")).style.bottom = lrc ? "" : "-60px";
     }).catch(() => {
-        print("Cannot fetch lyric");
+        print("Can't fetch Netease lyric");
         retryTimeout = setTimeout(getLyric, 5000, song);
     });
 }

@@ -14,8 +14,8 @@ import "../sass/ie.sass";
 
 import ColorThief from "colorthief";
 
-import { formatTime, print } from "./modules/helper";
-import { songs, currentSong, play, pause, prev, next, setVolume } from "./controller";
+import { print } from "./modules/helper";
+import { songs, currentSong, play, pause, prev, next, setVolume, setPlaymode } from "./controller";
 import { handlePlaylist } from "./ui";
 
 /// #if !NO_STYLE
@@ -24,7 +24,7 @@ import "../sass/player.sass";
 
 import template from "../template.pug";
 import { addEventListener, removeEventListener, dispatchEvent, dispatchWindowEvent } from "./modules/event";
-import { getPlaylist } from "./modules/netease";
+import { getPlaylist } from "./provider/netease";
 
 let el = document.createElement("div");
 el.className = "penguin-player";
@@ -37,12 +37,6 @@ export let playerOptions: PenguinPlayerOptions;
 
 // Setup
 {
-    // Audio element setup
-    let audio = (<HTMLAudioElement>el.querySelector(".penguin-player__audio"));
-    audio.addEventListener("playing", updatePlayPauseButton);
-    audio.addEventListener("pause", updatePlayPauseButton);
-    audio.addEventListener("error", () => print("Cannot play " + songs[currentSong].name));
-    audio.addEventListener("durationchange", () => (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-duration")).textContent = formatTime(api.duration));
     addEventListener("initialized", () => {
         // Volume setup
         setVolume(1);
@@ -111,71 +105,23 @@ function initialize(options: string | PenguinPlayerOptions) {
     });
 }
 
-/*function initializeWithPlaylist(list: any) {
-    print("Initializing...");
-    if (document.querySelector(".penguin-player") != null) {
-        print("Initialize cancelled! Already initialized");
-        return;
-    }
-    print(`Using playlist ${list.name}`);
-    for (let track of list.tracks) {
-        let artists = "";
-        for (let artist of track.ar) { artists += `, ${artist.name}`; }
-        songs.push({ id: track.id, name: track.name, artists: artists.substring(2), album: track.al.name, thumbnail: track.al.picUrl.replace("http:", "https:"), duration: track.dt / 1000 });
-    }
-    print("Playlist processed");
-    handlePlaylist(songs);
-    document.body.appendChild(el);
-    dispatchEvent("initialized");
-    play(playerOptions.startIndex || Math.floor(Math.random() * songs.length));
-    print("Player ready");
-}*/
-
-function updatePlayPauseButton() {
-    let [play, pause] = [
-        (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-play")),
-        (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-pause"))
-    ];
-    if ((<HTMLAudioElement>el.querySelector(".penguin-player__audio")).paused) {
-        [play.style.display, pause.style.display] = ["block", "none"];
-    } else {
-        [play.style.display, pause.style.display] = ["none", "block"];
-    }
-}
-
 export const api = {
-    initialize, play, pause, next, previous: prev,
-    addEventListener,
-    removeEventListener,
-    get volume() {
-        return (<HTMLAudioElement>el.querySelector(".penguin-player__audio")).volume;
-    },
-    set volume(value) {
-        setVolume(value);
-    },
-    get currentTime() {
-        return (<HTMLAudioElement>el.querySelector(".penguin-player__audio")).currentTime;
-    },
-    set currentTime(value) {
-        (<HTMLAudioElement>el.querySelector(".penguin-player__audio")).currentTime = value;
-    },
+    initialize, play, pause, next, previous: prev, setPlaymode,
+    addEventListener, removeEventListener,
+    get volume() { return (<HTMLAudioElement>el.querySelector(".penguin-player__audio")).volume },
+    set volume(value) { setVolume(value) },
+    get currentTime() { return (<HTMLAudioElement>el.querySelector(".penguin-player__audio")).currentTime },
+    set currentTime(value) { (<HTMLAudioElement>el.querySelector(".penguin-player__audio")).currentTime = value },
     get duration() {
         let song = songs[currentSong];
         return song.provider == "netease" ? (<NeteaseSong>song).duration : (<HTMLAudioElement>el.querySelector(".penguin-player__audio")).duration;
     },
-    get paused() {
-        return (<HTMLAudioElement>el.querySelector(".penguin-player__audio")).paused;
-    },
-    get song() {
-        return songs[currentSong];
-    },
-    get playlist() {
-        return songs;
-    }
+    get paused() { return (<HTMLAudioElement>el.querySelector(".penguin-player__audio")).paused },
+    get song() { return songs[currentSong] },
+    get playlist() { return songs }
 }
 
 window.PPlayer = api;
-
 dispatchWindowEvent("penguinplayerapiready");
 
 print("https://github.com/M4TEC/PenguinPlayer");

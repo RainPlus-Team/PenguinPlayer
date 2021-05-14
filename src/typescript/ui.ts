@@ -5,7 +5,7 @@ const StackBlur = require('stackblur-canvas');
 /// #endif
 
 import { findHighContrastColor } from "./modules/color";
-import { addEventListener, dispatchEvent } from "./modules/event";
+import { addEventListener, addEventListeners, dispatchEvent } from "./modules/event";
 import { api, colorthief, container as el } from "./player";
 import Slider from "./modules/slider";
 import { currentSong, getCurrentTime, next, play, prev, songs, trialInfo } from "./controller";
@@ -109,11 +109,24 @@ function createSongElement(song: Song, click: () => void): HTMLElement {
     return songEl;
 }
 
-function thumbState(state: boolean) {rotateToggle(state);(<HTMLDivElement>el.querySelector(".penguin-player__lyric")).style.opacity = state ? "1" : "0";}
+function thumbState(state: boolean) { rotateToggle(state); (<HTMLDivElement>el.querySelector(".penguin-player__lyric")).style.opacity = state ? "1" : "0"; }
+
+function updatePlayPauseButton() {
+    let [play, pause] = [
+        (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-play")),
+        (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-pause"))
+    ];
+    if ((<HTMLAudioElement>el.querySelector(".penguin-player__audio")).paused) {
+        [play.style.display, pause.style.display] = ["block", "none"];
+    } else {
+        [play.style.display, pause.style.display] = ["none", "block"];
+    }
+}
 
 addEventListener("setup", () => {
     let audio: HTMLAudioElement = el.querySelector(".penguin-player__audio");
     // Audio setup
+    addEventListeners(audio, "play pause", updatePlayPauseButton);
     audio.addEventListener("playing", () => thumbState(true));
     audio.addEventListener("pause", () => thumbState(false));
     audio.addEventListener("progress", function() {
