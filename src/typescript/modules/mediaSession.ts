@@ -1,5 +1,6 @@
 import { container as el } from "../player";
 import { play, pause, next, prev } from "../controller";
+import { getThumbnail } from "./helper";
 
 if ("mediaSession" in navigator) {
     (<any>navigator).mediaSession.setActionHandler("play", play);
@@ -19,34 +20,20 @@ if ("mediaSession" in navigator) {
 export function setSong(song: Song) {
     (<HTMLHeadingElement>el.querySelector(".penguin-player__player--name")).textContent = song.name;
     (<HTMLParagraphElement>el.querySelector(".penguin-player__player--artists")).textContent = song.artists;
-    if (song.provider == "netease") {
-        (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img")).src = song.thumbnail + "?param=48y48";
-        if ("mediaSession" in navigator) {
-            (<any>navigator).mediaSession.metadata = new MediaMetadata({
-                title: song.name,
-                artist: song.artists,
-                album: song.album,
-                artwork: [
-                    { src: song.thumbnail + "?param=96y96", sizes: "96x96" },
-                    { src: song.thumbnail + "?param=128y128", sizes: "128x128" },
-                    { src: song.thumbnail + "?param=192y192", sizes: "192x192" },
-                    { src: song.thumbnail + "?param=256y256", sizes: "256x256" },
-                    { src: song.thumbnail + "?param=384y384", sizes: "384x384" },
-                    { src: song.thumbnail + "?param=512y512", sizes: "512x512" }
-                ]
-            });
-        }
-    } else if (song.thumbnail) {
-        (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img")).src = song.thumbnail;
-        if ("mediaSession" in navigator) {
-            (<any>navigator).mediaSession.metadata = new MediaMetadata({
-                title: song.name,
-                artist: song.artists,
-                album: song.album,
-                artwork: [
-                    { src: song.thumbnail }
-                ]
-            });
-        }
+    (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img")).src = getThumbnail(song.thumbnail, 48);
+    if ("mediaSession" in navigator) {
+        (<any>navigator).mediaSession.metadata = new MediaMetadata({
+            title: song.name,
+            artist: song.artists,
+            album: song.album,
+            artwork: [
+                { src: getThumbnail(song.thumbnail, 96), sizes: "96x96" },
+                { src: getThumbnail(song.thumbnail, 128), sizes: "128x128" },
+                { src: getThumbnail(song.thumbnail, 192), sizes: "192x192" },
+                { src: getThumbnail(song.thumbnail, 256), sizes: "256x256" },
+                { src: getThumbnail(song.thumbnail, 384), sizes: "384x384" },
+                { src: getThumbnail(song.thumbnail, 512), sizes: "512x512" }
+            ]
+        });
     }
 }

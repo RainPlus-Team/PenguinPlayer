@@ -23,8 +23,8 @@ export default class Slider {
         this.innerEl = el.querySelector(options.innerSelector);
         this.value = options.value || 1;
 
-        deepEventHandler(this.activeEl, "mousedown", (e: MouseEvent | TouchEvent) => {this.handleBeginDrag(e);});
-        deepEventHandler(this.activeEl, "touchstart", (e: MouseEvent | TouchEvent) => {this.handleBeginDrag(e);});
+        deepEventHandler(this.activeEl, "mousedown", (e: MouseEvent | TouchEvent) => {this.handleBeginDrag(e);}, false);
+        deepEventHandler(this.activeEl, "touchstart", (e: MouseEvent | TouchEvent) => {this.handleBeginDrag(e);}, false);
         window.addEventListener("mousemove", (e: MouseEvent | TouchEvent) => {this.update(e);});
         window.addEventListener("touchmove", (e: MouseEvent | TouchEvent) => {this.update(e);});
         window.addEventListener("mouseup", (e: MouseEvent | TouchEvent) => {this.handleEndDrag(e);});

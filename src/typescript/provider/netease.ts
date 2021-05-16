@@ -10,7 +10,7 @@ function getPlaylist(id: string): Promise<Song[]> {
                 for (let track of list.tracks) {
                     let artists = "";
                     for (let artist of track.ar) { artists += `, ${artist.name}`; }
-                    songs.push({ provider: "netease", id: track.id, name: track.name, artists: artists.substring(2), album: track.al.name, thumbnail: track.al.picUrl.replace("http:", "https:"), duration: track.dt / 1000 });
+                    songs.push({ provider: "netease", id: track.id, name: track.name, artists: artists.substring(2), album: track.al.name, thumbnail: track.al.picUrl.replace("http:", "https:") + "?param=%width%y%height%", duration: track.dt / 1000 });
                 }
                 resolve(songs);
             } else {

@@ -29,6 +29,14 @@ export function deepEventHandler(element: HTMLElement, ...args: any[]) {
     });
 }
 
+export function getThumbnail(url: string, sizeOrWidth: number, height?: number) {
+    if (url.indexOf("%width%") != -1 && url.indexOf("%height%") != -1) {
+        return url.replace(/%width%/g, sizeOrWidth.toString()).replace(/%height%/g, (height || sizeOrWidth).toString());
+    } else {
+        return url.replace(/%size%/g, sizeOrWidth.toString());
+    }
+}
+
 /// #if IE_SUPPORT
 export function isBlurSupported() {
     return Modernizr.testAllProps("backdropFilter", "blur(5px)");

@@ -70,7 +70,9 @@ function initialize(options: string | PenguinPlayerOptions) {
     for (let playlist of playerOptions.playlist) {
         waitPromises.push(getProvider(playlist.type).getPlaylist(playlist.options));
     }
+    console.log("begin");
     Promise.allSettled(waitPromises).then((res) => {
+        console.log("done", res);
         for (let result of res) {
             if (result.status == "fulfilled") {
                 songs.push.apply(songs, result.value);

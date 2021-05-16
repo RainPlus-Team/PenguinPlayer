@@ -76,5 +76,5 @@ addEventListener("initialized", () => {
                 disableAutoScroll = true;
                 break;
         }
-    });
+    }, false);
 });

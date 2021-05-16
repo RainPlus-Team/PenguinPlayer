@@ -9,7 +9,7 @@ import { addEventListener, addEventListeners, dispatchEvent } from "./modules/ev
 import { api, colorthief, container as el } from "./player";
 import Slider from "./modules/slider";
 import { currentSong, getCurrentTime, next, play, prev, songs, trialInfo } from "./controller";
-import { formatTime } from "./modules/helper";
+import { formatTime, getThumbnail } from "./modules/helper";
 /// #if IE_SUPPORT
 import { isBlurSupported } from "./modules/helper";
 /// #endif
@@ -38,7 +38,7 @@ export function setThemeColor(color: Color, palette: Color[]) {
     if (!isBlurSupported()) {
         let img = new Image(window.innerWidth / 4, window.innerHeight / 2);
         img.crossOrigin = "anonymous";
-        img.src = songs[currentSong].thumbnail + `?param=${img.width}y${img.height}`;
+        img.src = getThumbnail(songs[currentSong].thumbnail, img.width, img.height);
         img.addEventListener("load", () => StackBlur.image(img, el.querySelector(".penguin-player__player--canvas-background"), 30));
     }
     /// #endif
@@ -96,7 +96,8 @@ function createSongElement(song: Song, click: () => void): HTMLElement {
     img.classList.add("penguin-player__player--playlist-thumbnail");
     img.classList.add("penguin-player--lazy");
     img.crossOrigin = "anonymous";
-    img.setAttribute("data-src", song.thumbnail + (song.provider == "netease" ? "?param=36y36" : ""));
+    img.alt = "封面";
+    img.setAttribute("data-src", getThumbnail(song.thumbnail, 36));
     songEl.appendChild(img);
     let title = document.createElement("h1");
     title.classList.add("penguin-player__player--playlist-title");
