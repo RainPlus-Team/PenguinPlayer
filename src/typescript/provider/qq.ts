@@ -33,8 +33,8 @@ function getUrl(song: QQSong): Promise<string> {
     return new Promise((resolve, reject) => {
         (<any>window).penguinplayer_qqmusic_callback = function(data: any) {
             delete (<any>window).penguinplayer_qqmusic_callback;
-            if (data.code == 0 && data.url_mid.code == 0 && data.url_mid.data.midurlinfo.length >= 1) {
-                resolve(data.url_mid.data.midurlinfo[0].purl);
+            if (data.code == 0 && data.url_mid.code == 0 && data.url_mid.data.midurlinfo.length >= 1 && typeof data.url_mid.data.midurlinfo[0].purl === "string") {
+                resolve(data.url_mid.data.midurlinfo[0].purl.replace("http:", "https:"));
             }
         }
         let script = document.createElement("script");
