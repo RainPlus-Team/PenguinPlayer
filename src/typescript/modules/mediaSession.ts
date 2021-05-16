@@ -20,7 +20,13 @@ if ("mediaSession" in navigator) {
 export function setSong(song: Song) {
     (<HTMLHeadingElement>el.querySelector(".penguin-player__player--name")).textContent = song.name;
     (<HTMLParagraphElement>el.querySelector(".penguin-player__player--artists")).textContent = song.artists;
-    (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img")).src = getThumbnail(song.thumbnail, 48);
+    let img = (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img"));
+    if (song.thumbnailNoCrossOrigin) {
+        img.removeAttribute("crossorigin");
+    } else {
+        img.setAttribute("crossorigin", "anonymous");
+    }
+    img.src = getThumbnail(song.thumbnail, 48);
     if ("mediaSession" in navigator) {
         (<any>navigator).mediaSession.metadata = new MediaMetadata({
             title: song.name,

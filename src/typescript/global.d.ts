@@ -13,6 +13,7 @@ interface Song {
     artists: string,
     album?: string,
     thumbnail?: string,
+    thumbnailNoCrossOrigin?: boolean
 }
 interface NeteaseSong extends Song {
     id: string,
@@ -106,7 +107,7 @@ interface Provider {
     type: string,
     getPlaylist: (options: any) => Promise<Song[]>,
     getLyric?: (song: Song) => Promise<Lyric>,
-    getUrl: (song: Song) => Promise<string>
+    getUrl: (song: Song) => Promise<string>,
 }
 
 interface BasePlaylist {

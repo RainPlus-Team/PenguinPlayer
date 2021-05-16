@@ -18,6 +18,7 @@ function getPlaylist(id: string): Promise<Song[]> {
                         id: song.songmid,
                         name: song.songname,
                         thumbnail: `https://y.qq.com/music/photo_new/T002R300x300M000${song.albummid}.jpg`,
+                        thumbnailNoCrossOrigin: true,
                         artists,
                         album: song.albumname
                     });

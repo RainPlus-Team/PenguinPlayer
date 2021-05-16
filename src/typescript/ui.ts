@@ -95,7 +95,9 @@ function createSongElement(song: Song, click: () => void): HTMLElement {
     let img = document.createElement("img");
     img.classList.add("penguin-player__player--playlist-thumbnail");
     img.classList.add("penguin-player--lazy");
-    img.crossOrigin = "anonymous";
+    if (!song.thumbnailNoCrossOrigin) {
+        img.crossOrigin = "anonymous";
+    }
     img.alt = "封面";
     img.setAttribute("data-src", getThumbnail(song.thumbnail, 36));
     songEl.appendChild(img);
@@ -162,7 +164,7 @@ addEventListener("setup", () => {
     });
     // Thumbnail setup
     (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img")).addEventListener("load", function() {
-        if ((<any>api.song).noThumbnail) {
+        if ((<any>api.song).noThumbnail || api.song.thumbnailNoCrossOrigin) {
             setThemeColor([255, 255, 255], [[0, 0, 0]])
         } else {
             setThemeColor(colorthief.getColor(this), colorthief.getPalette(this));
