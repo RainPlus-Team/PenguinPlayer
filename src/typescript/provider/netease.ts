@@ -1,6 +1,7 @@
+import { print } from "../modules/helper";
 import ajax from "../modules/ajax";
 
-export function getPlaylist(id: string): Promise<Song[]> {
+function getPlaylist(id: string): Promise<Song[]> {
     return new Promise((resolve, reject) => {
         ajax(`https://gcm.tenmahw.com/resolve/playlist?id=${id}`).send().then((result: AjaxResponse) => {
             if (result.data != null && result.data.code == 200) {
@@ -21,10 +22,10 @@ export function getPlaylist(id: string): Promise<Song[]> {
 
 let lyricReq: AjaxPromise;
 
-export function getLyric(id: string): Promise<Lyric> {
+function getLyric(song: NeteaseSong): Promise<Lyric> {
     return new Promise((resolve, reject) => {
         if (lyricReq) { lyricReq.cancel(); }
-        lyricReq = ajax(`https://gcm.tenmahw.com/resolve/lyric?id=${id}`).send().then((result: AjaxResponse) => {
+        lyricReq = ajax(`https://gcm.tenmahw.com/resolve/lyric?id=${song.id}`).send().then((result: AjaxResponse) => {
             let lyric = result.data?.lyric;
             resolve({
                 lrc: lyric?.lrc,
@@ -32,4 +33,28 @@ export function getLyric(id: string): Promise<Lyric> {
             });
         }).catch(reject);
     });
+}
+
+let currentUrlReq: AjaxPromise;
+
+function getUrl(song: NeteaseSong): Promise<string> {
+    return new Promise((resolve, reject) => {
+        currentUrlReq?.cancel();
+        currentUrlReq = ajax(`https://gcm.tenmahw.com/song/url?id=${(song as NeteaseSong).id}`).send().then((result: AjaxResponse) => {
+            if (result.data.code == 200) {
+                let track = result.data.data[0];
+                if (track.url) {
+                    //trialInfo = track.freeTrialInfo;
+                    resolve(track.url.replace("http:", "https:"));
+                } else {
+                    print(`${song.name} is unavailable`);
+                }
+            } else { reject(); }
+        }).catch(reject);
+    });
+}
+
+export default <NeteaseProvider>{
+    type: "netease",
+    getPlaylist, getLyric, getUrl
 }

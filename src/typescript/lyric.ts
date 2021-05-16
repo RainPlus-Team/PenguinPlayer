@@ -1,7 +1,5 @@
 import { getCurrentTime } from "./controller";
-import { container as el } from "./player";
-
-import { getLyric as getNeteaseLyric } from "./provider/netease";
+import { api, container as el } from "./player";
 
 import { addEventListener, dispatchEvent, fireEvent } from "./modules/event";
 /// #if IE_SUPPORT
@@ -10,6 +8,7 @@ import { inputStep, print } from "./modules/helper";
 
 import { disableAutoScroll, scrollBar as fullviewScrollbar } from "./lyric-fullview";
 import { setLyricStatus, toggleSettings } from "./lyric-settings";
+import { getProvider } from "./modules/provider";
 
 export let lyricOffset = 0;
 
@@ -146,7 +145,8 @@ export function getLyric(song: Song) {
     }
     clearTimeout(retryTimeout);
     setLyricStatus("error", "歌词加载中");
-    getNeteaseLyric((song as NeteaseSong).id).then((res) => {
+    getProvider(song.provider).getLyric(song).then((res) => {
+        if (api.song != song) return;
         [lrc, tLrc] = [res.lrc, res.translatedLrc];
         setLyricStatus.apply(null, lrc ? ["tick", "歌词已加载"].concat(tLrc ? ["tick", "翻译歌词已加载"] : ["error", "无翻译歌词"]) : ["error", "无歌词"]);
         dispatchEvent("lyricready", song, lrc, tLrc);

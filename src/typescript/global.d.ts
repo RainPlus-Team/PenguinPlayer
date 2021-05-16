@@ -8,7 +8,7 @@ declare module "*.svg" {
 }
 
 interface Song {
-    provider: "file" | "netease",
+    provider: string,
     name: string,
     artists: string,
     album?: string,
@@ -95,14 +95,32 @@ interface PenguinPlayerAPI {
 }
 
 interface PenguinPlayerOptions {
-    playlist: string | PlaylistProvider[],
+    playlist: string | Playlist[],
     autoplay?: boolean,
     startIndex?: number,
     overrideVolume?: number
     overridePlaymode?: import("./controller").Playmodes
 }
 
-interface FileProviderItem {
+interface Provider {
+    type: string,
+    getPlaylist: (options: any) => Promise<Song[]>,
+    getLyric?: (song: Song) => Promise<Lyric>,
+    getUrl: (song: Song) => Promise<string>
+}
+
+interface BasePlaylist {
+    type: string,
+    options: any
+}
+
+
+/// File Provider ///
+interface FileProvider extends Provider {
+    getPlaylist: (files: FilePlaylistItem[]) => Promise<Song[]>,
+    getUrl: (file: FileSong) => Promise<string>
+}
+interface FilePlaylistItem {
     name: string,
     artists: string[],
     url: string,
@@ -110,13 +128,33 @@ interface FileProviderItem {
     album?: string
 }
 
-type FileProvider = {
+type FilePlaylist = BasePlaylist & {
     type: "file",
-    files: FileProviderItem[]
-}
-type NeteaseProvider = {
-    type: "netease",
-    id: string
+    options: FilePlaylistItem[]
 }
 
-type PlaylistProvider = FileProvider | NeteaseProvider;
+/// Netease Provider ///
+interface NeteaseProvider extends Provider {
+    getPlaylist: (id: string) => Promise<Song[]>,
+    getLyric: (song: NeteaseSong) => Promise<Lyric>,
+    getUrl: (song: NeteaseSong) => Promise<string>
+}
+type NeteasePlaylist = BasePlaylist & {
+    type: "netease",
+    options: string
+}
+
+/// QQ Provider ///
+interface QQProvider extends Provider {
+    getPlaylist: (id: string) => Promise<Song[]>,
+    getUrl: (song: QQSong) => Promise<string>
+}
+interface QQSong extends Song {
+    id: string
+}
+type QQPlaylist = BasePlaylist & {
+    type: "qq",
+    options: string
+}
+
+type Playlist = FilePlaylist | NeteasePlaylist | QQPlaylist;

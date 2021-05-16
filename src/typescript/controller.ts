@@ -4,12 +4,12 @@ import { setSong as setMediaSession } from "./modules/mediaSession";
 import { getLyric } from "./lyric";
 import { progressSlider, resetRotate, setThemeColor, volumeSlider } from "./ui";
 import { addEventListener, dispatchEvent } from "./modules/event";
-import ajax from "./modules/ajax";
 
 import list from "../icons/list-play.svg";
 import listLoop from "../icons/list-loop.svg";
 import singleLoop from "../icons/single-loop.svg";
 import random from "../icons/random.svg";
+import { getProvider } from "./modules/provider";
 
 export enum Playmodes {
     List,
@@ -30,7 +30,7 @@ export function setPlaymode(newMode?: Playmodes): Playmodes | undefined {
     }
 }
 
-let playmode: Playmodes = Playmodes.ListLoop, errorAmount = 0, currentUrlReq: AjaxPromise;
+let playmode: Playmodes = Playmodes.ListLoop, errorAmount = 0;
 
 const playFailedHandler = () => {
     errorAmount++;
@@ -111,25 +111,10 @@ export function play(id?: number) {
         reset();
         setMediaSession(song);
         getLyric(song);
-        if (song.provider == "netease") {
-            currentUrlReq?.cancel();
-            currentUrlReq = ajax(`https://gcm.tenmahw.com/song/url?id=${(song as NeteaseSong).id}`).send().then((result: AjaxResponse) => {
-                if (result.data.code == 200) {
-                    let track = result.data.data[0];
-                    if (track.url) {
-                        trialInfo = track.freeTrialInfo;
-                        audio.src = track.url.replace("http:", "https:");
-                        play();
-                    } else {
-                        print(`${song.name} is unavailable`);
-                        next();
-                    }
-                } else { playFailedHandler(); }
-            }).catch(playFailedHandler);
-        } else {
-            audio.src = (song as FileSong).url;
+        getProvider(song.provider).getUrl(song).then((res) => {
+            audio.src = res;
             play();
-        }
+        }).catch(playFailedHandler);
         dispatchEvent("songchange", song);
     } else { audio.play().catch(); }
 }

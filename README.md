@@ -89,4 +89,4 @@ You can buy me a ~~cola~~ coffee at http://afdian.net/@TenmaHiltonWhat ;P
 ## Development
 You can check the latest development build [here](https://penguin-player.vercel.app/).
 
-[![Vercel](demo/vercel-dark.svg)](https://vercel.com/pplayer/penguin-player?utm_source=pplayer&utm_campaign=oss)
+[<img src="demo/vercel-dark.svg" width="150"/>](https://vercel.com/pplayer/penguin-player?utm_source=pplayer&utm_campaign=oss)

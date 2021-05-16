@@ -24,7 +24,7 @@ import "../sass/player.sass";
 
 import template from "../template.pug";
 import { addEventListener, removeEventListener, dispatchEvent, dispatchWindowEvent } from "./modules/event";
-import { getPlaylist } from "./provider/netease";
+import { getProvider } from "./modules/provider";
 
 let el = document.createElement("div");
 el.className = "penguin-player";
@@ -62,34 +62,20 @@ function initialize(options: string | PenguinPlayerOptions) {
         playerOptions.playlist = [
             {
                 type: "netease",
-                id: playerOptions.playlist
+                options: playerOptions.playlist
             }
         ]
     }
-    let waitPromises: Promise<any>[] = [];
-    for (let provider of playerOptions.playlist) {
-        switch (provider.type) {
-            case "file":
-                for (let item of provider.files) {
-                    let artists = item.artists.join(", ");
-                    if (!item.thumbnail) {
-                        (<any>item).noThumbnail = true;
-                        item.thumbnail = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M13,10V12H11V17A2,2 0 0,1 9,19A2,2 0 0,1 7,17A2,2 0 0,1 9,15C9.4,15 9.7,15.1 10,15.3V10H13Z' /%3E%3C/svg%3E";
-                    }
-                    songs.push(<FileSong>{
-                        ...item,
-                        artists,
-                    });
-                }
-            break;
-            case "netease":
-                waitPromises.push(getPlaylist(provider.id).then((list) => {songs.push.apply(songs, list);}).catch(() => {
-                    print("Cannot fetch Netease playlist");
-                }));
-            break;
-        }
+    let waitPromises: Promise<Song[]>[] = [];
+    for (let playlist of playerOptions.playlist) {
+        waitPromises.push(getProvider(playlist.type).getPlaylist(playlist.options));
     }
-    Promise.allSettled(waitPromises).then((v) => {
+    Promise.allSettled(waitPromises).then((res) => {
+        for (let result of res) {
+            if (result.status == "fulfilled") {
+                songs.push.apply(songs, result.value);
+            }
+        }
         if (songs.length <= 0) {
             print("Cannot initialize, empty playlist");
             return;
