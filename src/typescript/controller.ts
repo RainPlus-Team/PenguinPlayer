@@ -112,6 +112,7 @@ export function play(id?: number) {
         setMediaSession(song);
         getLyric(song);
         getProvider(song.provider).getUrl(song).then((res) => {
+            if (song != api.song) return;
             audio.src = res;
             play();
         }).catch(playFailedHandler);

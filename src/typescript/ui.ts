@@ -71,9 +71,8 @@ export function rotateToggle(rotate: boolean) {
 export function resetRotate() {
     let thumbnail = (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img"));
     thumbnail.style.animation = "none";
-    setTimeout(() => {
-        thumbnail.style.animation = "";
-    });
+    el.offsetHeight; // Animation reset hack
+    thumbnail.style.animation = "";
 }
 
 export function handlePlaylist(list: Song[]) {
