@@ -1,5 +1,6 @@
 import { print } from "../modules/helper";
 import ajax from "../modules/ajax";
+import { updateTrialInfo } from "../controller";
 
 function getPlaylist(id: string): Promise<Song[]> {
     return new Promise((resolve, reject) => {
@@ -9,13 +10,11 @@ function getPlaylist(id: string): Promise<Song[]> {
                 let list = result.data.playlist;
                 for (let track of list.tracks) {
                     let artists = "";
-                    for (let artist of track.ar) { artists += `, ${artist.name}`; }
+                    for (let artist of track.ar) artists += `, ${artist.name}`;
                     songs.push({ provider: "netease", id: track.id, name: track.name, artists: artists.substring(2), album: track.al.name, thumbnail: track.al.picUrl.replace("http:", "https:") + "?param=%width%y%height%", duration: track.dt / 1000 });
                 }
                 resolve(songs);
-            } else {
-                reject(result.data.code);
-            }
+            } else reject(result.data.code);
         }).catch(reject);
     });
 }
@@ -24,7 +23,7 @@ let lyricReq: AjaxPromise;
 
 function getLyric(song: NeteaseSong): Promise<Lyric> {
     return new Promise((resolve, reject) => {
-        if (lyricReq) { lyricReq.cancel(); }
+        if (lyricReq) lyricReq.cancel();
         lyricReq = ajax(`https://gcm.tenmahw.com/resolve/lyric?id=${song.id}`).send().then((result: AjaxResponse) => {
             let lyric = result.data?.lyric;
             resolve({
@@ -44,12 +43,14 @@ function getUrl(song: NeteaseSong): Promise<string> {
             if (result.data.code == 200) {
                 let track = result.data.data[0];
                 if (track.url) {
-                    //trialInfo = track.freeTrialInfo;
+                    if (track.freeTrialInfo)
+                        updateTrialInfo({
+                            startTime: track.freeTrialInfo.start,
+                            endTime: track.freeTrialInfo.end
+                        });
                     resolve(track.url.replace("http:", "https:"));
-                } else {
-                    print(`${song.name} is unavailable`);
-                }
-            } else { reject(); }
+                } else print(`${song.name} is unavailable`);
+            } else reject();
         }).catch(reject);
     });
 }

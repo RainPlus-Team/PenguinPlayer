@@ -45,8 +45,8 @@ interface MediaMetadataOptions {
     artwork: Artwork[]
 }
 interface TrialInfo {
-    start: number
-    end: number
+    startTime: number
+    endTime: number
 }
 declare class MediaMetadata {
     constructor(options: MediaMetadataOptions)

@@ -51,15 +51,14 @@ addEventListener("setup", () => {
     audio.addEventListener("ended", handleEnded);
     audio.addEventListener("durationchange", () => (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-duration")).textContent = formatTime(api.duration));
     let playmodeEl = <HTMLDivElement>el.querySelector(".penguin-player__player--controls-playmode");
-    playmodeEl.addEventListener("click", () => {
-        setPlaymode(Object.values(Playmodes).includes(playmode + 1) ? playmode + 1 : 0);
-    });
+    playmodeEl.addEventListener("click", () => 
+        setPlaymode(Object.values(Playmodes).includes(playmode + 1) ? playmode + 1 : 0)
+    );
     addEventListener("initialized", () => {
-        if (Object.values(Playmodes).includes(playerOptions.overridePlaymode)) {
+        if (Object.values(Playmodes).includes(playerOptions.overridePlaymode))
             setPlaymode(playerOptions.overridePlaymode);
-        } else if (localStorage.getItem("penguinplayer_playmode") !== null && !isNaN(parseInt(localStorage.getItem("penguinplayer_playmode")))) {
+        else if (localStorage.getItem("penguinplayer_playmode") !== null && !isNaN(parseInt(localStorage.getItem("penguinplayer_playmode"))))
             setPlaymode(parseInt(localStorage.getItem("penguinplayer_playmode")));
-        }
         updatePlaymodeButton();
     });
 });
@@ -91,12 +90,16 @@ function reset() {
 
 export let trialInfo: TrialInfo;
 
+export function updateTrialInfo(info: TrialInfo) {
+    trialInfo = info;
+}
+
 export function setVolume(volume: number) {
     volumeSlider.setValue(volume);
 }
 
 export function getCurrentTime(): number {
-    return audio.currentTime + (trialInfo?.start || 0);
+    return audio.currentTime + (trialInfo?.startTime || 0);
 }
 
 export function getRealDuration(): number {
@@ -105,7 +108,7 @@ export function getRealDuration(): number {
 
 export function play(id?: number) {
     if (typeof id == "number") {
-        if (id < 0 || id >= songs.length) { throw "Invalid song index"; }
+        if (id < 0 || id >= songs.length) throw "Invalid song index";
         audio.pause();
         let song = songs[currentSong = id];
         reset();
@@ -117,7 +120,7 @@ export function play(id?: number) {
             play();
         }).catch(playFailedHandler);
         dispatchEvent("songchange", song);
-    } else { audio.play().catch(); }
+    } else audio.play().catch();
 }
 
 export function pause() {

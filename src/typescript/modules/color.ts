@@ -13,23 +13,20 @@ function contrast(rgb1: Color, rgb2: Color): number {
     let lum2 = luminance(rgb2[0], rgb2[1], rgb2[2]);
     let brightest = Math.max(lum1, lum2);
     let darkest = Math.min(lum1, lum2);
-    return (brightest + 0.05)
-         / (darkest + 0.05);
+    return (brightest + 0.05) / (darkest + 0.05);
 }
 
 export function isBright(color: Color): boolean {
     return ((color[0] * 299) + (color[1] * 587) + (color[2] * 114)) / 1000 >= 125;
 }
 
-export function findHighContrastColor(background: Color, colors: Color[]): Color {
+export function findHighestContrastColor(background: Color, colors: Color[]): Color {
     let contrasts = [];
-    for (let color of colors) {
+    for (let color of colors)
         contrasts.push(contrast(background, color));
-    }
     let bestContrast = Math.max.apply(null, contrasts);
-    if (bestContrast < 4.5) {
+    if (bestContrast < 4.5)
         return isBright(background) ? [0, 0, 0] : [255, 255, 255];
-    } else {
+    else
         return colors[contrasts.indexOf(bestContrast)];
-    }
 }

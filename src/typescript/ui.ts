@@ -4,7 +4,7 @@ import LazyLoad, { ILazyLoadInstance } from "vanilla-lazyload";
 const StackBlur = require('stackblur-canvas');
 /// #endif
 
-import { findHighContrastColor } from "./modules/color";
+import { findHighestContrastColor } from "./modules/color";
 import { addEventListener, addEventListeners, dispatchEvent } from "./modules/event";
 import { api, colorthief, container as el } from "./player";
 import Slider from "./modules/slider";
@@ -42,21 +42,21 @@ export function setThemeColor(color: Color, palette: Color[]) {
         img.addEventListener("load", () => StackBlur.image(img, el.querySelector(".penguin-player__player--canvas-background"), 30));
     }
     /// #endif
-    let foregroundRgb = `rgb(${findHighContrastColor(color, palette).join(", ")})`;
+    let foregroundRgb = `rgb(${findHighestContrastColor(color, palette).join(", ")})`;
     let player: HTMLDivElement = el.querySelector(".penguin-player__player");
     player.style.backgroundColor = backgroundRgba;
     player.style.color = player.style.fill = foregroundRgb;
     (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-left")).style.borderColor = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-right")).style.borderColor = foregroundRgb;
     let fullContent: HTMLDivElement = el.querySelector(".penguin-player__player--full-content"),
         playlist: HTMLDivElement = el.querySelector(".penguin-player__player--playlist");
-    foregroundRgb = `rgb(${findHighContrastColor([255, 255, 255], palette).join(", ")})`;
+    foregroundRgb = `rgb(${findHighestContrastColor([255, 255, 255], palette).join(", ")})`;
     playlist.style.color = playlist.style.fill = fullContent.style.color = fullContent.style.fill = foregroundRgb;
-    let highContrastToWhiteAlpha = `rgba(${findHighContrastColor([255, 255, 255], palette).join(", ")}, 0.5)`;
+    let highContrastToWhiteAlpha = `rgba(${findHighestContrastColor([255, 255, 255], palette).join(", ")}, 0.5)`;
     (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-bar")).style.backgroundColor = (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-volume-bar")).style.backgroundColor = (<HTMLDivElement>el.querySelector(".penguin-player__lyric")).style.color = highContrastToWhiteAlpha;
     el.querySelectorAll(".penguin-player__player--progress-inner, .penguin-player__player--progress-dot, .penguin-player__player--controls-volume-inner, .penguin-player__player--controls-volume-dot").forEach((el) => {
         (<HTMLDivElement>el).style.backgroundColor = foregroundRgb;
     });
-    dispatchEvent("themecolorchange", color, findHighContrastColor(color, palette), findHighContrastColor([255, 255, 255], palette), findHighContrastColor([0, 0, 0], palette), palette);
+    dispatchEvent("themecolorchange", color, findHighestContrastColor(color, palette), findHighestContrastColor([255, 255, 255], palette), findHighestContrastColor([0, 0, 0], palette), palette);
 }
 
 export function rotateToggle(rotate: boolean) {
@@ -132,8 +132,8 @@ addEventListener("setup", () => {
     audio.addEventListener("playing", () => thumbState(true));
     audio.addEventListener("pause", () => thumbState(false));
     audio.addEventListener("progress", function() {
-        if (this.buffered.length <= 0) {return;}
-        (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-buffered")).style.width = ((this.buffered.end(this.buffered.length - 1) + (trialInfo?.start || 0)) / api.duration * 100) + "%";
+        if (this.buffered.length <= 0) return;
+        (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-buffered")).style.width = ((this.buffered.end(this.buffered.length - 1) + (trialInfo?.startTime || 0)) / api.duration * 100) + "%";
     });
     audio.addEventListener("timeupdate", function() {
         setCircleProgress(getCurrentTime() / api.duration * 100);
@@ -149,17 +149,15 @@ addEventListener("setup", () => {
         if (player.classList.contains("penguin-player__player-full")) {
             player.classList.remove("penguin-player__player-playlist");
             player.classList.remove("penguin-player__player-full");
-        } else {
+        } else
             player.classList.add("penguin-player__player-full");
-        }
     });
     (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-playlist")).addEventListener("click", () => {
         let player = (<HTMLDivElement>el.querySelector(".penguin-player__player"));
-        if (player.classList.contains("penguin-player__player-playlist")) {
+        if (player.classList.contains("penguin-player__player-playlist"))
             player.classList.remove("penguin-player__player-playlist");
-        } else {
+        else
             player.classList.add("penguin-player__player-playlist");
-        }
     });
     // Thumbnail setup
     (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img")).addEventListener("load", function() {
@@ -172,11 +170,10 @@ addEventListener("setup", () => {
     (<HTMLButtonElement>el.querySelector(".penguin-player__player--thumbnail-play-pause")).addEventListener("click", () => {
         if (el.querySelector(".penguin-player__player").clientWidth == 56) {return;}
         let audio = (<HTMLAudioElement>el.querySelector(".penguin-player__audio"));
-        if (audio.paused) {
+        if (audio.paused)
             audio.play().catch();
-        } else {
+        else
             audio.pause();
-        }
     });
     // Progress bar setup
     let playerOldState: boolean;
@@ -190,14 +187,14 @@ addEventListener("setup", () => {
         playerOldState = audio.paused;
         audio.pause();
     });
-    progressSlider.addEventHandler("enddrag", () => {
-        if (!playerOldState) {audio.play().catch();}
-    });
+    progressSlider.addEventHandler("enddrag", () =>
+        playerOldState ? 0 : audio.play().catch()
+    );
     progressSlider.addEventHandler("valuechange", (value: number) => {
         let songDura = api.duration;
         let fullTime = songDura * value;
-        audio.currentTime = fullTime - (trialInfo?.start || 0);
-        return value < trialInfo?.start / songDura || value > trialInfo?.end / songDura;
+        audio.currentTime = fullTime - (trialInfo?.startTime || 0);
+        return value < trialInfo?.startTime / songDura || value > trialInfo?.endTime / songDura;
     });
     // Volume bar setup
     volumeSlider = new Slider({
@@ -211,11 +208,10 @@ addEventListener("setup", () => {
     });
     // Lyric overlay setup
     window.addEventListener("mousemove", (e) => {
-        if (e.pageY >= window.innerHeight - 60) {
+        if (e.pageY >= window.innerHeight - 60)
             el.querySelector(".penguin-player__lyric").classList.add("penguin-player__lyric-hover");
-        } else {
+        else
             el.querySelector(".penguin-player__lyric").classList.remove("penguin-player__lyric-hover");
-        }
     });
     Scrollbar.init(el.querySelector(".penguin-player__player--playlist"), { damping: 0.15 });
     /// #if IE_SUPPORT
@@ -228,6 +224,6 @@ addEventListener("setup", () => {
     /// #endif
 });
 
-addEventListener("playtrack", () => {
-    (<HTMLSpanElement>el.querySelector(".penguin-player__player--trial-icon")).style.display = trialInfo ? "inline-block" : "none";
-});
+addEventListener("playtrack", () =>
+    (<HTMLSpanElement>el.querySelector(".penguin-player__player--trial-icon")).style.display = trialInfo ? "inline-block" : "none"
+);

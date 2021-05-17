@@ -67,7 +67,7 @@ function lyricTap() {
     lastTap = new Date().getTime();
 }
 
-let retryTimeout: any;
+let retryTimeout: number;
 
 let lrc: LyricLine[], tLrc: LyricLine[], lrcOffset = 0, lastLrcOffset = -1, tLrcOffset = 0;
 
@@ -153,6 +153,6 @@ export function getLyric(song: Song) {
         (<HTMLDivElement>el.querySelector(".penguin-player__lyric--background")).style.bottom = lrc ? "" : "-60px";
     }).catch(() => {
         print("Can't fetch Netease lyric");
-        retryTimeout = setTimeout(getLyric, 5000, song);
+        retryTimeout = window.setTimeout(getLyric, 5000, song);
     });
 }

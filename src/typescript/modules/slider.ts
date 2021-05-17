@@ -23,12 +23,12 @@ export default class Slider {
         this.innerEl = el.querySelector(options.innerSelector);
         this.value = options.value || 1;
 
-        deepEventHandler(this.activeEl, "mousedown", (e: MouseEvent | TouchEvent) => {this.handleBeginDrag(e);}, false);
-        deepEventHandler(this.activeEl, "touchstart", (e: MouseEvent | TouchEvent) => {this.handleBeginDrag(e);}, false);
-        window.addEventListener("mousemove", (e: MouseEvent | TouchEvent) => {this.update(e);});
-        window.addEventListener("touchmove", (e: MouseEvent | TouchEvent) => {this.update(e);});
-        window.addEventListener("mouseup", (e: MouseEvent | TouchEvent) => {this.handleEndDrag(e);});
-        window.addEventListener("touchend", (e: MouseEvent | TouchEvent) => {this.handleEndDrag(e);});
+        deepEventHandler(this.activeEl, "mousedown", (e: MouseEvent | TouchEvent) => { this.handleBeginDrag(e) }, false);
+        deepEventHandler(this.activeEl, "touchstart", (e: MouseEvent | TouchEvent) => { this.handleBeginDrag(e) }, false);
+        window.addEventListener("mousemove", (e: MouseEvent | TouchEvent) => { this.update(e) });
+        window.addEventListener("touchmove", (e: MouseEvent | TouchEvent) => { this.update(e) });
+        window.addEventListener("mouseup", (e: MouseEvent | TouchEvent) => { this.handleEndDrag(e) });
+        window.addEventListener("touchend", (e: MouseEvent | TouchEvent) => { this.handleEndDrag(e) });
     }
 
     private handleBeginDrag(e: MouseEvent | TouchEvent) {
@@ -49,33 +49,25 @@ export default class Slider {
     }
 
     private update(e: MouseEvent | TouchEvent) {
-        if (!this.dragging) { return; }
+        if (!this.dragging) return;
         let cx: number;
-        if (e instanceof MouseEvent) {
+        if (e instanceof MouseEvent)
             cx = e.pageX;
-        } else {
+        else
             cx = e.touches[0].pageX;
-        }
         let width = this.barEl.clientWidth;
         let left = Math.min(Math.max(0, cx - getPropertySum(this.barEl, "offsetLeft")), width);
         let progress = left / width;
         progress = Math.max(Math.min(progress, this.maxValue || 1), this.minValue || 0);
-        if (progress != this.value) {
+        if (progress != this.value)
             this.setValue(progress);
-        }
     }
 
     addEventHandler(name: "begindrag" | "enddrag" | "valuechange", callback: (e: any) => void) {
         switch (name) {
-            case "begindrag":
-                this.beginDragHandlers.push(callback);
-                break;
-            case "enddrag":
-                this.endDragHandlers.push(callback);
-                break;
-            case "valuechange":
-                this.valueChangeHandlers.push(callback);
-                break;
+            case "begindrag": this.beginDragHandlers.push(callback); break;
+            case "enddrag": this.endDragHandlers.push(callback); break;
+            case "valuechange": this.valueChangeHandlers.push(callback); break;
         }
     }
 

@@ -7,10 +7,8 @@ let providers: Provider[] = [
 ];
 
 export function getProvider(type: string): Provider {
-    for (let provider of providers) {
-        if (provider.type == type) {
+    for (let provider of providers)
+        if (provider.type == type)
             return provider;
-        }
-    }
     return null;
 }

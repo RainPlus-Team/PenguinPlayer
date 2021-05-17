@@ -7,18 +7,17 @@ export let scrollBar: Scrollbar;
 export let disableAutoScroll = false;
 
 function findLyricByTime(lyric: LyricLine[], time: number): LyricLine {
-    for (let line of lyric) {
-        if (line.time == time) {return line;}
-    }
+    for (let line of lyric)
+        if (line.time == time) return line;
     return null;
 }
 
 function createLine(line: LyricLine, tLine?: LyricLine) {
     let l = document.createElement("p");
     l.classList.add("penguin-player__lyric-settings--full-view-line");
-    if (line.value == "" || line.value == "\n") {
+    if (line.value == "" || line.value == "\n")
         l.innerHTML = "&nbsp;";
-    } else {
+    else {
         l.append(line.value);
         if (tLine) {
             let t = document.createElement("span");
@@ -30,22 +29,19 @@ function createLine(line: LyricLine, tLine?: LyricLine) {
     return l;
 }
 
-addEventListener("fetchlyric", (_: Song) => {
-    el.querySelector(".penguin-player__lyric-settings--full-view > .scroll-content").innerHTML = "";
-});
+addEventListener("fetchlyric", (_: Song) => 
+    el.querySelector(".penguin-player__lyric-settings--full-view > .scroll-content").innerHTML = ""
+);
 
 addEventListener("lyricready", (_: Song, lrc?: LyricLine[], tLrc?: LyricLine[]) => {
     if (lrc) {
         let fullview = el.querySelector(".penguin-player__lyric-settings--full-view > .scroll-content");
-        if (tLrc) {
-            for (let line of lrc) {
+        if (tLrc)
+            for (let line of lrc)
                 fullview.appendChild(createLine(line, findLyricByTime(tLrc, line.time)));
-            }
-        } else {
-            for (let line of lrc) {
+        else
+            for (let line of lrc)
                 fullview.appendChild(createLine(line));
-            }
-        }
     }
     scrollBar.update();
 });

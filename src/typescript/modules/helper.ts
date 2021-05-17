@@ -24,17 +24,14 @@ export function print(text: string) {
 export function deepEventHandler(element: HTMLElement, ...args: any[]) {
     element.addEventListener.apply(element, args);
 
-    [].forEach.call(element.childNodes, (child: ChildNode) => {
-        deepEventHandler(<HTMLElement>child, ...args);
-    });
+    [].forEach.call(element.childNodes, (child: ChildNode) => deepEventHandler(<HTMLElement>child, ...args));
 }
 
 export function getThumbnail(url: string, sizeOrWidth: number, height?: number) {
-    if (url.indexOf("%width%") != -1 && url.indexOf("%height%") != -1) {
+    if (url.indexOf("%width%") != -1 && url.indexOf("%height%") != -1)
         return url.replace(/%width%/g, sizeOrWidth.toString()).replace(/%height%/g, (height || sizeOrWidth).toString());
-    } else {
+    else
         return url.replace(/%size%/g, sizeOrWidth.toString());
-    }
 }
 
 /// #if IE_SUPPORT
@@ -49,8 +46,7 @@ function getStep(el: HTMLInputElement): number {
 
 export function inputStep(el: HTMLInputElement, dir: "up" | "down" = "up") {
     let val = Number(el.value);
-    if (!isNaN(val)) {
+    if (!isNaN(val))
         el.value = (val + getStep(el) * (dir == "up" ? 1 : -1)).toString();
-    }
 }
 /// #endif
