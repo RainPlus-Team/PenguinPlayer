@@ -49,7 +49,7 @@ function getUrl(song: NeteaseSong): Promise<string> {
                             endTime: track.freeTrialInfo.end
                         });
                     resolve(track.url.replace("http:", "https:"));
-                } else print(`${song.name} is unavailable`);
+                } else { print(`${song.name} is unavailable`); reject(); }
             } else reject();
         }).catch(reject);
     });

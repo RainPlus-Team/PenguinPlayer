@@ -40,16 +40,15 @@ export let playerOptions: PenguinPlayerOptions;
     addEventListener("initialized", () => {
         // Volume setup
         setVolume(1);
-        if (typeof playerOptions.overrideVolume === "number") {
+        if (typeof playerOptions.overrideVolume === "number")
             setVolume(playerOptions.overrideVolume);
-        } else {
+        else
             try {
                 if (localStorage.getItem("penguinplayer_volume") !== null) {
                     let volume = parseInt(localStorage.getItem("penguinplayer_volume"));
                     setVolume(volume);
                 }
             } catch { print("Invalid volume storage"); }
-        }
     });
     dispatchEvent("setup");
 }
@@ -58,14 +57,13 @@ function initialize(options: string | PenguinPlayerOptions) {
     playerOptions = typeof options === "string" ? {
         playlist: options
     } : options;
-    if (typeof playerOptions.playlist === "string") {
+    if (typeof playerOptions.playlist === "string")
         playerOptions.playlist = [
             {
                 type: "netease",
                 options: playerOptions.playlist
             }
         ]
-    }
     let waitPromises: Promise<Song[]>[] = [];
     for (let playlist of playerOptions.playlist)
         waitPromises.push(getProvider(playlist.type).getPlaylist(playlist.options));

@@ -31,13 +31,15 @@ export function setSong(song: Song) {
             title: song.name,
             artist: song.artists,
             album: song.album,
-            artwork: [
+            artwork: song.thumbnail.indexOf("%size%") != -1 || (song.thumbnail.indexOf("%width%") != -1 && song.thumbnail.indexOf("%height%") != -1) ? [
                 { src: getThumbnail(song.thumbnail, 96), sizes: "96x96" },
                 { src: getThumbnail(song.thumbnail, 128), sizes: "128x128" },
                 { src: getThumbnail(song.thumbnail, 192), sizes: "192x192" },
                 { src: getThumbnail(song.thumbnail, 256), sizes: "256x256" },
                 { src: getThumbnail(song.thumbnail, 384), sizes: "384x384" },
                 { src: getThumbnail(song.thumbnail, 512), sizes: "512x512" }
+            ] : [
+                { src: song.thumbnail }
             ]
         });
     }

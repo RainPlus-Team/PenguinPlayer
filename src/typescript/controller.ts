@@ -34,7 +34,7 @@ let playmode: Playmodes = Playmodes.ListLoop, errorAmount = 0;
 
 const playFailedHandler = () => {
     errorAmount++;
-    print(`Cannot play song ${songs[currentSong].name}`);
+    print(`Cannot play song ${api.song.name}`);
     if (errorAmount >= 5) {
         print(`Failed ${errorAmount} times, stop trying`);
     } else {

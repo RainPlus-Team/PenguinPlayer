@@ -61,11 +61,10 @@ export function setThemeColor(color: Color, palette: Color[]) {
 
 export function rotateToggle(rotate: boolean) {
     let thumbnail = (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img"));
-    if (rotate && !(<any>api.song).noThumbnail) {
+    if (rotate && !(<any>api.song).noThumbnail)
         thumbnail.classList.add("rotate");
-    } else {
+    else
         thumbnail.classList.remove("rotate");
-    }
 }
 
 export function resetRotate() {
@@ -94,9 +93,8 @@ function createSongElement(song: Song, click: () => void): HTMLElement {
     let img = document.createElement("img");
     img.classList.add("penguin-player__player--playlist-thumbnail");
     img.classList.add("penguin-player--lazy");
-    if (!song.thumbnailNoCrossOrigin) {
+    if (!song.thumbnailNoCrossOrigin)
         img.crossOrigin = "anonymous";
-    }
     img.alt = "封面";
     img.setAttribute("data-src", getThumbnail(song.thumbnail, 36));
     songEl.appendChild(img);
@@ -118,11 +116,10 @@ function updatePlayPauseButton() {
         (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-play")),
         (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-pause"))
     ];
-    if ((<HTMLAudioElement>el.querySelector(".penguin-player__audio")).paused) {
+    if ((<HTMLAudioElement>el.querySelector(".penguin-player__audio")).paused)
         [play.style.display, pause.style.display] = ["block", "none"];
-    } else {
+    else
         [play.style.display, pause.style.display] = ["none", "block"];
-    }
 }
 
 addEventListener("setup", () => {
@@ -161,14 +158,13 @@ addEventListener("setup", () => {
     });
     // Thumbnail setup
     (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img")).addEventListener("load", function() {
-        if ((<any>api.song).noThumbnail || api.song.thumbnailNoCrossOrigin) {
+        if ((<any>api.song).noThumbnail || api.song.thumbnailNoCrossOrigin)
             setThemeColor([255, 255, 255], [[0, 0, 0]])
-        } else {
+        else
             setThemeColor(colorthief.getColor(this), colorthief.getPalette(this));
-        }
     });
     (<HTMLButtonElement>el.querySelector(".penguin-player__player--thumbnail-play-pause")).addEventListener("click", () => {
-        if (el.querySelector(".penguin-player__player").clientWidth == 56) {return;}
+        if (el.querySelector(".penguin-player__player").clientWidth == 56) return;
         let audio = (<HTMLAudioElement>el.querySelector(".penguin-player__audio"));
         if (audio.paused)
             audio.play().catch();

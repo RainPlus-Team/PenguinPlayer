@@ -19,9 +19,7 @@ export function dispatchEvent(name: string, ...parameters: any) {
     for (let handler of (events[name] || []))
         try {
             handler.apply(null, parameters);
-        } catch (e) {
-            console.error(e);
-        }
+        } catch (e) { console.error(e) }
 }
 
 function createEvent(name: string, detail?: object) {
@@ -51,6 +49,6 @@ export function callHandlers(handlers: Array<(e: any) => void>, ...args: any): b
     for (let callback of handlers)
         try {
             ret = ret || callback.apply(null, args);
-        } catch(e) { console.error(e); }
+        } catch(e) { console.error(e) }
     return ret;
 }

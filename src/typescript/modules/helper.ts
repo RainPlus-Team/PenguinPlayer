@@ -35,7 +35,7 @@ export function getThumbnail(url: string, sizeOrWidth: number, height?: number) 
 }
 
 /// #if IE_SUPPORT
-export function isBlurSupported() {
+export function isBlurSupported(): boolean {
     return Modernizr.testAllProps("backdropFilter", "blur(5px)");
 }
 

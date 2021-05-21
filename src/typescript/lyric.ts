@@ -27,16 +27,14 @@ addEventListener("setup", () => {
         lyricUpdate();
     });
     window.addEventListener("mousedown", (e: MouseEvent) => {
-        if (el.querySelector(".penguin-player__lyric-settings").classList.contains("penguin-player__lyric-settings-shown")) {
-            if (e.target instanceof HTMLElement && (<HTMLElement>e.target).closest(".penguin-player__lyric-settings") == null) {
+        if (el.querySelector(".penguin-player__lyric-settings").classList.contains("penguin-player__lyric-settings-shown"))
+            if (e.target instanceof HTMLElement && (<HTMLElement>e.target).closest(".penguin-player__lyric-settings") == null)
                 toggleSettings();
-            }
-        } else {
+        else
             if (e.pageY >= window.innerHeight - 60 && e.pageX >= 56 + 20 && el.querySelector(".penguin-player__player").clientWidth <= 56 && window.innerWidth <= 700) {
                 lyricTap();
                 e.preventDefault();
             }
-        }
     });
     // Lyric settings menu setup
     (<HTMLDivElement>el.querySelector(".penguin-player__lyric--expand-button")).addEventListener("click", () => toggleSettings());
@@ -61,9 +59,8 @@ let lastTap: number;
 function lyricTap() {
     let now = new Date().getTime();
     let timesince = now - lastTap;
-    if ((timesince < 600) && (timesince > 0)) {
+    if ((timesince < 600) && (timesince > 0))
         toggleSettings();
-    }
     lastTap = new Date().getTime();
 }
 
@@ -72,41 +69,37 @@ let retryTimeout: number;
 let lrc: LyricLine[], tLrc: LyricLine[], lrcOffset = 0, lastLrcOffset = -1, tLrcOffset = 0;
 
 function findLrcPos(lrc: LyricLine[], time: number, offset = 0): number {
-    if (!lrc) {return -1;}
-    for (let i = offset;i < lrc.length;i++) {
-        if (lrc[i + 1] == null || lrc[i + 1].time > time * 1000) {
+    if (!lrc) return -1
+    for (let i = offset;i < lrc.length;i++)
+        if (lrc[i + 1] == null || lrc[i + 1].time > time * 1000)
             return i;
-        }
-    }
     return -1;
 }
 
 function setElText(text: string, name: string = "main") {
     let l = lrcInfos[name];
-    if (text == l.last) { return; }
+    if (text == l.last) return;
     l.el.style.opacity = "0";
     clearTimeout(l.timeout);
     l.timeout = setTimeout(() => {
-        if (!text.replace(/\s/g, '').length) {
+        if (!text.replace(/\s/g, '').length)
             l.el.innerHTML = "&nbsp;";
-        } else {
+        else
             l.el.textContent = text;
-        }
         l.el.style.opacity = "1";
     }, 100);
     l.last = text;
 }
 
 function lyricUpdate() {
-    if (audio.paused) { return; }
+    if (audio.paused) return;
     let [main, sub] = ["", ""];
     if (!isNaN(audio.currentTime) && (lrcOffset = findLrcPos(lrc, getCurrentTime() + lyricOffset, lrcOffset)) != -1) {
         main = lrc[lrcOffset].value;
-        if ((tLrcOffset = findLrcPos(tLrc, getCurrentTime() + lyricOffset, tLrcOffset)) != -1) {
+        if ((tLrcOffset = findLrcPos(tLrc, getCurrentTime() + lyricOffset, tLrcOffset)) != -1)
             sub = tLrc[tLrcOffset].value;
-        } else {
+        else
             sub = lrc[lrcOffset + 1]?.value || "";
-        }
     }
     setElText(main);
     setElText(sub, "sub");
@@ -118,17 +111,16 @@ function lyricUpdate() {
 export function lyricFullviewUpdate() {
     if (lrcOffset != lastLrcOffset) {
         let fullview = el.querySelector(".penguin-player__lyric-settings--full-view > .scroll-content");
-        fullview.querySelectorAll(".penguin-player__lyric-settings--full-view-line-active").forEach((el) => {
-            el.classList.remove("penguin-player__lyric-settings--full-view-line-active");
-        });
+        fullview.querySelectorAll(".penguin-player__lyric-settings--full-view-line-active").forEach((el) => 
+            el.classList.remove("penguin-player__lyric-settings--full-view-line-active")
+        );
         let line = <HTMLElement>fullview.children[lrcOffset];
         if (line) {
             line.classList.add("penguin-player__lyric-settings--full-view-line-active");
-            if (!disableAutoScroll) {
+            if (!disableAutoScroll)
                 fullviewScrollbar.scrollIntoView(line, {
                     offsetTop: el.querySelector(".penguin-player__lyric-settings--full-view").clientHeight / 2 - line.clientHeight / 2
                 });
-            }
         }
         lastLrcOffset = lrcOffset;
     }

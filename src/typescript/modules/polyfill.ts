@@ -4,13 +4,12 @@ import "core-js/features/number/is-integer";
 import "core-js/features/object/values";
 import "core-js/features/array/includes";
 
-if (!Element.prototype.matches) {
+if (!Element.prototype.matches)
     Element.prototype.matches =
         (<any>Element.prototype).msMatchesSelector ||
         Element.prototype.webkitMatchesSelector;
-}
 
-if (!Element.prototype.closest) {
+if (!Element.prototype.closest)
     Element.prototype.closest = function (s: string) {
         let el = this;
 
@@ -20,11 +19,9 @@ if (!Element.prototype.closest) {
         } while (el !== null && el.nodeType === 1);
         return null;
     };
-}
 
-if (typeof NodeList !== "undefined" && NodeList.prototype && !NodeList.prototype.forEach) {
+if (typeof NodeList !== "undefined" && NodeList.prototype && !NodeList.prototype.forEach)
     (<any>NodeList).prototype.forEach = Array.prototype.forEach;
-}
 
 // Required by Smooth Scrollbar
 import 'core-js/es/map';
