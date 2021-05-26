@@ -19,8 +19,8 @@ export let lazyLoad: ILazyLoadInstance;
 
 export function setCircleProgress(progress: number) {
     let progressEl = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress"));
-    let left = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-left"));
-    let right = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-right"));
+    let left = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-left")),
+        right = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-right"));
     if (progress <= 50) {
         progressEl.style.clip = "";
         left.style.transform = "rotate(0deg)";

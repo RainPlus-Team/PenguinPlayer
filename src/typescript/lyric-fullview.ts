@@ -42,6 +42,13 @@ addEventListener("lyricready", (_: Song, lrc?: LyricLine[], tLrc?: LyricLine[]) 
         else
             for (let line of lrc)
                 fullview.appendChild(createLine(line));
+        if (fullview.children.length > 0) {
+            let placeholder = document.createElement("p");
+            placeholder.innerHTML = "&nbsp;";
+            placeholder.style.margin = "0";
+            fullview.insertBefore(placeholder, fullview.children[0]);
+            fullview.appendChild(placeholder.cloneNode(true));
+        }
     }
     scrollBar.update();
 });

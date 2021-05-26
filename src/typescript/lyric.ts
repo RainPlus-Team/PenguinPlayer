@@ -2,13 +2,14 @@ import { getCurrentTime } from "./controller";
 import { api, container as el } from "./player";
 
 import { addEventListener, dispatchEvent, fireEvent } from "./modules/event";
+import { getProvider } from "./modules/provider";
+import { print } from "./modules/helper";
 /// #if IE_SUPPORT
-import { inputStep, print } from "./modules/helper";
+import { inputStep } from "./modules/helper";
 /// #endif
 
 import { disableAutoScroll, scrollBar as fullviewScrollbar } from "./lyric-fullview";
 import { setLyricStatus, toggleSettings } from "./lyric-settings";
-import { getProvider } from "./modules/provider";
 
 export let lyricOffset = 0;
 
