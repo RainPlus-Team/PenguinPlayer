@@ -2,6 +2,7 @@ import Scrollbar from "smooth-scrollbar";
 
 import { container as el } from "./player";
 import { addEventListener, addEventListeners } from "./modules/event";
+import { createLine } from "./modules/element-helper";
 
 export let scrollBar: Scrollbar;
 export let disableAutoScroll = false;
@@ -10,23 +11,6 @@ function findLyricByTime(lyric: LyricLine[], time: number): LyricLine {
     for (let line of lyric)
         if (line.time == time) return line;
     return null;
-}
-
-function createLine(line: LyricLine, tLine?: LyricLine) {
-    let l = document.createElement("p");
-    l.classList.add("penguin-player__lyric-settings--full-view-line");
-    if (line.value == "" || line.value == "\n")
-        l.innerHTML = "&nbsp;";
-    else {
-        l.append(line.value);
-        if (tLine) {
-            let t = document.createElement("span");
-            t.classList.add("penguin-player__lyric-settings--full-view-line-translate");
-            t.textContent = tLine.value;
-            l.append(document.createElement("br"), t);
-        }
-    }
-    return l;
 }
 
 addEventListener("fetchlyric", (_: Song) => 

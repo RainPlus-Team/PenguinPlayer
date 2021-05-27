@@ -2,13 +2,9 @@ import { formatTime, print } from "./modules/helper";
 import { api, container as el, playerOptions } from "./player";
 import { setSong as setMediaSession } from "./modules/mediaSession";
 import { getLyric } from "./lyric";
-import { progressSlider, resetRotate, setThemeColor, volumeSlider } from "./ui";
+import { progressSlider, resetRotate, setThemeColor, updatePlaymodeButton, volumeSlider } from "./ui";
 import { addEventListener, dispatchEvent } from "./modules/event";
 
-import list from "../icons/list-play.svg";
-import listLoop from "../icons/list-loop.svg";
-import singleLoop from "../icons/single-loop.svg";
-import random from "../icons/random.svg";
 import { getProvider } from "./modules/provider";
 
 export enum Playmodes {
@@ -25,9 +21,7 @@ export function setPlaymode(newMode?: Playmodes): Playmodes | undefined {
         playmode = newMode;
         localStorage.setItem("penguinplayer_playmode", playmode.toString());
         updatePlaymodeButton();
-    } else {
-        return playmode;
-    }
+    } else return playmode;
 }
 
 let playmode: Playmodes = Playmodes.ListLoop, errorAmount = 0;
@@ -35,11 +29,10 @@ let playmode: Playmodes = Playmodes.ListLoop, errorAmount = 0;
 const playFailedHandler = () => {
     errorAmount++;
     print(`Cannot play song ${api.song.name}`);
-    if (errorAmount >= 5) {
+    if (errorAmount >= 5)
         print(`Failed ${errorAmount} times, stop trying`);
-    } else {
+    else
         next();
-    }
 }
 
 let audio: HTMLAudioElement;
@@ -69,16 +62,6 @@ function handleEnded() {
         case Playmodes.ListLoop: next(); break;
         case Playmodes.SingleLoop: play(); break;
         case Playmodes.Random: play(Math.floor(songs.length * Math.random())); break;
-    }
-}
-
-function updatePlaymodeButton() {
-    let playmodeEl = <HTMLDivElement>el.querySelector(".penguin-player__player--controls-playmode");
-    switch (playmode) {
-        case Playmodes.List: playmodeEl.innerHTML = list; playmodeEl.setAttribute("data-mode", "列表播放"); break;
-        case Playmodes.ListLoop: playmodeEl.innerHTML = listLoop; playmodeEl.setAttribute("data-mode", "列表循环"); break;
-        case Playmodes.SingleLoop: playmodeEl.innerHTML = singleLoop; playmodeEl.setAttribute("data-mode", "单曲循环"); break;
-        case Playmodes.Random: playmodeEl.innerHTML = random; playmodeEl.setAttribute("data-mode", "随机播放"); break;
     }
 }
 

@@ -132,8 +132,8 @@ export function getLyric(song: Song) {
     lrc = tLrc = null;
     lrcOffset = tLrcOffset = 0;
     lastLrcOffset = -1;
-    if (song.provider != "netease") {
-        setLyricStatus("error", "非网易云音乐曲目");
+    if (typeof getProvider(song.provider).getLyric !== "function") {
+        setLyricStatus("error", "此平台不支持歌词显示");
         return;
     }
     clearTimeout(retryTimeout);

@@ -8,11 +8,17 @@ import { findHighestContrastColor } from "./modules/color";
 import { addEventListener, addEventListeners, dispatchEvent } from "./modules/event";
 import { api, colorthief, container as el } from "./player";
 import Slider from "./modules/slider";
-import { currentSong, getCurrentTime, next, play, prev, songs, trialInfo } from "./controller";
+import { currentSong, getCurrentTime, next, play, Playmodes, prev, setPlaymode, songs, trialInfo } from "./controller";
 import { formatTime, getThumbnail } from "./modules/helper";
 /// #if IE_SUPPORT
 import { isBlurSupported } from "./modules/helper";
 /// #endif
+
+import list from "../icons/list-play.svg";
+import listLoop from "../icons/list-loop.svg";
+import singleLoop from "../icons/single-loop.svg";
+import random from "../icons/random.svg";
+import { createSongElement } from "./modules/element-helper";
 
 export let volumeSlider: Slider, progressSlider: Slider;
 export let lazyLoad: ILazyLoadInstance;
@@ -85,33 +91,9 @@ export function handlePlaylist(list: Song[]) {
     });
 }
 
-function createSongElement(song: Song, click: () => void): HTMLElement {
-    let songEl = document.createElement("div");
-    songEl.classList.add("penguin-player__player--playlist-song");
-    songEl.setAttribute("role", "listitem");
-    songEl.addEventListener("click", click);
-    let img = document.createElement("img");
-    img.classList.add("penguin-player__player--playlist-thumbnail");
-    img.classList.add("penguin-player--lazy");
-    if (!song.thumbnailNoCrossOrigin)
-        img.crossOrigin = "anonymous";
-    img.alt = "封面";
-    img.setAttribute("data-src", getThumbnail(song.thumbnail, 36));
-    songEl.appendChild(img);
-    let title = document.createElement("h1");
-    title.classList.add("penguin-player__player--playlist-title");
-    title.textContent = song.name;
-    songEl.appendChild(title);
-    let artists = document.createElement("p");
-    artists.classList.add("penguin-player__player--playlist-artists");
-    artists.textContent = song.artists;
-    songEl.appendChild(artists);
-    return songEl;
-}
-
 function thumbState(state: boolean) { rotateToggle(state); (<HTMLDivElement>el.querySelector(".penguin-player__lyric")).style.opacity = state ? "1" : "0"; }
 
-function updatePlayPauseButton() {
+export function updatePlayPauseButton() {
     let [play, pause] = [
         (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-play")),
         (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-pause"))
@@ -120,6 +102,16 @@ function updatePlayPauseButton() {
         [play.style.display, pause.style.display] = ["block", "none"];
     else
         [play.style.display, pause.style.display] = ["none", "block"];
+}
+
+export function updatePlaymodeButton() {
+    let playmodeEl = <HTMLDivElement>el.querySelector(".penguin-player__player--controls-playmode");
+    switch (setPlaymode()) {
+        case Playmodes.List: playmodeEl.innerHTML = list; playmodeEl.setAttribute("data-mode", "列表播放"); break;
+        case Playmodes.ListLoop: playmodeEl.innerHTML = listLoop; playmodeEl.setAttribute("data-mode", "列表循环"); break;
+        case Playmodes.SingleLoop: playmodeEl.innerHTML = singleLoop; playmodeEl.setAttribute("data-mode", "单曲循环"); break;
+        case Playmodes.Random: playmodeEl.innerHTML = random; playmodeEl.setAttribute("data-mode", "随机播放"); break;
+    }
 }
 
 addEventListener("setup", () => {
