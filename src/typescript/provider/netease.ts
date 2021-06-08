@@ -1,6 +1,7 @@
 import { print } from "../modules/helper";
 import ajax from "../modules/ajax";
 import { updateTrialInfo } from "../controller";
+import CancelablePromise from "../modules/cancelable-promise";
 
 function getPlaylist(id: string): Promise<Song[]> {
     return new Promise((resolve, reject) => {

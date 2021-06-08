@@ -6,6 +6,7 @@ import { progressSlider, resetRotate, setThemeColor, updatePlaymodeButton, volum
 import { addEventListener, dispatchEvent } from "./modules/event";
 
 import { getProvider } from "./modules/provider";
+import CancelablePromise from "./modules/cancelable-promise";
 
 export enum Playmodes {
     List,

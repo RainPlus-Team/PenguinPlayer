@@ -10,6 +10,7 @@ import { inputStep } from "./modules/helper";
 
 import { disableAutoScroll, scrollBar as fullviewScrollbar } from "./lyric-fullview";
 import { setLyricStatus, toggleSettings } from "./lyric-settings";
+import CancelablePromise from "./modules/cancelable-promise";
 
 export let lyricOffset = 0;
 
