@@ -21,9 +21,9 @@ function getPlaylist(id: string): Promise<Song[]> {
 
 let lyricReq: AjaxPromise;
 
-function getLyric(song: NeteaseSong): Promise<Lyric> {
-    return new Promise((resolve, reject) => {
-        if (lyricReq) lyricReq.cancel();
+function getLyric(song: NeteaseSong): CancelablePromise<Lyric> {
+    return new CancelablePromise((resolve, reject) => {
+        lyricReq?.cancel();
         lyricReq = ajax(`https://gcm.tenmahw.com/resolve/lyric?id=${song.id}`).send().then((result: AjaxResponse) => {
             let lyric = result.data?.lyric;
             resolve({
@@ -31,13 +31,13 @@ function getLyric(song: NeteaseSong): Promise<Lyric> {
                 translatedLrc: lyric?.tlrc
             });
         }).catch(reject);
-    });
+    }, () => lyricReq?.cancel());
 }
 
 let currentUrlReq: AjaxPromise;
 
-function getUrl(song: NeteaseSong): Promise<string> {
-    return new Promise((resolve, reject) => {
+function getUrl(song: NeteaseSong): CancelablePromise<string> {
+    return new CancelablePromise((resolve, reject) => {
         currentUrlReq?.cancel();
         currentUrlReq = ajax(`https://gcm.tenmahw.com/song/url?id=${(song as NeteaseSong).id}`).send().then((result: AjaxResponse) => {
             if (result.data.code == 200) {
@@ -52,7 +52,7 @@ function getUrl(song: NeteaseSong): Promise<string> {
                 } else { print(`${song.name} is unavailable`); reject(); }
             } else reject();
         }).catch(reject);
-    });
+    }, () => currentUrlReq?.cancel());
 }
 
 export default <NeteaseProvider>{

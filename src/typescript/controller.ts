@@ -71,6 +71,8 @@ function reset() {
     trialInfo = progressSlider.maxValue = progressSlider.minValue = null;
 }
 
+let lastUrlPromise: CancelablePromise<void> | Promise<void>;
+
 export let trialInfo: TrialInfo;
 
 export function updateTrialInfo(info: TrialInfo) {
@@ -92,12 +94,13 @@ export function getRealDuration(): number {
 export function play(id?: number) {
     if (typeof id == "number") {
         if (id < 0 || id >= songs.length) throw "Invalid song index";
+        if (lastUrlPromise instanceof CancelablePromise) lastUrlPromise.cancel();
         audio.pause();
         let song = songs[currentSong = id];
         reset();
         setMediaSession(song);
         getLyric(song);
-        getProvider(song.provider).getUrl(song).then((res) => {
+        lastUrlPromise = getProvider(song.provider).getUrl(song).then((res) => {
             if (song != api.song) return;
             audio.src = res;
             play();

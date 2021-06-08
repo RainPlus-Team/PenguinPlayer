@@ -127,7 +127,10 @@ export function lyricFullviewUpdate() {
     }
 }
 
+let lastLyricPromise: CancelablePromise<void> | Promise<void>;
+
 export function getLyric(song: Song) {
+    if (lastLyricPromise instanceof CancelablePromise) lastLyricPromise.cancel();
     dispatchEvent("fetchlyric", song);
     lrc = tLrc = null;
     lrcOffset = tLrcOffset = 0;
@@ -138,7 +141,7 @@ export function getLyric(song: Song) {
     }
     clearTimeout(retryTimeout);
     setLyricStatus("error", "歌词加载中");
-    getProvider(song.provider).getLyric(song).then((res) => {
+    lastLyricPromise = getProvider(song.provider).getLyric(song).then((res) => {
         if (api.song != song) return;
         [lrc, tLrc] = [res.lrc, res.translatedLrc];
         setLyricStatus.apply(null, lrc ? ["tick", "歌词已加载"].concat(tLrc ? ["tick", "翻译歌词已加载"] : ["error", "无翻译歌词"]) : ["error", "无歌词"]);
