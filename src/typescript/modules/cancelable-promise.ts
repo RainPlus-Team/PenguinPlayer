@@ -6,6 +6,7 @@ export default class CancelablePromise<T> extends Promise<T> {
     }
 
     cancel() {
-        this.cancelCallback();
+        if (typeof this.cancelCallback === "function")
+            this.cancelCallback();
     }
 }
