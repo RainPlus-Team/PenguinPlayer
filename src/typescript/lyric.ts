@@ -110,16 +110,16 @@ function lyricUpdate() {
     requestAnimationFrame(lyricUpdate);
 }
 
-export function lyricFullviewUpdate() {
-    if (lrcOffset != lastLrcOffset) {
+export function lyricFullviewUpdate(force: boolean = false) {
+    if (lrcOffset != lastLrcOffset || force) {
         let fullview = el.querySelector(".penguin-player__lyric-settings--full-view > .scroll-content");
         fullview.querySelectorAll(".penguin-player__lyric-settings--full-view-line-active").forEach((el) => 
             el.classList.remove("penguin-player__lyric-settings--full-view-line-active")
         );
-        let line = <HTMLElement>fullview.children[lrcOffset];
+        let line = <HTMLElement>fullview.querySelectorAll(".penguin-player__lyric-settings--full-view-line")[lrcOffset];
         if (line) {
             line.classList.add("penguin-player__lyric-settings--full-view-line-active");
-            if (!disableAutoScroll)
+            if (!disableAutoScroll || force)
                 fullviewScrollbar.scrollIntoView(line, {
                     offsetTop: el.querySelector(".penguin-player__lyric-settings--full-view").clientHeight / 2 - line.clientHeight / 2
                 });

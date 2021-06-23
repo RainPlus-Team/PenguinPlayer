@@ -14,8 +14,10 @@ export function toggleSettings(show?: boolean) {
         settings.style.display = "block";
         setTimeout(() => [settings.style.transform, settings.style.opacity] = ["translate(0)", "1"]);
         settings.classList.add("penguin-player__lyric-settings-shown");
-        fullviewScrollbar.update();
-        lyricFullviewUpdate();
+        setTimeout(() => {
+            fullviewScrollbar.update();
+            lyricFullviewUpdate(true);
+        });
     } else {
         [settings.style.transform, settings.style.opacity] = ["translate(10px)", "0"];
         settingsHideTimeout = window.setTimeout(() => settings.style.display = "none", 200);

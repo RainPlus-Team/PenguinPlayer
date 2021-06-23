@@ -66,7 +66,7 @@ function initialize(options: string | PenguinPlayerOptions) {
         ]
     // Disable autoplay if using slow network or cellular network
     let connectionInfo = ((<any>navigator).connection || (<any>navigator).mozConnection || (<any>navigator).webkitConnection);
-    if (typeof playerOptions.autoplay != "boolean" && connectionInfo)
+    if (typeof playerOptions.autoplay !== "boolean" && connectionInfo)
         playerOptions.autoplay = connectionInfo.effectiveType !== "slow-2g" && (!connectionInfo.type || connectionInfo.type !== "cellular");
     let waitPromises: Promise<Song[]>[] = [];
     for (let playlist of playerOptions.playlist)
