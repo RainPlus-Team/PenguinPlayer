@@ -40,3 +40,7 @@ export function createLine(line: LyricLine, tLine?: LyricLine) {
     }
     return l;
 }
+
+export function getElementWidth(element: HTMLElement) {
+    return element.getBoundingClientRect().width;
+}

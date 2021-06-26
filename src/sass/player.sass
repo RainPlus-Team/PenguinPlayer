@@ -95,11 +95,15 @@
                     text-overflow: ellipsis
                     line-height: 24px
                 .penguin-player__player--title
+                    display: flex
                     font-size: 24px
                     .penguin-player__player--trial-icon
                         display: none
                         svg
                             vertical-align: middle
+                    .penguin-player__player--name
+                        display: inline-block
+                        flex: 1
                 .penguin-player__player--artists
                     font-size: 12px
                 .penguin-player__player--full-toggle
@@ -367,9 +371,9 @@
         background-color: white
         right: 10px
         bottom: 60px
-        padding: 10px
+        padding: 15px 20px
         padding-bottom: 40px
-        border-radius: 5px
+        border-radius: 30px
         box-shadow: 2px 2px 3px #333
         min-width: 35vw
         min-height: 200px
@@ -391,8 +395,12 @@
             position: relative
             text-align: center
             overflow-x: hidden
+            .scrollbar-track-x, .scrollbar-track-y
+                z-index: 2
             .scrollbar-track-x
                 display: none!important
+            .scrollbar-track-y
+                border-radius: 4px
             .penguin-player__lyric-settings--full-view-line
                 font-size: 14px
                 margin: 5px
@@ -422,9 +430,9 @@
                 background: linear-gradient(to bottom, transparent, white)
         .penguin-player__lyric-settings--lyric-offset
             position: absolute
-            left: 10px
+            left: 15px
             bottom: 10px
-            > span
+            > span:not(.penguin-player__lyric-settings--lyric-offset-unit)
                 display: inline-block
                 width: 24px
                 height: 24px
@@ -434,6 +442,10 @@
                     background-color: rgba(0, 0, 0, 0.1)
                 svg
                     vertical-align: middle
+            .penguin-player__lyric-settings--lyric-offset-unit
+                font-size: 12px
+                opacity: .5
+                margin-right: 10px
             .penguin-player__lyric-settings--lyric-offset-value
                 outline: none
                 border: none

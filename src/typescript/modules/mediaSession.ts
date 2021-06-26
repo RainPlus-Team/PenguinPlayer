@@ -1,6 +1,7 @@
 import { container as el } from "../player";
 import { play, pause, next, prev } from "../controller";
 import { getThumbnail } from "./helper";
+//import { songnameMarquee } from "../ui";
 
 if ("mediaSession" in navigator) {
     (<any>navigator).mediaSession.setActionHandler("play", play);
@@ -19,6 +20,8 @@ if ("mediaSession" in navigator) {
 
 export function setSong(song: Song) {
     (<HTMLHeadingElement>el.querySelector(".penguin-player__player--name")).textContent = song.name;
+    //songnameMarquee.setText(song.name);
+    //songnameMarquee.marqueeTime = song.name.length * 50;
     (<HTMLParagraphElement>el.querySelector(".penguin-player__player--artists")).textContent = song.artists;
     let img = (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img"));
     if (song.thumbnailNoCrossOrigin)
