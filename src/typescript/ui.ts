@@ -8,7 +8,7 @@ import { findHighestContrastColor } from "./modules/color";
 import { addEventListener, addEventListeners, dispatchEvent } from "./modules/event";
 import { api, colorthief, container as el } from "./player";
 import Slider from "./modules/slider";
-import Marquee from "./modules/marquee";
+//import Marquee from "./modules/marquee";
 import { currentSong, getCurrentTime, next, play, Playmodes, prev, setPlaymode, songs, trialInfo } from "./controller";
 import { createSongElement } from "./modules/element-helper";
 import { formatTime, getThumbnail } from "./modules/helper";
@@ -115,7 +115,7 @@ export function updatePlaymodeButton() {
     }
 }
 
-export let songnameMarquee: Marquee;
+//export let songnameMarquee: Marquee;
 
 addEventListener("setup", () => {
     let audio: HTMLAudioElement = el.querySelector(".penguin-player__audio");
@@ -167,8 +167,8 @@ addEventListener("setup", () => {
             audio.pause();
     });
     // Song information setup
-    songnameMarquee = new Marquee(<HTMLElement>el.querySelector(".penguin-player__player--name"), 0, true);
-    songnameMarquee.autoMarqueeDelay = 3000;
+    //songnameMarquee = new Marquee(<HTMLElement>el.querySelector(".penguin-player__player--name"), 0, true);
+    //songnameMarquee.autoMarqueeDelay = 3000;
     // Progress bar setup
     let playerOldState: boolean;
     progressSlider = new Slider({
