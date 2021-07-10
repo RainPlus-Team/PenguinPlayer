@@ -29,14 +29,16 @@ addEventListener("setup", () => {
         lyricUpdate();
     });
     window.addEventListener("mousedown", (e: MouseEvent) => {
-        if (el.querySelector(".penguin-player__lyric-settings").classList.contains("penguin-player__lyric-settings-shown"))
+        if (el.querySelector(".penguin-player__lyric-settings").classList.contains("penguin-player__lyric-settings-shown")) {
             if (e.target instanceof HTMLElement && (<HTMLElement>e.target).closest(".penguin-player__lyric-settings") == null)
                 toggleSettings();
-        else
-            if (e.pageY >= window.innerHeight - 60 && e.pageX >= 56 + 20 && el.querySelector(".penguin-player__player").clientWidth <= 56 && window.innerWidth <= 700) {
+        } else {
+            let bounding = el.querySelector(".penguin-player__lyric").getBoundingClientRect();
+            if (e.pageX > bounding.left && e.pageX < bounding.right && e.pageY > bounding.top && e.pageY < bounding.bottom && window.innerWidth <= 700) {
                 lyricTap();
                 e.preventDefault();
             }
+        }
     });
     // Lyric settings menu setup
     (<HTMLDivElement>el.querySelector(".penguin-player__lyric--expand-button")).addEventListener("click", () => toggleSettings());
