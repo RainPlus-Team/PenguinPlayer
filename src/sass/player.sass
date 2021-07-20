@@ -13,6 +13,7 @@
         width: variables.$thumbnail-size + 8px
         height: variables.$thumbnail-size + 8px
         position: fixed
+        z-index: #{variables.$start-z-index + 2}
         z-index: calc(var(--pplayer-start-z-index, #{variables.$start-z-index}) + 2)
         border-radius: 36px
         box-sizing: border-box
@@ -52,6 +53,7 @@
                     right: 0
                     bottom: 0
                     opacity: 0
+                    z-index: #{variables.$start-z-index + 2}
                     z-index: calc(var(--pplayer-start-z-index, #{variables.$start-z-index}) + 2)
                     background-color: rgba(0, 0, 0, 0.3)
                     transition: opacity .1s linear
@@ -76,6 +78,7 @@
                     left: 0
                     right: 0
                     bottom: 0
+                    z-index: #{variables.$start-z-index + 3}
                     z-index: calc(var(--pplayer-start-z-index, #{variables.$start-z-index}) + 3)
                     clip: rect(0px, #{variables.$thumbnail-size}, #{variables.$thumbnail-size}, #{variables.$thumbnail-size / 2})
                     .penguin-player__player--thumbnail-progress-left, .penguin-player__player--thumbnail-progress-right
@@ -334,6 +337,7 @@
             height: 60px
             transition: bottom .2s ease-in-out
             background: linear-gradient(to top, black, transparent)
+            z-index: #{variables.$start-z-index - 1}
             z-index: calc(var(--pplayer-start-z-index, #{variables.$start-z-index}) - 1)
         .penguin-player__lyric--expand-button
             position: absolute
@@ -362,6 +366,7 @@
     .penguin-player__lyric-settings
         color: #333
         position: fixed
+        z-index: #{variables.$start-z-index + 6}
         z-index: calc(var(--pplayer-start-z-index, #{variables.$start-z-index}) + 6)
         bottom: 60px
         display: none
@@ -461,6 +466,7 @@
         left: 0
         right: 0
         bottom: 0
+        z-index: #{variables.$start-z-index + 5}
         z-index: calc(var(--pplayer-start-z-index, #{variables.$start-z-index}) + 5)
         background-color: rgba(0, 0, 0, 0.5)
         display: none

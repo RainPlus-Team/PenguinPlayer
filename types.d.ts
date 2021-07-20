@@ -100,7 +100,7 @@ interface PenguinPlayerOptions {
     autoplay?: boolean,
     startIndex?: number,
     overrideVolume?: number
-    overridePlaymode?: import("./controller").Playmodes
+    overridePlaymode?: import("./src/typescript/controller").Playmodes
 }
 
 interface Provider {

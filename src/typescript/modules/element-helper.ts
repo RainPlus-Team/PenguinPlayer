@@ -30,12 +30,13 @@ export function createLine(line: LyricLine, tLine?: LyricLine) {
     if (line.value == "" || line.value == "\n")
         l.innerHTML = "&nbsp;";
     else {
-        l.append(line.value);
+        l.innerText += line.value;
         if (tLine) {
             let t = document.createElement("span");
             t.classList.add("penguin-player__lyric-settings--full-view-line-translate");
             t.textContent = tLine.value;
-            l.append(document.createElement("br"), t);
+            l.appendChild(document.createElement("br"));
+            l.appendChild(t);
         }
     }
     return l;

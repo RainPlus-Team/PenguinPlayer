@@ -107,7 +107,10 @@ export function play(id?: number) {
             play();
         }).catch(playFailedHandler);
         dispatchEvent("songchange", song);
-    } else audio.play().catch();
+    } else {
+        let ret = audio.play();
+        if (ret instanceof Promise) ret.catch();
+    }
 }
 
 export function pause() {
