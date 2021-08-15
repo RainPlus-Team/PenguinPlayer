@@ -1,9 +1,10 @@
-.penguin-player__player--canvas-background
-    position: absolute
-    top: 0
-    left: 0
-    right: 0
-    bottom: 0
-    z-index: -1
-    min-width: 100%
-    min-height: 100%
+.penguin-player
+    .penguin-player__player
+        max-height: calc(148px + 35vh)
+
+        &.penguin-player__player-playlist
+            height: 100%
+        
+        .penguin-player__player--playlist
+            height: 35vh
+            transition: none

@@ -5,6 +5,10 @@ declare global {
     }
 }
 
+/// #if !NO_STYLE
+import "../sass/player.sass";
+/// #endif
+
 /// #if IE_SUPPORT
 import "./modules/polyfill";
 /// #if !NO_STYLE
@@ -17,10 +21,6 @@ import ColorThief from "colorthief";
 import { print } from "./modules/helper";
 import { songs, currentSong, play, pause, prev, next, setVolume, setPlaymode } from "./controller";
 import { handlePlaylist } from "./ui";
-
-/// #if !NO_STYLE
-import "../sass/player.sass";
-/// #endif
 
 import template from "../template.pug";
 import { addEventListener, removeEventListener, dispatchEvent, dispatchWindowEvent } from "./modules/event";

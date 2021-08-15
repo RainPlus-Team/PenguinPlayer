@@ -1,7 +1,7 @@
 import Scrollbar from "smooth-scrollbar";
 import LazyLoad, { ILazyLoadInstance } from "vanilla-lazyload";
 /// #if IE_SUPPORT
-const StackBlur = require('stackblur-canvas');
+//const StackBlur = require('stackblur-canvas');
 /// #endif
 
 import { findHighestContrastColor } from "./modules/color";
@@ -42,12 +42,12 @@ export function setCircleProgress(progress: number) {
 export function setThemeColor(color: Color, palette: Color[]) {
     let backgroundRgba = `rgba(${color.join(", ")}, 0.5)`;
     /// #if IE_SUPPORT
-    if (!isBlurSupported()) {
+    /*if (!isBlurSupported()) {
         let img = new Image(window.innerWidth / 4, window.innerHeight / 2);
         img.crossOrigin = "anonymous";
         img.src = getThumbnail(songs[currentSong].thumbnail, img.width, img.height);
         img.addEventListener("load", () => StackBlur.image(img, el.querySelector(".penguin-player__player--canvas-background"), 30));
-    }
+    }*/
     /// #endif
     let foregroundRgb = `rgb(${findHighestContrastColor(color, palette).join(", ")})`;
     let player: HTMLDivElement = el.querySelector(".penguin-player__player");
@@ -153,6 +153,12 @@ addEventListener("setup", () => {
     });
     // Thumbnail setup
     (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img")).addEventListener("load", function() {
+        ///#if IE_SUPPORT
+        if (!isBlurSupported()) {
+            setThemeColor([255, 255, 255], [[0, 0, 0]]);
+            return;
+        }
+        ///#endif
         if ((<any>api.song).noThumbnail || api.song.thumbnailNoCrossOrigin)
             setThemeColor([255, 255, 255], [[0, 0, 0]])
         else
@@ -210,11 +216,11 @@ addEventListener("setup", () => {
     Scrollbar.init(el.querySelector(".penguin-player__player--playlist"), { damping: 0.15 });
     /// #if IE_SUPPORT
     // IE 11 Blur Fallback
-    if (!isBlurSupported()) {
+    /*if (!isBlurSupported()) {
         let cel = document.createElement("canvas");
         cel.classList.add("penguin-player__player--canvas-background");
         el.querySelector(".penguin-player__player").appendChild(cel);
-    }
+    }*/
     /// #endif
 });
 
