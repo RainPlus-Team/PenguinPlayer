@@ -44,7 +44,7 @@ export let playerOptions: PenguinPlayerOptions;
         else
             try {
                 if (localStorage.getItem("penguinplayer_volume") !== null) {
-                    let volume = parseInt(localStorage.getItem("penguinplayer_volume"));
+                    let volume = parseFloat(localStorage.getItem("penguinplayer_volume"));
                     setVolume(volume);
                 }
             } catch { print("Invalid volume storage"); setVolume(1); }
