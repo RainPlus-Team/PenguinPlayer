@@ -39,7 +39,6 @@ export let playerOptions: PenguinPlayerOptions;
 {
     addEventListener("initialized", () => {
         // Volume setup
-        setVolume(1);
         if (typeof playerOptions.overrideVolume === "number")
             setVolume(playerOptions.overrideVolume);
         else
@@ -48,7 +47,7 @@ export let playerOptions: PenguinPlayerOptions;
                     let volume = parseInt(localStorage.getItem("penguinplayer_volume"));
                     setVolume(volume);
                 }
-            } catch { print("Invalid volume storage"); }
+            } catch { print("Invalid volume storage"); setVolume(1); }
     });
     dispatchEvent("setup");
 }
