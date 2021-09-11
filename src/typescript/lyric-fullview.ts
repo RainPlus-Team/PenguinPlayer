@@ -50,6 +50,7 @@ addEventListener("initialized", () => {
             case "mousedown":
             case "keydown":
                 disableAutoScroll = true;
+                // This requires continuously disabling
                 break;
             case "touchend":
             case "touchcancel":
@@ -57,10 +58,15 @@ addEventListener("initialized", () => {
             case "keyup":
             case "blur":
                 disableAutoScroll = false;
+                // When continuously event stops, enables the auto scroll
                 break;
             default:
-                autoScrollTimeout = window.setTimeout(() => disableAutoScroll = false, 3000);
+                autoScrollTimeout = window.setTimeout(() => {
+                    disableAutoScroll = false;
+                    lyricFullViewUpdate();
+                }, 3000);
                 disableAutoScroll = true;
+                // This doesn't requires continuously disabling
                 break;
         }
     }, false);
