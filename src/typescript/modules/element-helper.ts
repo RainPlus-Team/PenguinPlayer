@@ -1,4 +1,5 @@
-import { getThumbnail } from "./helper";
+import { container as el } from "../player";
+import { formatTime, getThumbnail } from "./helper";
 
 export function createSongElement(song: Song, click: () => void): HTMLElement {
     let songEl = document.createElement("div");
@@ -39,6 +40,13 @@ export function createLine(line: LyricLine, tLine?: LyricLine) {
             l.appendChild(t);
         }
     }
+    let time = document.createElement("span");
+    time.classList.add("penguin-player__lyric-settings--full-view-line-time");
+    time.innerText = formatTime(line.time / 1000);
+    l.appendChild(time);
+    l.addEventListener("click", () => 
+        (<HTMLAudioElement>el.querySelector(".penguin-player__audio")).currentTime = line.time / 1000
+    );
     return l;
 }
 

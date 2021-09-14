@@ -407,18 +407,28 @@
             .scrollbar-track-y
                 border-radius: 4px
             .penguin-player__lyric-settings--full-view-line
+                position: relative
                 font-size: 14px
                 margin: 5px
-                transition: font-size .1s linear, font-weight .1s linear
+                cursor: pointer
+                transition: font-size .1s linear, font-weight .1s linear, background-color .1s ease-in-out
                 &.penguin-player__lyric-settings--full-view-line-active
                     font-weight: bold
                     font-size: 18px
                 .penguin-player__lyric-settings--full-view-line-translate
                     font-size: small
+                .penguin-player__lyric-settings--full-view-line-time
+                    position: absolute
+                    opacity: .5
+                    font-size: smaller
+                    bottom: 3px
+                    right: 10px
                 &:first-of-type
                     margin-top: 0
                 &:last-of-type
                     margin-bottom: 0
+                &:hover
+                    background-color: rgba(0, 0, 0, .1)
             &::before, &::after
                 content: ''
                 position: absolute

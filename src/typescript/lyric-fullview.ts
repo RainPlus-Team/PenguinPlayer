@@ -1,6 +1,7 @@
 import Scrollbar from "smooth-scrollbar";
 
 import { container as el } from "./player";
+import { lyricFullviewUpdate } from "./lyric";
 import { addEventListener, addEventListeners } from "./modules/event";
 import { createLine } from "./modules/element-helper";
 
@@ -63,7 +64,7 @@ addEventListener("initialized", () => {
             default:
                 autoScrollTimeout = window.setTimeout(() => {
                     disableAutoScroll = false;
-                    lyricFullViewUpdate();
+                    lyricFullviewUpdate();
                 }, 3000);
                 disableAutoScroll = true;
                 // This doesn't requires continuously disabling
