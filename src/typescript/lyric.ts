@@ -17,17 +17,17 @@ export let lyricOffset = 0;
 let audio: HTMLAudioElement, lrcInfos = {
     main: <any>{},
     sub: <any>{}
-};
+}, settings: HTMLElement, background: HTMLElement;
 addEventListener("setup", () => {
     audio = <HTMLAudioElement>el.querySelector(".penguin-player__audio");
+    settings = (<HTMLDivElement>el.querySelector(".penguin-player__lyric-settings"));
+    background = (<HTMLDivElement>el.querySelector(".penguin-player__lyric--background"));
     [lrcInfos.main.el, lrcInfos.sub.el] = [
         <HTMLHeadingElement>el.querySelector(".penguin-player__lyric--line[line-name=main]"),
         <HTMLHeadingElement>el.querySelector(".penguin-player__lyric--line[line-name=sub]")
     ];
-    audio.addEventListener("playing", () => {
-        lrcOffset = tLrcOffset = 0;
-        lyricUpdate();
-    });
+    audio.addEventListener("playing", () => lrcOffset = tLrcOffset = 0);
+    audio.addEventListener("timeupdate", lyricUpdate);
     window.addEventListener("mousedown", (e: MouseEvent) => {
         if (el.querySelector(".penguin-player__lyric-settings").classList.contains("penguin-player__lyric-settings-shown")) {
             if (e.target instanceof HTMLElement && (<HTMLElement>e.target).closest(".penguin-player__lyric-settings") == null)
@@ -80,9 +80,9 @@ function findLrcPos(lrc: LyricLine[], time: number, offset = 0): number {
     return -1;
 }
 
-function setElText(text: string, name: string = "main") {
+function setElText(text: string, name: string = "main"): boolean {
     let l = lrcInfos[name];
-    if (text == l.last) return;
+    if (text == l.last) return false;
     l.el.style.opacity = "0";
     clearTimeout(l.timeout);
     l.timeout = setTimeout(() => {
@@ -93,10 +93,10 @@ function setElText(text: string, name: string = "main") {
         l.el.style.opacity = "1";
     }, 100);
     l.last = text;
+    return true;
 }
 
 function lyricUpdate() {
-    if (audio.paused) return;
     let [main, sub] = ["", ""];
     if (!isNaN(audio.currentTime) && (lrcOffset = findLrcPos(lrc, getCurrentTime() + lyricOffset, lrcOffset)) != -1) {
         main = lrc[lrcOffset].value;
@@ -105,11 +105,9 @@ function lyricUpdate() {
         else
             sub = lrc[lrcOffset + 1]?.value || "";
     }
-    setElText(main);
-    setElText(sub, "sub");
-    lyricFullviewUpdate();
-    (<HTMLDivElement>el.querySelector(".penguin-player__lyric--background")).style.bottom = (main != "" || sub != "") ? "" : "-60px";
-    requestAnimationFrame(lyricUpdate);
+    let [mChg, subChg] = [setElText(main), setElText(sub, "sub")];
+    if (mChg && settings.style.display == "block") lyricFullviewUpdate();
+    if (mChg || subChg) background.style.bottom = (main != "" || sub != "") ? "" : "-60px";
 }
 
 export function lyricFullviewUpdate(force: boolean = false) {

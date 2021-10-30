@@ -8,11 +8,17 @@ import { createLine } from "./modules/element-helper";
 export let scrollBar: Scrollbar;
 export let disableAutoScroll = false;
 
+let settings: HTMLElement;
+
 function findLyricByTime(lyric: LyricLine[], time: number): LyricLine {
     for (let line of lyric)
         if (line.time == time) return line;
     return null;
 }
+
+addEventListener("setup", () => {
+    settings = (<HTMLDivElement>el.querySelector(".penguin-player__lyric-settings"));
+})
 
 addEventListener("fetchlyric", (_: Song) => 
     el.querySelector(".penguin-player__lyric-settings--full-view > .scroll-content").innerHTML = ""
@@ -64,7 +70,8 @@ addEventListener("initialized", () => {
             default:
                 autoScrollTimeout = window.setTimeout(() => {
                     disableAutoScroll = false;
-                    lyricFullviewUpdate();
+                    if (settings.style.display == "block")
+                        lyricFullviewUpdate();
                 }, 3000);
                 disableAutoScroll = true;
                 // This doesn't requires continuously disabling
