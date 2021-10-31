@@ -36,7 +36,8 @@ module.exports = env => {
         IE_SUPPORT: ENABLE_IE_SUPPORT,
         NO_STYLE: enabledFlags.indexOf("no-style") !== -1,
         THEME: env.theme || "default",
-        USE_COLORTHEIF: themeConfig.colortheif
+        USE_COLORTHIEF: themeConfig.colorthief,
+        HAS_IE_COMPATIBLE_STYLE: themeConfig.ieCompatibleStyles
     }
 
     // Compile targets

@@ -1,3 +1,1 @@
-module.exports = {
-    colortheif: false
-}
+module.exports = {}

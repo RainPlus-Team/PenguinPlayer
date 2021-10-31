@@ -1,3 +1,4 @@
 module.exports = {
-    colortheif: true
+    colorthief: true,
+    ieCompatibleStyles: true
 }

@@ -7,16 +7,20 @@ declare global {
 
 /// #if !NO_STYLE
 import "Theme/style.sass";
+/// #if IE_SUPPORT && HAS_IE_COMPATIBLE_STYLE
+import "Theme/ie.sass";
+/// #endif
 /// #endif
 
 /// #if IE_SUPPORT
 import "./modules/polyfill";
-/// #if !NO_STYLE
-import "../sass/ie.sass";
-/// #endif
 /// #endif
 
+/// #if USE_COLORTHIEF
 import ColorThief from "colorthief";
+
+export const colorthief = new ColorThief();
+/// #endif
 
 import { print } from "./modules/helper";
 import { songs, currentSong, play, pause, prev, next, setVolume, setPlaymode } from "./controller";
@@ -31,7 +35,6 @@ el.className = "penguin-player";
 el.innerHTML = template;
 
 export const container = el;
-export const colorthief = new ColorThief();
 
 export let playerOptions: PenguinPlayerOptions;
 

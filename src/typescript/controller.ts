@@ -4,7 +4,7 @@ import { setSong as setMediaSession } from "./modules/mediaSession";
 import { getLyric } from "./lyric";
 import { progressSlider, resetRotate, updatePlaymodeButton, volumeSlider } from "./ui";
 import { addEventListener, dispatchEvent } from "./modules/event";
-/// #if USE_COLORTHEIF
+/// #if USE_COLORTHIEF
 import { setThemeColor } from "./ui";
 /// #endif
 
@@ -70,7 +70,7 @@ function handleEnded() {
 }
 
 function reset() {
-    /// #if USE_COLORTHEIF
+    /// #if USE_COLORTHIEF
     setThemeColor([255, 255, 255], [[0, 0, 0]]);
     /// #endif
     resetRotate();

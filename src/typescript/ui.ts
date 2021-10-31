@@ -3,7 +3,7 @@ import LazyLoad, { ILazyLoadInstance } from "vanilla-lazyload";
 
 import { findHighestContrastColor } from "./modules/color";
 import { addEventListener, addEventListeners, dispatchEvent } from "./modules/event";
-import { api, colorthief, container as el } from "./player";
+import { api, container as el } from "./player";
 import Slider from "./modules/slider";
 //import Marquee from "./modules/marquee";
 import { getCurrentTime, next, play, Playmodes, prev, setPlaymode, trialInfo } from "./controller";
@@ -11,6 +11,10 @@ import { createSongElement } from "./modules/element-helper";
 import { formatTime } from "./modules/helper";
 /// #if IE_SUPPORT
 import { isBlurSupported } from "./modules/helper";
+/// #endif
+
+/// #if USE_COLORTHIEF
+import { colorthief } from "./player";
 /// #endif
 
 import list from "../icons/list-play.svg";
@@ -42,7 +46,7 @@ export function setCircleProgress(progress: number) {
         right.style.transform = "rotate(180deg)";
     }
 }
-/// #if USE_COLORTHEIF
+/// #if USE_COLORTHIEF
 export function setThemeColor(color: Color, palette: Color[]) {
     let backgroundRgba = `rgba(${color.join(", ")}, 0.5)`;
     let foregroundRgb = `rgb(${findHighestContrastColor(color, palette).join(", ")})`;
@@ -150,7 +154,7 @@ addEventListener("setup", () => {
             player.classList.add("penguin-player__player-playlist");
     });
     // Thumbnail setup
-    /// #if USE_COLORTHEIF
+    /// #if USE_COLORTHIEF
     (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img")).addEventListener("load", function() {
         ///#if IE_SUPPORT
         if (!isBlurSupported()) {
