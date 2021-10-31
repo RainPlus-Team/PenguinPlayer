@@ -1,17 +1,14 @@
 import Scrollbar from "smooth-scrollbar";
 import LazyLoad, { ILazyLoadInstance } from "vanilla-lazyload";
-/// #if IE_SUPPORT
-//const StackBlur = require('stackblur-canvas');
-/// #endif
 
 import { findHighestContrastColor } from "./modules/color";
 import { addEventListener, addEventListeners, dispatchEvent } from "./modules/event";
 import { api, colorthief, container as el } from "./player";
 import Slider from "./modules/slider";
 //import Marquee from "./modules/marquee";
-import { currentSong, getCurrentTime, next, play, Playmodes, prev, setPlaymode, songs, trialInfo } from "./controller";
+import { getCurrentTime, next, play, Playmodes, prev, setPlaymode, trialInfo } from "./controller";
 import { createSongElement } from "./modules/element-helper";
-import { formatTime, getThumbnail } from "./modules/helper";
+import { formatTime } from "./modules/helper";
 /// #if IE_SUPPORT
 import { isBlurSupported } from "./modules/helper";
 /// #endif
@@ -24,10 +21,17 @@ import random from "../icons/random.svg";
 export let volumeSlider: Slider, progressSlider: Slider;
 export let lazyLoad: ILazyLoadInstance;
 
+let progressEl: HTMLElement,
+    left: HTMLElement,
+    right: HTMLElement;
+
+addEventListener("setup", () => {
+    progressEl = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress")),
+    left = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-left")),
+    right = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-right"));
+})
+
 export function setCircleProgress(progress: number) {
-    let progressEl = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress"));
-    let left = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-left")),
-        right = (<HTMLDivElement>el.querySelector(".penguin-player__player--thumbnail-progress-right"));
     if (progress <= 50) {
         progressEl.style.clip = "";
         left.style.transform = "rotate(0deg)";
@@ -38,17 +42,9 @@ export function setCircleProgress(progress: number) {
         right.style.transform = "rotate(180deg)";
     }
 }
-
+/// #if USE_COLORTHEIF
 export function setThemeColor(color: Color, palette: Color[]) {
     let backgroundRgba = `rgba(${color.join(", ")}, 0.5)`;
-    /// #if IE_SUPPORT
-    /*if (!isBlurSupported()) {
-        let img = new Image(window.innerWidth / 4, window.innerHeight / 2);
-        img.crossOrigin = "anonymous";
-        img.src = getThumbnail(songs[currentSong].thumbnail, img.width, img.height);
-        img.addEventListener("load", () => StackBlur.image(img, el.querySelector(".penguin-player__player--canvas-background"), 30));
-    }*/
-    /// #endif
     let foregroundRgb = `rgb(${findHighestContrastColor(color, palette).join(", ")})`;
     let player: HTMLDivElement = el.querySelector(".penguin-player__player");
     player.style.backgroundColor = backgroundRgba;
@@ -65,7 +61,7 @@ export function setThemeColor(color: Color, palette: Color[]) {
     });
     dispatchEvent("themecolorchange", color, findHighestContrastColor(color, palette), findHighestContrastColor([255, 255, 255], palette), findHighestContrastColor([0, 0, 0], palette), palette);
 }
-
+/// #endif
 export function rotateToggle(rotate: boolean) {
     let thumbnail = (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img"));
     if (rotate && !(<any>api.song).noThumbnail)
@@ -123,14 +119,16 @@ addEventListener("setup", () => {
     addEventListeners(audio, "play pause", updatePlayPauseButton);
     audio.addEventListener("playing", () => thumbState(true));
     audio.addEventListener("pause", () => thumbState(false));
+    let bufferedBar = (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-buffered"));
     audio.addEventListener("progress", function() {
         if (this.buffered.length <= 0) return;
-        (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-buffered")).style.width = ((this.buffered.end(this.buffered.length - 1) + (trialInfo?.startTime || 0)) / api.duration * 100) + "%";
+        bufferedBar.style.width = ((this.buffered.end(this.buffered.length - 1) + (trialInfo?.startTime || 0)) / api.duration * 100) + "%";
     });
+    let [currentTime, progressBar] = [(<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-current")), (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-inner"))];
     audio.addEventListener("timeupdate", function() {
         setCircleProgress(getCurrentTime() / api.duration * 100);
-        (<HTMLSpanElement>el.querySelector(".penguin-player__player--progress-current")).textContent = formatTime(getCurrentTime());
-        (<HTMLDivElement>el.querySelector(".penguin-player__player--progress-inner")).style.width = (getCurrentTime() / api.duration * 100) + "%";
+        currentTime.textContent = formatTime(getCurrentTime());
+        progressBar.style.width = (getCurrentTime() / api.duration * 100) + "%";
     });
     // Controls setup
     (<HTMLDivElement>el.querySelector(".penguin-player__player--controls-previous")).addEventListener("click", prev);
@@ -152,6 +150,7 @@ addEventListener("setup", () => {
             player.classList.add("penguin-player__player-playlist");
     });
     // Thumbnail setup
+    /// #if USE_COLORTHEIF
     (<HTMLImageElement>el.querySelector(".penguin-player__player--thumbnail-img")).addEventListener("load", function() {
         ///#if IE_SUPPORT
         if (!isBlurSupported()) {
@@ -164,6 +163,7 @@ addEventListener("setup", () => {
         else
             setThemeColor(colorthief.getColor(this), colorthief.getPalette(this));
     });
+    /// #endif
     (<HTMLButtonElement>el.querySelector(".penguin-player__player--thumbnail-play-pause")).addEventListener("click", () => {
         if (el.querySelector(".penguin-player__player").clientWidth == 56) return;
         let audio = (<HTMLAudioElement>el.querySelector(".penguin-player__audio"));

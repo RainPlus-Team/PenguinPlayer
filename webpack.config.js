@@ -23,24 +23,34 @@ module.exports = env => {
     let mode = "development";
     if (env.production) {mode = "production";}
     console.log("Compilation Mode: " + mode);
+
     // Compile variables
     let enabledFlags = typeof env.flags === "string" ? env.flags.split(".") : [];
     const ENABLE_IE_SUPPORT = enabledFlags.indexOf("ie") !== -1;
+
+    const THEME = env.theme || "default";
+    let themeConfig = require("./themes/" + THEME + "/config.js");
+
     const compileOptions = {
         PRODUCTION: mode === "production",
         IE_SUPPORT: ENABLE_IE_SUPPORT,
-        NO_STYLE: enabledFlags.indexOf("no-style") !== -1
+        NO_STYLE: enabledFlags.indexOf("no-style") !== -1,
+        THEME: env.theme || "default",
+        USE_COLORTHEIF: themeConfig.colortheif
     }
+
     // Compile targets
     let targets = {
         chrome: "70"
     }
     if (ENABLE_IE_SUPPORT) {targets.ie = "10";}
+
     // Plugins
     let plugins = [];
     if (mode == "development") {
         plugins.push(new BundleAnalyzerPlugin({openAnalyzer: false}));
     }
+
     // Optimization
     const optimization = {
         minimize: true,
@@ -55,6 +65,7 @@ module.exports = env => {
             })
         ]
     };
+    
     // Static configuration
     return {
         mode: mode,
@@ -69,7 +80,7 @@ module.exports = env => {
         },
         plugins,
         optimization: mode === "production" ? optimization : undefined,
-        resolve: { extensions: [".wasm", ".mjs", ".ts", ".js", ".json"] },
+        resolve: { extensions: [".wasm", ".mjs", ".ts", ".js", ".json"], alias: { Theme: path.resolve(__dirname, "themes/" + THEME + "/") } },
         module: {
             rules: [
                 {

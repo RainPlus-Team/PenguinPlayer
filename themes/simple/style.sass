@@ -1,0 +1,18 @@
+// This theme and the theme module is still WORKING IN PROGRESS //
+    
+@use "../variables"
+
+.penguin-player
+    font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans', 'Source Han Sans', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    .penguin-player__player
+        width: variables.$thumbnail-size
+        height: variables.$thumbnail-size
+        position: fixed
+        z-index: #{variables.$start-z-index + 2}
+        z-index: calc(var(--pplayer-start-z-index, #{variables.$start-z-index}) + 2)
+        left: 0
+        bottom: 0
+        transition: min-width .2s ease-in-out, width .2s ease-in-out, height .2s ease-in-out, border-radius .2s ease-in-out
+        overflow: hidden
+        max-width: 750px
+        min-width: variables.$thumbnail-size

@@ -1,4 +1,5 @@
-@use "variables"
+@use "sass:math"
+@use "../variables"
 
 @keyframes rotate
     from
@@ -36,7 +37,7 @@
                 left: 4px
                 width: variables.$thumbnail-size
                 height: variables.$thumbnail-size
-                border-radius: variables.$thumbnail-size / 2
+                border-radius: math.div(variables.$thumbnail-size, 2)
                 overflow: hidden
                 cursor: pointer
                 .penguin-player__player--thumbnail-img
@@ -80,14 +81,14 @@
                     bottom: 0
                     z-index: #{variables.$start-z-index + 3}
                     z-index: calc(var(--pplayer-start-z-index, #{variables.$start-z-index}) + 3)
-                    clip: rect(0px, #{variables.$thumbnail-size}, #{variables.$thumbnail-size}, #{variables.$thumbnail-size / 2})
+                    clip: rect(0px, #{variables.$thumbnail-size}, #{variables.$thumbnail-size}, #{math.div(variables.$thumbnail-size, 2)})
                     .penguin-player__player--thumbnail-progress-left, .penguin-player__player--thumbnail-progress-right
                         width: variables.$thumbnail-size - 6px
                         height: variables.$thumbnail-size - 6px
                         border: 3px solid white
-                        border-radius: variables.$thumbnail-size / 2
+                        border-radius: math.div(variables.$thumbnail-size, 2)
                         position: absolute
-                        clip: rect(0px, #{variables.$thumbnail-size / 2}, #{variables.$thumbnail-size}, 0px)
+                        clip: rect(0px, #{math.div(variables.$thumbnail-size, 2)}, #{variables.$thumbnail-size}, 0px)
             .penguin-player__player--expanded-content
                 padding-right: variables.$thumbnail-size
                 position: relative
@@ -288,14 +289,14 @@
             &+.penguin-player__lyric
                 padding-left: calc(20px + min(calc(100vw - 20px), max(#{variables.$expand-width}, 300px)))
         &.penguin-player__player-full
-            border-radius: variables.$thumbnail-size / 2
+            border-radius: math.div(variables.$thumbnail-size, 2)
             height: variables.$thumbnail-size + 8px + 92px
             .penguin-player__player--full-toggle-menu
                 boarder-radius: 5px
             .penguin-player__player--mini
                 .penguin-player__player--full-toggle
                     border-bottom-right-radius: 0
-                    border-top-right-radius: variables.$thumbnail-size / 2
+                    border-top-right-radius: math.div(variables.$thumbnail-size, 2)
                     .penguin-player__player--full-toggle-menu
                         display: none
                     .penguin-player__player--full-toggle-close

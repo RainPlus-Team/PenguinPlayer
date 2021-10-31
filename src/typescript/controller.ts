@@ -2,8 +2,11 @@ import { formatTime, print } from "./modules/helper";
 import { api, container as el, playerOptions } from "./player";
 import { setSong as setMediaSession } from "./modules/mediaSession";
 import { getLyric } from "./lyric";
-import { progressSlider, resetRotate, setThemeColor, updatePlaymodeButton, volumeSlider } from "./ui";
+import { progressSlider, resetRotate, updatePlaymodeButton, volumeSlider } from "./ui";
 import { addEventListener, dispatchEvent } from "./modules/event";
+/// #if USE_COLORTHEIF
+import { setThemeColor } from "./ui";
+/// #endif
 
 import { getProvider } from "./modules/provider";
 import CancelablePromise from "./modules/cancelable-promise";
@@ -67,7 +70,9 @@ function handleEnded() {
 }
 
 function reset() {
+    /// #if USE_COLORTHEIF
     setThemeColor([255, 255, 255], [[0, 0, 0]]);
+    /// #endif
     resetRotate();
     trialInfo = progressSlider.maxValue = progressSlider.minValue = null;
 }

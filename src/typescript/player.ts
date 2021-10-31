@@ -6,7 +6,7 @@ declare global {
 }
 
 /// #if !NO_STYLE
-import "../sass/player.sass";
+import "Theme/style.sass";
 /// #endif
 
 /// #if IE_SUPPORT

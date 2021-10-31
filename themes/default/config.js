@@ -1,0 +1,3 @@
+module.exports = {
+    colortheif: true
+}
