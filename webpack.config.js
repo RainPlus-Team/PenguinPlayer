@@ -1,22 +1,6 @@
 const path = require("path");
-const svgo = require("svgo");
 const TerserPlugin = require("terser-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-
-const svgoFilter = function(text) {
-    return svgo.optimize(text, {
-        plugins: svgo.extendDefaultPlugins([
-            {
-                name: "removeXMLNS",
-                active: true
-            },
-            {
-                name: "removeViewBox",
-                active: false
-            }
-        ])
-    }).data;
-}
 
 module.exports = env => {
     // Determine build mode
@@ -26,25 +10,14 @@ module.exports = env => {
 
     // Compile variables
     let enabledFlags = typeof env.flags === "string" ? env.flags.split(".") : [];
-    const ENABLE_IE_SUPPORT = enabledFlags.indexOf("ie") !== -1;
 
     const THEME = env.theme || "default";
-    let themeConfig = require("./themes/" + THEME + "/config.js");
 
     const compileOptions = {
         PRODUCTION: mode === "production",
-        IE_SUPPORT: ENABLE_IE_SUPPORT,
         NO_STYLE: enabledFlags.indexOf("no-style") !== -1,
-        THEME: env.theme || "default",
-        USE_COLORTHIEF: themeConfig.colorthief,
-        HAS_IE_COMPATIBLE_STYLE: themeConfig.ieCompatibleStyles
+        THEME,
     }
-
-    // Compile targets
-    let targets = {
-        chrome: "70"
-    }
-    if (ENABLE_IE_SUPPORT) {targets.ie = "10";}
 
     // Plugins
     let plugins = [];
@@ -58,7 +31,7 @@ module.exports = env => {
         minimizer: [
             new TerserPlugin({
                 terserOptions: {
-                    ecma: ENABLE_IE_SUPPORT ? 5 : 6,
+                    ecma: 6,
                     compress: true,
                     output: { comments: false, beautify: false }
                 },
@@ -70,30 +43,24 @@ module.exports = env => {
     // Static configuration
     return {
         mode: mode,
-        target: ENABLE_IE_SUPPORT ? ["web", "es5"] : undefined,
-        entry: { player: path.resolve(__dirname, "src/typescript/player.ts") },
+        entry: { player: path.resolve(__dirname, "src/ts/app.tsx") },
         output: {
             path: path.resolve(__dirname, "dist/"),
             filename: "[name].js"
         },
-        externals: {
-            "./polyfills": "''"
-        },
         plugins,
         optimization: mode === "production" ? optimization : undefined,
-        resolve: { extensions: [".wasm", ".mjs", ".ts", ".js", ".json"], alias: { Theme: path.resolve(__dirname, "themes/" + THEME + "/") } },
+        resolve: { extensions: [".wasm", ".mjs", ".ts", ".tsx", ".js", ".json"], alias: { Theme: path.resolve(__dirname, "themes/" + THEME + "/") } },
         module: {
             rules: [
                 {
-                    test: /\.(js|ts)$/,
+                    test: /\.(js|ts|tsx)$/,
                     use: [
+                        "babel-loader",
                         {
-                            loader: "babel-loader",
+                            loader: "ts-loader",
                             options: {
-                                presets: [
-                                    "@babel/preset-typescript",
-                                    [ "@babel/preset-env", { targets, modules: false, shippedProposals: true } ]
-                                ]
+                                transpileOnly: true
                             }
                         },
                         {
@@ -103,34 +70,26 @@ module.exports = env => {
                     ]
                 },
                 {
-                    test: /\.pug$/,
-                    use: [
-                        "html-loader",
-                        { loader: "pug-html-loader", options: { filters: { "svgo": svgoFilter } } }
-                    ]
-                },
-                {
-                    test: /\.(scss|sass)$/,
+                    test: /\.(css|less)$/,
                     use: [
                         "style-loader",
                         "css-loader",
                         "postcss-loader",
-                        "sass-loader"
-                    ]
-                },
-                {
-                    test: /\.css$/,
-                    use: [
-                        "style-loader",
-                        "css-loader",
-                        "postcss-loader"
+                        "less-loader"
                     ]
                 },
                 {
                     test: /\.svg$/,
                     use: [
-                        "raw-loader",
-                        { loader: "svgo-loader", options: { plugins: svgo.extendDefaultPlugins([ "removeXMLNS", { name: "removeViewBox", active: false } ]) } }
+                        "babel-loader",
+                        {
+                            loader: "ts-loader",
+                            options: {
+                                transpileOnly: true,
+                                appendTsxSuffixTo: [/\.svg$/]
+                            }
+                        },
+                        "./loaders/svgToJsxLoader.js"
                     ]
                 }
             ]

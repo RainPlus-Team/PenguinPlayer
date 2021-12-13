@@ -1,4 +1,2 @@
 exclude_patterns:
-- "vendor/"
 - "webpack.config.js"
-- "src/typescript/modules/polyfill.ts"

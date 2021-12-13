@@ -1,9 +1,5 @@
-declare module "*.pug" {
-    const html: string
-    export default html
-}
 declare module "*.svg" {
-    const svg: string
+    const svg: import("preact").Component;
     export default svg
 }
 
@@ -48,10 +44,6 @@ interface TrialInfo {
     startTime: number
     endTime: number
 }
-declare class MediaMetadata {
-    constructor(options: MediaMetadataOptions)
-}
-
 declare class Color extends Array {
     0: number
     1: number
@@ -100,7 +92,7 @@ interface PenguinPlayerOptions {
     autoplay?: boolean,
     startIndex?: number,
     overrideVolume?: number
-    overridePlaymode?: import("./src/typescript/controller").Playmodes
+    //overridePlaymode?: import("./src/typescript/controller").Playmodes
 }
 
 interface Provider {

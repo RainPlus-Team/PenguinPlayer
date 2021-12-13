@@ -15,7 +15,6 @@ A simple player based on Netease Cloud Music, and it only needs to load ONE Java
 
 ## Features
 - Mobile / touch support
-- Internet Explorer 10+ support
 - Simple, beautiful & powerful
 - Easy to use
 
@@ -46,8 +45,6 @@ Following table contains all available options.
 | --------- | ----------- |
 | player.js | ```Recommend``` This version will work in modern browsers |
 | player.no-style.js | A version that doesn't contain styles |
-| player.ie.js | A version that contains polyfills for ```Internet Explorer```, use this if you want to support it |
-| player.no-style.ie.js | A combination of ```player.no-style.js``` and ```player.ie.js``` |
 
 ## API
 Every API of the player is exposed in ```PPlayer``` object of ```window``` context.

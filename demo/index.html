@@ -64,7 +64,7 @@
 </head>
 <body style="background: url(background.jpg) no-repeat;background-size: cover;background-attachment: fixed;">
     <div class="control-panel">
-        <h1>Penguin Player Demo Page / 演示页</h1>
+        <h1>Penguin Player</h1>
         <p><a href="https://github.com/M4TEC/PenguinPlayer">GitHub repository / GitHub库</a></p>
         <form class="id-form" method="get">
             <p>Leave playlist IDs empty to disable it, type "def" to use default playlist.</p>
@@ -133,11 +133,6 @@
             });
         }
         window.addEventListener("penguinplayerapiready", function() {
-            window.PPlayer.addEventListener("themecolorchange", function(color, foreground) {
-                var el = document.querySelector(".control-panel");
-                el.style.backgroundColor = "rgba(" + color.join(", ") + ", 0.5)";
-                el.style.color = "rgb(" + foreground.join(", ") + ")";
-            });
         });
     </script>
     <script src="dist/player.js" onerror="var s = document.createElement('script');s.src = '../dist/player.js';document.body.appendChild(s);this.parentNode.removeChild(this);"></script>
