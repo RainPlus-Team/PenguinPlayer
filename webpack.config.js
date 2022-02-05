@@ -27,7 +27,7 @@ module.exports = env => {
 
     // Optimization
     const optimization = {
-        minimize: true,
+        minimize: mode === "production",
         minimizer: [
             new TerserPlugin({
                 terserOptions: {
@@ -37,19 +37,25 @@ module.exports = env => {
                 },
                 extractComments: false
             })
-        ]
+        ],
+        runtimeChunk: false,
+        splitChunks: {
+            cacheGroups: {
+                default: false
+            }
+        }
     };
     
     // Static configuration
     return {
         mode: mode,
-        entry: { player: path.resolve(__dirname, "src/ts/app.tsx") },
+        entry: { player: path.resolve(__dirname, "src/ts/index.ts") },
         output: {
             path: path.resolve(__dirname, "dist/"),
             filename: "[name].js"
         },
         plugins,
-        optimization: mode === "production" ? optimization : undefined,
+        optimization,
         resolve: { extensions: [".wasm", ".mjs", ".ts", ".tsx", ".js", ".json"], alias: { Theme: path.resolve(__dirname, "themes/" + THEME + "/") } },
         module: {
             rules: [
