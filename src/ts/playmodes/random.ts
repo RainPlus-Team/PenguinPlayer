@@ -1,36 +1,75 @@
 import { Player, Song } from "../player";
-import { getSongListLength } from "../playlist";
 import { addPlaymode, Playmode } from "../playmode";
 import { shuffle } from "../util";
 
-interface SongWithProvider {
+interface SongWithOriginalInfo {
     song: Song,
     provider: string
+    index: number
 }
 
 class Random implements Playmode {
-    randomizedList: SongWithProvider[];
+    randomizedList: SongWithOriginalInfo[];
     player: Player
 
     initialize(player: Player): void {
         this.player = player;
         this.randomizedList = [];
-        for (let list of player.songs) {
-            for (let song of list.songs) {
+        let previousLength = 0;
+        for (let i = 0;i<player.songs.length;i++) {
+            const list = player.songs[i];
+            for (let j = 0;i<list.songs.length;j++) {
+                const song = list.songs[j];
                 this.randomizedList.push({
                     song,
-                    provider: list.provider
-                })
+                    provider: list.provider,
+                    index: previousLength + j
+                });
             }
+            previousLength += list.songs.length;
         }
         shuffle(this.randomizedList);
     }
 
+    private findRandId(index: number) {
+        const cId = index;
+        let randId = -1;
+        for (let item of this.randomizedList) {
+            if (item.index == cId) {
+                randId = cId;
+                break;
+            }
+        }
+        return randId;
+    }
+
     handleNext(_: boolean) {
+        const randId = this.findRandId(this.player.currentSong);
+        if (randId < 0) {
+            // Must do something?
+            this.player.play(this.randomizedList[0].index);
+        } else {
+            if (randId >= this.randomizedList.length + 1) {
+                this.player.play(this.randomizedList[0].index);
+            } else {
+                this.player.play(this.randomizedList[randId + 1].index);
+            }
+        }
     }
 
     handlePrevious(_: boolean) {
+        const randId = this.findRandId(this.player.currentSong);
+        if (randId < 0) {
+            // Must do something?
+            this.player.play(this.randomizedList[0].index);
+        } else {
+            if (randId <= 0) {
+                this.player.play(this.randomizedList[this.randomizedList.length - 1].index);
+            } else {
+                this.player.play(this.randomizedList[randId - 1].index);
+            }
+        }
     }
 }
 
-addPlaymode("listloop", new Random());
+addPlaymode("random", new Random());

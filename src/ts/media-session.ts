@@ -1,6 +1,6 @@
 import { Player, Song } from "./player";
 
-class MediaSessioManager {
+class MediaSessionManager { // TODO: As a player module
     private player: Player
 
     constructor(player: Player) {
@@ -10,9 +10,7 @@ class MediaSessioManager {
         navigator.mediaSession.setActionHandler("pause", () => this.player.pause());
         navigator.mediaSession.setActionHandler("nexttrack", () => this.player.next());
         navigator.mediaSession.setActionHandler("previoustrack", () => this.player.previous());
-    }
 
-    songChanged(song: Song) {
-        
+        // TODO: Listen for player events
     }
 }
