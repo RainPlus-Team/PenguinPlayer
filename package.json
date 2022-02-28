@@ -2,7 +2,7 @@
   "name": "@m4tec/penguinplayer",
   "version": "1.2.4",
   "description": "A simple player based on Netease Cloud Music",
-  "main": "dist/player.js",
+  "main": "src/ts/index.ts",
   "scripts": {
     "build": "yarn run webpack --mode=production --env production",
     "watch": "yarn run webpack --watch",
