@@ -2,7 +2,7 @@ import { h, render } from "preact";
 
 import { getSongByIndex, getSongListLength, Playlist, SongList } from "./playlist";
 import { findProvider } from "./provider";
-import { ThemeManager } from "./theme";
+import { themeConfig } from "./theme";
 
 export interface Song {
     name: string
@@ -10,7 +10,7 @@ export interface Song {
 }
 
 export class Player {
-    private audio: HTMLAudioElement
+    private readonly audio: HTMLAudioElement
     private layout: new () => Theme
     private _currentSong: number
 
@@ -43,7 +43,7 @@ export class Player {
     constructor(parent: HTMLElement, options: PenguinPlayerOptions) {
         this.options = options;
 
-        this.layout = this.options.theme || ThemeManager.currentTheme;
+        this.layout = this.options.theme || themeConfig.currentTheme;
 
         const player = document.createElement("div");
         player.classList.add("PenguinPlayer");

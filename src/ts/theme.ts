@@ -2,9 +2,12 @@ import defaultTheme from "Theme/layout";
 
 let _theme: new() => Theme = defaultTheme;
 
-export const ThemeManager = {
+export const themeConfig = {
+    get defaultTheme() : new() => Theme {
+        return defaultTheme;
+    },
     get currentTheme() : new() => Theme {
-        return 
+        return _theme;
     }
 }
 

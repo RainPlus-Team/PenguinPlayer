@@ -1,6 +1,7 @@
 import { initialize } from "./player";
 import { addPlaymode } from "./playmode";
 import { addProvider } from "./provider";
+import { themeConfig, useTheme } from "./theme";
 
 declare var define: any;
 
@@ -20,6 +21,8 @@ declare global {
     return {
         initialize,
         addProvider,
-        addPlaymode
+        addPlaymode,
+        useTheme,
+        themeConfig
     };
 }));
