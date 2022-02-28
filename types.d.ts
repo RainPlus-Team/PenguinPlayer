@@ -3,11 +3,14 @@ declare module "*.svg" {
     export default svg
 }
 
+type Theme = import("preact").Component<PPlayerLayoutProps, PPlayerLayoutState>;
+
 interface PenguinPlayerOptions {
     parent?: HTMLElement
     fixed?: boolean
     volume?: number
     autoplay?: boolean
+    theme?: new () => Theme
 }
 
 declare class Color extends Array {

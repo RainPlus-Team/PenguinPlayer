@@ -1,8 +1,8 @@
 import { h, render } from "preact";
 
-import Layout from "Theme/layout";
 import { getSongByIndex, getSongListLength, Playlist, SongList } from "./playlist";
 import { findProvider } from "./provider";
+import { ThemeManager } from "./theme";
 
 export interface Song {
     name: string
@@ -11,7 +11,7 @@ export interface Song {
 
 export class Player {
     private audio: HTMLAudioElement
-    private layout: Layout
+    private layout: new () => Theme
     private _currentSong: number
 
     public readonly options: PenguinPlayerOptions
@@ -43,6 +43,8 @@ export class Player {
     constructor(parent: HTMLElement, options: PenguinPlayerOptions) {
         this.options = options;
 
+        this.layout = this.options.theme || ThemeManager.currentTheme;
+
         const player = document.createElement("div");
         player.classList.add("PenguinPlayer");
 
@@ -51,7 +53,7 @@ export class Player {
 
         this.audio = new Audio();
 
-        render(<Layout ref={layout => {this.layout = layout;}} options={options} player={this} />, player);
+        render(<this.layout ref={layout => {this.layout = layout;}} options={options} player={this} />, player);
     }
 
     next() {
