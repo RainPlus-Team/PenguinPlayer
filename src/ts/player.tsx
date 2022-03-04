@@ -9,6 +9,12 @@ export interface Song {
     artists: string[]
 }
 
+export interface Module {
+    initialize(player: Player)
+
+    unload?()
+}
+
 export class Player {
     private readonly audio: HTMLAudioElement
     private layout: new () => Theme
@@ -75,7 +81,7 @@ export class Player {
             const url = await p.fetchUrl(song);
             if (this._currentSong == index) { // Make sure song doesn't change when fetching URL
                 this.audio.src = url;
-                this.play();
+                return await this.play();
             }
         } else
             return this.audio ? this.audio.play() : ""
@@ -97,6 +103,10 @@ export class Player {
         if (len == 0) {
             Math.floor(this.songs.length * Math.random())
         }
+    }
+
+    withModule(module: Module) {
+        // TODO: Handle module loading
     }
 }
 

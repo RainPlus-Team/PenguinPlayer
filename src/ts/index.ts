@@ -3,6 +3,8 @@ import { addPlaymode } from "./playmode";
 import { addProvider } from "./provider";
 import { themeConfig, useTheme } from "./theme";
 
+import MediaSession from "./media-session";
+
 declare var define: any;
 
 declare global {
@@ -23,6 +25,9 @@ declare global {
         addProvider,
         addPlaymode,
         useTheme,
-        themeConfig
+        themeConfig,
+        modules: {
+            MediaSession
+        }
     };
 }));

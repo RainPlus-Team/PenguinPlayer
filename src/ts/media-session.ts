@@ -1,9 +1,9 @@
-import { Player, Song } from "./player";
+import { Module, Player, Song } from "./player";
 
-class MediaSessionManager { // TODO: As a player module
+export default class implements Module {
     private player: Player
 
-    constructor(player: Player) {
+    initialize(player: Player) {
         this.player = player;
 
         navigator.mediaSession.setActionHandler("play", () => this.player.play());
