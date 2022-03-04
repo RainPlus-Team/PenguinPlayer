@@ -21,7 +21,7 @@ module.exports = env => {
 
     // Plugins
     let plugins = [];
-    if (mode == "development") {
+    if (mode === "development") {
         plugins.push(new BundleAnalyzerPlugin({openAnalyzer: false}));
     }
 
@@ -61,6 +61,7 @@ module.exports = env => {
             rules: [
                 {
                     test: /\.(js|ts|tsx)$/,
+                    exclude : /\bcore-js\b/,
                     use: [
                         "babel-loader",
                         {
