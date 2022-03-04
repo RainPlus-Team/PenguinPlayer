@@ -18,7 +18,8 @@ declare global {
         module.exports = factory();
     } else {
         root.PPlayer = factory();
-  }
+    }
+    console.log("%cP%cPlayer is now ready~ %c(づ￣ 3￣)づ", "color: #6cf;font-weight: bold;", "color: #7fb1c6;", "color: #ee0000;font-weight: bold;");
 }(typeof self !== 'undefined' ? self : this, function () {
     return {
         initialize,

@@ -3,6 +3,7 @@ import { h, render } from "preact";
 import { getSongByIndex, getSongListLength, Playlist, SongList } from "./playlist";
 import { findProvider } from "./provider";
 import { themeConfig } from "./theme";
+import { Playmode } from "./playmode";
 
 export interface Song {
     name: string
@@ -19,6 +20,7 @@ export class Player {
     private readonly audio: HTMLAudioElement
     private layout: new () => Theme
     private _currentSong: number
+    private _playmode: Playmode;
 
     public readonly options: PenguinPlayerOptions
     public readonly root: HTMLElement
@@ -46,38 +48,53 @@ export class Player {
         return this.audio ? this.audio.duration : NaN;
     }
 
+    get playmode() {
+        return this._playmode;
+    }
+    set playmode(v) {
+        this._playmode = v;
+        this._playmode.initialize(this);
+    }
+
     constructor(parent: HTMLElement, options: PenguinPlayerOptions) {
         this.options = options;
 
         this.layout = this.options.theme || themeConfig.currentTheme;
 
+        // Create player root element
         const player = document.createElement("div");
         player.classList.add("PenguinPlayer");
 
         (parent || document.body).append(player);
         this.root = player;
 
+        // Get audio ready
         this.audio = new Audio();
 
+        // All ready, get the UI working!
         render(<this.layout ref={layout => {this.layout = layout;}} options={options} player={this} />, player);
     }
 
-    next() {
-        
+    next(user: boolean = true) {
+        this.playmode.handleNext(user);
     }
 
-    previous() {
-
+    previous(user: boolean = true) {
+        this.playmode.handlePrevious(user);
     }
 
     async play(index?: number) {
         if (index != undefined) {
             if (index < 0 || index >= getSongListLength(this.songs)) throw new Error("Song index out of bound");
+
+            // Find the song and its provider
             this._currentSong = index;
             const ret = getSongByIndex(this.songs, index);
             const song = ret.song, provider = ret.provider;
             const p = findProvider(provider);
             if (p == null) throw new Error("No such provider " + provider);
+
+            // Get its URL and then play it
             const url = await p.fetchUrl(song);
             if (this._currentSong == index) { // Make sure song doesn't change when fetching URL
                 this.audio.src = url;
@@ -100,8 +117,10 @@ export class Player {
             provider: playlist.provider,
             songs: list
         });
-        if (len == 0) {
-            Math.floor(this.songs.length * Math.random())
+        if (len == 0 && this.options.autoplay) {
+            // This is the first playlist loaded, and we should play it automatically
+            const index = this.options.song || Math.floor(this.songs.length * Math.random());
+            this.play(index).then(_ => console.log("Auto play started!"));
         }
     }
 

@@ -10,6 +10,7 @@ interface PenguinPlayerOptions {
     fixed?: boolean
     volume?: number
     autoplay?: boolean
+    song?: number
     theme?: new () => Theme
 }
 
