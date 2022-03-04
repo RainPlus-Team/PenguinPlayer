@@ -30,5 +30,5 @@ export function getSongByIndex(songlist: SongList[], index: number): {song: Song
                 provider: list.provider
             };
     }
-    throw Error("Sond index out of bound");
+    throw Error("Song index out of bound");
 }
