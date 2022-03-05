@@ -10,14 +10,9 @@ import Shuffle from "./icons/shuffle.svg";
 
 import "./styles/theme.less";
 
-export default class Player extends Component<PPlayerLayoutProps, PPlayerLayoutState> {
+export default class extends Component<PPlayerLayoutProps, PPlayerLayoutState> {
     constructor() {
         super();
-        this.state = {
-            currentTime: NaN,
-            duration: NaN,
-            song: null
-        }
     }
 
     render() {

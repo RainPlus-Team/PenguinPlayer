@@ -28,12 +28,13 @@ interface SliderOptions {
 }
 
 interface PPlayerLayoutState {
-    currentTime: number
-    duration: number
-    song: import("./src/ts/player").Song
+
 }
 
 interface PPlayerLayoutProps {
     options: PenguinPlayerOptions
     player: import("./src/ts/player").Player
+    currentTime: number
+    duration: number
+    song: import("./src/ts/player").Song
 }
