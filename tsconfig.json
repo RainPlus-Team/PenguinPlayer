@@ -11,6 +11,6 @@
             "Theme/*": ["./themes/default/*"]
         }
     },
-    "include": ["src/**/*", "types.d.ts"],
+    "include": ["src/**/*", "themes/**/*", "types.d.ts"],
     "exclude": ["node_modules"]
 }

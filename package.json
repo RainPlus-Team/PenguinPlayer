@@ -1,6 +1,6 @@
 {
   "name": "@m4tec/penguinplayer",
-  "version": "1.2.4",
+  "version": "1.3.0",
   "description": "A simple player based on Netease Cloud Music",
   "main": "src/ts/index.ts",
   "scripts": {
@@ -16,6 +16,7 @@
   "keywords": [
     "blog-plugin",
     "netease",
+    "qq",
     "player"
   ],
   "author": "LuoRain",
