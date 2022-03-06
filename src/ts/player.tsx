@@ -4,6 +4,7 @@ import { getSongByIndex, getSongListLength, Playlist, SongList } from "./playlis
 import { findProvider } from "./provider";
 import { themeConfig } from "./theme";
 import { Playmode } from "./playmode";
+import {PlaylistLoadEvent, PlaymodeChangeEvent, SongChangeEvent} from "./events";
 
 export interface Song {
     name: string
@@ -16,7 +17,7 @@ export interface Module {
     unload?()
 }
 
-export class Player {
+export class Player extends EventTarget {
     private readonly audio: HTMLAudioElement
     private layout: new () => Theme
     private _currentSong: number
@@ -27,7 +28,10 @@ export class Player {
     public readonly songs: SongList[]
 
     get currentSong() {
-        return this._currentSong;
+        return getSongByIndex(this.songs, this._currentSong);
+    }
+    get currentSongIndex() {
+        return this._currentSong
     }
 
     get currentTime() {
@@ -52,11 +56,14 @@ export class Player {
         return this._playmode;
     }
     set playmode(v) {
+        const old = this._playmode;
         this._playmode = v;
         this._playmode.initialize(this);
+        this.dispatchEvent(new PlaymodeChangeEvent(old, v));
     }
 
     constructor(parent: HTMLElement, options: PenguinPlayerOptions) {
+        super();
         this.options = options;
 
         this.layout = this.options.theme || themeConfig.currentTheme;
@@ -72,7 +79,13 @@ export class Player {
         this.audio = new Audio();
 
         // All ready, get the UI working!
-        render(<this.layout ref={layout => {this.layout = layout;}} options={options} player={this} />, player);
+        render(<this.layout
+            options={options}
+            player={this}
+            currentTime={0}
+            duration={0}
+            song={this.currentSong.song}
+        />, player);
     }
 
     next(user: boolean = true) {
@@ -96,6 +109,7 @@ export class Player {
 
             // Get its URL and then play it
             const url = await p.fetchUrl(song);
+            this.dispatchEvent(new SongChangeEvent(this.currentSong.song, this.currentSong.provider, this.currentSongIndex));
             if (this._currentSong == index) { // Make sure song doesn't change when fetching URL
                 this.audio.src = url;
                 return await this.play();
@@ -113,10 +127,12 @@ export class Player {
         if (provider == null) throw new Error("No such provider " + playlist.provider);
         const list = await provider.fetchPlaylist(playlist);
         const len = this.songs.length;
-        this.songs.push({
+        const songlist = {
             provider: playlist.provider,
             songs: list
-        });
+        };
+        this.songs.push(songlist);
+        this.dispatchEvent(new PlaylistLoadEvent(songlist));
         if (len == 0 && this.options.autoplay) {
             // This is the first playlist loaded, and we should play it automatically
             const index = this.options.song || Math.floor(this.songs.length * Math.random());
