@@ -1,4 +1,5 @@
-import { Module, Player, Song } from "./player";
+import {Module, Player} from "./player";
+import {SongChangeEvent} from "./events";
 
 export default class implements Module {
     private player: Player
@@ -11,6 +12,25 @@ export default class implements Module {
         navigator.mediaSession.setActionHandler("nexttrack", () => this.player.next());
         navigator.mediaSession.setActionHandler("previoustrack", () => this.player.previous());
 
-        // TODO: Listen for player events
+        player.addEventListener("songchange", (e: SongChangeEvent) => {
+            const s = e.song;
+            const thumbnail = (s as any).thumbnail || ""; // TODO: Thumbnail fallback image
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: s.name,
+                artist: s.artists.join(", "),
+                album: (s as any).album || "",
+                artwork: [
+                    {
+                        src: thumbnail
+                    }
+                ]
+            });
+        });
+        player.audio.addEventListener("playing", () => {
+            navigator.mediaSession.playbackState = "playing"
+        });
+        player.audio.addEventListener("pause", () => {
+            navigator.mediaSession.playbackState = "paused";
+        });
     }
 }

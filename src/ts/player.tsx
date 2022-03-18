@@ -4,7 +4,7 @@ import { getSongByIndex, getSongListLength, Playlist, SongList } from "./playlis
 import { findProvider } from "./provider";
 import { themeConfig } from "./theme";
 import { Playmode } from "./playmode";
-import {PlaylistLoadEvent, PlaymodeChangeEvent, SongChangeEvent} from "./events";
+import { PlaylistLoadEvent, PlaymodeChangeEvent, SongChangeEvent } from "./events";
 
 export interface Song {
     name: string
@@ -18,10 +18,12 @@ export interface Module {
 }
 
 export class Player extends EventTarget {
-    private readonly audio: HTMLAudioElement
     private layout: new () => Theme
     private _currentSong: number
-    private _playmode: Playmode;
+    private _playmode: Playmode
+    private _modules: Module[]
+
+    public readonly audio: HTMLAudioElement
 
     public readonly options: PenguinPlayerOptions
     public readonly root: HTMLElement
@@ -60,6 +62,10 @@ export class Player extends EventTarget {
         this._playmode = v;
         this._playmode.initialize(this);
         this.dispatchEvent(new PlaymodeChangeEvent(old, v));
+    }
+
+    get modules() {
+        return this._modules;
     }
 
     constructor(parent: HTMLElement, options: PenguinPlayerOptions) {
@@ -141,7 +147,8 @@ export class Player extends EventTarget {
     }
 
     withModule(module: Module) {
-        // TODO: Handle module loading
+        module.initialize(this);
+        this._modules.push(module);
     }
 }
 
