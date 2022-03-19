@@ -13,6 +13,6 @@
             "Theme/*": ["./themes/default/*"]
         }
     },
-    "include": ["src/**/*", "themes/**/*", "types.d.ts"],
+    "include": ["src/**/*", "themes/**/*", "demo/**/*", "types.d.ts"],
     "exclude": ["node_modules"]
 }

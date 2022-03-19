@@ -7,7 +7,7 @@
     "build": "yarn run webpack --mode=production --env production",
     "watch": "yarn run webpack --watch",
     "build-dev": "yarn run webpack",
-    "vercel-build": "yarn run build && cp -R dist public && cp demo/redirect.html public/index.html"
+    "vercel-build": "yarn run build && cp -R dist/demo public"
   },
   "repository": {
     "type": "git",

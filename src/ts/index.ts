@@ -19,7 +19,7 @@ declare global {
     } else {
         root.PPlayer = factory();
     }
-    console.log("%cP%cPlayer is now ready~ %c(づ￣ 3￣)づ", "color: #6cf;font-weight: bold;", "color: #7fb1c6;", "color: #ee0000;font-weight: bold;");
+    console.log("%cP%cPlayer v" + _VERSION_ + " is now ready~ %c(づ￣ 3￣)づ\n%cbuilt on " + _BUILD_DATE_, "color: #6cf;font-weight: bold;", "color: #7fb1c6;", "color: #ee0000;font-weight: bold;", "color: #ee0000;font-style: italic;");
 }(typeof self !== 'undefined' ? self : this, function () {
     return {
         initialize,
@@ -29,6 +29,7 @@ declare global {
         themeConfig,
         modules: {
             MediaSession
-        }
+        },
+        version: _VERSION_
     };
 }));

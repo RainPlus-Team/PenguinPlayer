@@ -1,4 +1,6 @@
+const fs = require("fs");
 const path = require("path");
+const webpack = require("webpack");
 const TerserPlugin = require("terser-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
@@ -24,8 +26,17 @@ module.exports = env => {
         THEME,
     }*/
 
+    // Constants
+    const pkg = JSON.parse(fs.readFileSync(path.resolve(__dirname, "package.json")).toString());
+    const constants = {
+        _VERSION_: JSON.stringify(pkg.version),
+        _BUILD_DATE_: JSON.stringify(new Date().toString())
+    }
+
     // Plugins
-    let plugins = [];
+    let plugins = [
+        new webpack.DefinePlugin(constants)
+    ];
     if (mode === "development") {
         plugins.push(new BundleAnalyzerPlugin({openAnalyzer: false}));
     }
@@ -51,6 +62,7 @@ module.exports = env => {
         }
     };
 
+    // Base Configuration
     const base = {
         mode,
         plugins,
@@ -101,25 +113,6 @@ module.exports = env => {
     // Static configuration
     return [
         merge(base, {
-            entry: { demo: path.resolve(__dirname, "demo/demo.tsx") },
-            output: {
-                path: path.resolve(__dirname, "dist/demo/"),
-                filename: "js/[name].[contenthash:5].js"
-            },
-            plugins: [
-                new HtmlWebpackPlugin({
-                    template: "demo/index.html",
-                    chunks: ["demo"]
-                }),
-                new CopyPlugin({
-                    patterns: [
-                        {from: "demo/lang/", to: "lang/"}
-                    ]
-                }),
-                new LangPlugin()
-            ]
-        }),
-        merge(base, {
             entry: { player: path.resolve(__dirname, "src/ts/index.ts") },
             output: {
                 path: path.resolve(__dirname, "dist/"),
@@ -136,6 +129,27 @@ module.exports = env => {
                     }
                 ]
             }
+        }),
+        merge(base, {
+            entry: { demo: path.resolve(__dirname, "demo/demo.tsx") },
+            output: {
+                path: path.resolve(__dirname, "dist/demo/"),
+                filename: "js/[name].[contenthash:5].js"
+            },
+            plugins: [
+                new HtmlWebpackPlugin({
+                    template: "demo/index.html",
+                    chunks: ["demo"],
+                    minify: true
+                }),
+                new CopyPlugin({
+                    patterns: [
+                        {from: "demo/lang/", to: "lang/"},
+                        {from: "dist/player.js", to: "player.js"}
+                    ]
+                }),
+                new LangPlugin()
+            ]
         })
     ]
 }

@@ -3,6 +3,9 @@ declare module "*.svg" {
     export default svg
 }
 
+declare const _VERSION_: string;
+declare const _BUILD_DATE_: string;
+
 type Theme = import("preact").Component<PPlayerLayoutProps, PPlayerLayoutState>;
 
 interface PenguinPlayerOptions {

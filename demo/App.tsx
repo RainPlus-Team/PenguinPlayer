@@ -63,7 +63,7 @@ export default class extends Component<any, State> {
         return <IntlProvider definition={this.state.language}>
             <div className="Header">
                 <p style="font-size: 64px;margin: 0;">🐧</p>
-                <h1><Text id="title"/></h1>
+                <h1><Text id="title"/><span className="player-version">v{_VERSION_}</span></h1>
                 <p><Text id="description"/></p>
                 <span className="bg-source">photo by <a href="https://flic.kr/p/bcNWxF" target="_blank">Ronald Woan</a></span>
             </div>
