@@ -3,10 +3,24 @@
   "description": "一个为嵌入而生的模块化网页播放器",
   "sections": {
     "what": {
-      "title": "它能做什么"
+      "title": "它能做什么",
+      "content": "<p>这是一个网页音乐播放器，它非常简便以及易用。比如，你只需要<b>一个</b> JavaScript 文件即可使用它。此外，它还是一个模块化的播放器，你可以通过许多方式定制它。</p>"
+    },
+    "features": {
+      "title": "它有何特色",
+      "content": "<ul><li>移动/触控设备支持</li><li>简洁，好看还好用</li><li>使用简单</li><li>模块化</li><li>使用 TypeScript 编写</li></ul>",
+      "more": "等等..."
     },
     "how": {
-      "title": "我要怎么用"
+      "title": "我怎么用它",
+      "simple": {
+        "title": "简单的方式",
+        "introduce": "如果你刚刚起步，你可以通过简单的方式使用它。"
+      },
+      "advanced": {
+        "title": "进阶方式",
+        "introduce": "或者，你想要更多的自定义控件，你就可以使用更高级的方式使用它。"
+      }
     }
   }
 }
