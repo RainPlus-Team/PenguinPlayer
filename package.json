@@ -35,6 +35,7 @@
     "copy-webpack-plugin": "^10.2.4",
     "core-js": "^3.21.1",
     "css-loader": "^6.5.0",
+    "filemanager-webpack-plugin": "^6.1.7",
     "html-loader": "^3.0.0",
     "html-webpack-plugin": "^5.5.0",
     "ifdef-loader": "^2.3.0",

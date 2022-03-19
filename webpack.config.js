@@ -5,6 +5,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const FileManagerPlugin = require("filemanager-webpack-plugin");
 const merge = require("webpack-merge").merge;
 
 const LangPlugin = require("./demo/lang-plugin");
@@ -117,17 +118,6 @@ module.exports = env => {
             output: {
                 path: path.resolve(__dirname, "dist/"),
                 filename: "[name].js"
-            },
-            module: {
-                rules: [
-                    {
-                        test: /\.(png|jpg|bmp|webp)$/,
-                        type: "asset/resource",
-                        generator: {
-                            filename: 'images/[name].[contenthash:5][ext]'
-                        }
-                    }
-                ]
             }
         }),
         merge(base, {
@@ -144,12 +134,31 @@ module.exports = env => {
                 }),
                 new CopyPlugin({
                     patterns: [
-                        {from: "demo/lang/", to: "lang/"},
-                        {from: "dist/player.js", to: "player.js"}
+                        {from: "demo/lang/", to: "lang/"}
                     ]
                 }),
+                new FileManagerPlugin({
+                    events: {
+                        onEnd: {
+                            copy: [
+                                {source: "dist/player.js", destination: "dist/demo/player.js"}
+                            ]
+                        }
+                    }
+                }),
                 new LangPlugin()
-            ]
+            ],
+            module: {
+                rules: [
+                    {
+                        test: /\.(png|jpg|bmp|webp)$/,
+                        type: "asset/resource",
+                        generator: {
+                            filename: 'images/[name].[contenthash:5][ext]'
+                        }
+                    }
+                ]
+            }
         })
     ]
 }
