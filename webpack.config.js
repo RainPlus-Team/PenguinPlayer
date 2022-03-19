@@ -1,6 +1,11 @@
 const path = require("path");
 const TerserPlugin = require("terser-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const merge = require("webpack-merge").merge;
+
+const LangPlugin = require("./demo/lang-plugin");
 
 module.exports = env => {
     // Determine build mode
@@ -13,11 +18,11 @@ module.exports = env => {
 
     const THEME = env.theme || "default";
 
-    const compileOptions = {
+    /*const compileOptions = {
         PRODUCTION: mode === "production",
         NO_STYLE: enabledFlags.indexOf("no-style") !== -1,
         THEME,
-    }
+    }*/
 
     // Plugins
     let plugins = [];
@@ -45,15 +50,9 @@ module.exports = env => {
             }
         }
     };
-    
-    // Static configuration
-    return {
-        mode: mode,
-        entry: { player: path.resolve(__dirname, "src/ts/index.ts") },
-        output: {
-            path: path.resolve(__dirname, "dist/"),
-            filename: "[name].js"
-        },
+
+    const base = {
+        mode,
         plugins,
         optimization,
         resolve: { extensions: [".wasm", ".mjs", ".ts", ".tsx", ".js", ".json"], alias: { Theme: path.resolve(__dirname, "themes/" + THEME + "/") } },
@@ -69,10 +68,6 @@ module.exports = env => {
                             options: {
                                 transpileOnly: true
                             }
-                        },
-                        {
-                            loader: "ifdef-loader",
-                            options: compileOptions
                         }
                     ]
                 },
@@ -102,4 +97,45 @@ module.exports = env => {
             ]
         }
     }
+
+    // Static configuration
+    return [
+        merge(base, {
+            entry: { demo: path.resolve(__dirname, "demo/demo.tsx") },
+            output: {
+                path: path.resolve(__dirname, "dist/demo/"),
+                filename: "js/[name].[contenthash:5].js"
+            },
+            plugins: [
+                new HtmlWebpackPlugin({
+                    template: "demo/index.html",
+                    chunks: ["demo"]
+                }),
+                new CopyPlugin({
+                    patterns: [
+                        {from: "demo/lang/", to: "lang/"}
+                    ]
+                }),
+                new LangPlugin()
+            ]
+        }),
+        merge(base, {
+            entry: { player: path.resolve(__dirname, "src/ts/index.ts") },
+            output: {
+                path: path.resolve(__dirname, "dist/"),
+                filename: "[name].js"
+            },
+            module: {
+                rules: [
+                    {
+                        test: /\.(png|jpg|bmp|webp)$/,
+                        type: "asset/resource",
+                        generator: {
+                            filename: 'images/[name].[contenthash:5][ext]'
+                        }
+                    }
+                ]
+            }
+        })
+    ]
 }

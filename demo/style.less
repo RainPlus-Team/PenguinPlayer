@@ -1,0 +1,65 @@
+body {
+  margin: 0;
+}
+
+.Header {
+  color: #2b2b2b;
+  background: linear-gradient(to bottom, transparent, white), url(../assets/images/background.webp) center;
+  background-size: cover;
+  text-align: center;
+  padding: 50px 0;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  position: relative;
+
+  .bg-source {
+    opacity: .6;
+    font-size: 14px;
+    position: absolute;
+    bottom: 3px;
+    right: 3px;
+  }
+}
+
+.Container {
+  width: 60vw;
+  margin: auto;
+  max-width: 1000px;
+}
+
+.Section {
+  h2 {
+    &::before {
+      content: "🐧";
+    }
+
+    .penguin-mark {
+      font-size: 14px;
+    }
+  }
+}
+
+.Footer {
+  opacity: .6;
+  text-align: center;
+  padding: 10px 0;
+}
+
+a {
+  text-decoration: none;
+  color: #2e47d3;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+@media only screen and (max-width: 600px) {
+  .Container {
+    width: calc(100vw - 30px);
+    max-width: unset;
+  }
+}

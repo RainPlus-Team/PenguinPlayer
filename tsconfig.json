@@ -1,9 +1,11 @@
 {
     "compilerOptions": {
+        "esModuleInterop": true,
         "target": "ES2020",
         "module": "ES2020",
         "moduleResolution": "node",
         "removeComments": true,
+        "resolveJsonModule": true,
         "jsx": "react",
         "jsxFactory": "h",
         "jsxFragmentFactory": "Fragment",

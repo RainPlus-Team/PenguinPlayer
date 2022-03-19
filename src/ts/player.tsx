@@ -152,7 +152,7 @@ export class Player extends EventTarget {
     }
 }
 
-export function initialize(options?: PenguinPlayerOptions): Player {
+export function initialize(options?: PenguinPlayerOptions): Player { // TODO: Support initialize with only an array of playlist
     const opt = {
         autoplay: true,
         ...options

@@ -1,0 +1,12 @@
+{
+  "title": "Penguin Player",
+  "description": "一个为嵌入而生的模块化网页播放器",
+  "sections": {
+    "what": {
+      "title": "它能做什么"
+    },
+    "how": {
+      "title": "我要怎么用"
+    }
+  }
+}

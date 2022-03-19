@@ -1,6 +1,6 @@
 [中文README](README-zh_CN.md)
 
-# PenguinPlayer
+# 🐧 PenguinPlayer
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/M4TEC/PenguinPlayer/Compile%20the%20player)
 [![Maintainability](https://img.shields.io/codeclimate/maintainability/M4TEC/PenguinPlayer)](https://codeclimate.com/github/M4TEC/PenguinPlayer/maintainability)
 ![Code size in bytes](https://img.shields.io/github/languages/code-size/M4TEC/PenguinPlayer)
@@ -18,6 +18,7 @@ A simple player based on Netease Cloud Music, and it only needs to load ONE Java
 - Simple, beautiful & powerful
 - Easy to use
 - Modular
+- Written in TypeScript
 - _More features are coming..._
 
 ## Usage
@@ -32,4 +33,9 @@ You can buy me a ~~cola~~ coffee at http://afdian.net/@TenmaHiltonWhat ;P
 ## Development
 You can check the latest development build [here](https://penguin-player-rewrite.vercel.app/).
 
-[<img src="demo/vercel-dark.svg" width="150"/>](https://vercel.com/pplayer/penguin-player?utm_source=pplayer&utm_campaign=oss)
+## Thanks
+Thanks to Vercel and JetBrains for supporting the development of this project.
+
+[<img src="assets/images/vercel-dark.svg" width="150"/>](https://vercel.com/pplayer/penguin-player?utm_source=pplayer&utm_campaign=oss)
+
+[<img src="assets/images/webstorm.svg" width="150"/>](https://jetbrains.com/?utm_source=pplayer&utm_campaign=oss)
