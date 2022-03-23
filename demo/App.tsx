@@ -4,6 +4,8 @@ import {LocaleMatcher} from "@phensley/locale-matcher";
 import {extend} from "./util";
 import Prism from "prismjs";
 
+import GitHub from "../assets/images/github.svg";
+import Vercel from "../assets/images/vercel-dark.svg";
 // @ts-ignore
 import SimpleInitialization from "!raw-loader!./examples/simple.js";
 
@@ -63,9 +65,17 @@ export default class extends Component<any, State> {
         return <IntlProvider definition={this.state.language}>
             <div className="Header">
                 <p style="font-size: 64px;margin: 0;">🐧</p>
-                <h1><Text id="title"/><span className="player-version">v{_VERSION_}</span></h1>
+                <h1><Text id="title"/><span className="Player-Version">v{_VERSION_}</span></h1>
                 <p><Text id="description"/></p>
-                <span className="bg-source">photo by <a href="https://flic.kr/p/bcNWxF" target="_blank">Ronald Woan</a></span>
+                <div className="GitHub-Link">
+                    <a target="_blank" href="https://github.com/M4TEC/PenguinPlayer"><GitHub/></a>
+                </div>
+                <div className="Sponsors">
+                    <a className="Vercel-Logo" href="https://vercel.com/?utm_source=pplayer&utm_campaign=oss">
+                        <Vercel preserveAspectRatio="xMidYMid meet"/>
+                    </a>
+                    <span className="Background-Source">photo by <a href="https://flic.kr/p/bcNWxF" target="_blank">Ronald Woan</a></span>
+                </div>
             </div>
             <div className="Container">
                 <div className="Section">

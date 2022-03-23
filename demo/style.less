@@ -20,19 +20,55 @@ body {
     font-family: "Poppins", "Noto Sans", sans-serif;
   }
 
-  .player-version {
+  .Player-Version {
     font-size: 14px;
     font-weight: lighter;
     opacity: .65;
     font-family: "Noto Sans", sans-serif;
   }
 
-  .bg-source {
-    opacity: .6;
-    font-size: 14px;
+  .GitHub-Link {
+    clip-path: polygon(0 0, 100% 0, 100% 100%);
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #24292f;
+    padding: 10px;
+    transition: padding ease-in-out .3s;
+
+    &:hover {
+      padding: 10px 10px 50px 50px;
+    }
+
+    svg {
+      fill: white;
+    }
+
+    a:hover {
+      svg {
+        fill: #d7d7d7;
+      }
+    }
+  }
+
+  .Sponsors {
     position: absolute;
     bottom: 3px;
     right: 3px;
+    text-align: right;
+
+    .Background-Source {
+      opacity: .6;
+      font-size: 14px;
+    }
+
+    .Vercel-Logo {
+      display: block;
+
+      svg {
+        width: 120px;
+      }
+    }
   }
 }
 

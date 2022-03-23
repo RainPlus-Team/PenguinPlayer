@@ -1,5 +1,5 @@
 declare module "*.svg" {
-    const svg: new() => import("preact").Component<{className?: string}>;
+    const svg: new() => import("preact").Component<{className?: string, preserveAspectRatio?: string}>;
     export default svg
 }
 
