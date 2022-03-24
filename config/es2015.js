@@ -2,14 +2,17 @@ const es2015 = {
     module: {
         rules: [
             {
-                test: /\.(m?js|ts|tsx)$/,
+                resource: {
+                    and: [/\.m?[jt]sx?$/],
+                    not: [/core-js/]
+                },
                 use: [
                     {
                         loader: "babel-loader",
                         options: {
+                            sourceType: "unambiguous",
                             presets: [
                                 ['@babel/preset-env', {
-                                    modules: false,
                                     useBuiltIns: "usage",
                                     corejs: 3,
                                     targets: {
