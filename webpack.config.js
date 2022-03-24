@@ -8,6 +8,8 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 const FileManagerPlugin = require("filemanager-webpack-plugin");
 const merge = require("webpack-merge").merge;
 
+const es5 = require("./config/es5");
+const es2015 = require("./config/es2015");
 const LangPlugin = require("./demo/lang-plugin");
 
 module.exports = env => {
@@ -72,19 +74,6 @@ module.exports = env => {
         module: {
             rules: [
                 {
-                    test: /\.(js|ts|tsx)$/,
-                    exclude : /\bcore-js\b/,
-                    use: [
-                        "babel-loader",
-                        {
-                            loader: "ts-loader",
-                            options: {
-                                transpileOnly: true
-                            }
-                        }
-                    ]
-                },
-                {
                     test: /\.(css|less)$/,
                     use: [
                         "style-loader",
@@ -111,54 +100,66 @@ module.exports = env => {
         }
     }
 
-    // Static configuration
+    // Demo Configuration
+    const demo = {
+        plugins: [
+            new HtmlWebpackPlugin({
+                template: "demo/index.html",
+                chunks: ["demo"],
+                minify: true
+            }),
+            new CopyPlugin({
+                patterns: [
+                    {from: "demo/lang/", to: "lang/"}
+                ]
+            }),
+            new FileManagerPlugin({
+                events: {
+                    onEnd: {
+                        copy: [
+                            {source: "dist/player.js", destination: "dist/demo/player.js"},
+                            {source: "dist/player.mjs", destination: "dist/demo/player.mjs"}
+                        ]
+                    }
+                }
+            }),
+            new LangPlugin()
+        ],
+        module: {
+            rules: [
+                {
+                    test: /\.(png|jpg|bmp|webp)$/,
+                    type: "asset/resource",
+                    generator: {
+                        filename: 'images/[name].[contenthash:5][ext]'
+                    }
+                }
+            ]
+        }
+    }
+
+    // Webpack Configuration
     return [
-        merge(base, {
+        merge(merge(base, es2015), { // ES2015+
+            entry: { player: path.resolve(__dirname, "src/ts/index.ts") },
+            output: {
+                path: path.resolve(__dirname, "dist/"),
+                filename: "[name].mjs"
+            }
+        }),
+        merge(merge(base, es5), { // ES5
             entry: { player: path.resolve(__dirname, "src/ts/index.ts") },
             output: {
                 path: path.resolve(__dirname, "dist/"),
                 filename: "[name].js"
             }
         }),
-        merge(base, {
+        merge(merge(base, es2015), merge(demo, { // ES2015+
             entry: { demo: path.resolve(__dirname, "demo/demo.tsx") },
             output: {
                 path: path.resolve(__dirname, "dist/demo/"),
                 filename: "js/[name].[contenthash:5].js"
-            },
-            plugins: [
-                new HtmlWebpackPlugin({
-                    template: "demo/index.html",
-                    chunks: ["demo"],
-                    minify: true
-                }),
-                new CopyPlugin({
-                    patterns: [
-                        {from: "demo/lang/", to: "lang/"}
-                    ]
-                }),
-                new FileManagerPlugin({
-                    events: {
-                        onEnd: {
-                            copy: [
-                                {source: "dist/player.js", destination: "dist/demo/player.js"}
-                            ]
-                        }
-                    }
-                }),
-                new LangPlugin()
-            ],
-            module: {
-                rules: [
-                    {
-                        test: /\.(png|jpg|bmp|webp)$/,
-                        type: "asset/resource",
-                        generator: {
-                            filename: 'images/[name].[contenthash:5][ext]'
-                        }
-                    }
-                ]
             }
-        })
+        }))
     ]
 }
