@@ -88,9 +88,6 @@ export class Player extends EventTarget {
         render(<this.layout
             options={options}
             player={this}
-            currentTime={0}
-            duration={0}
-            song={this.currentSong.song}
         />, player);
     }
 
@@ -152,10 +149,12 @@ export class Player extends EventTarget {
     }
 }
 
-export function initialize(options?: PenguinPlayerOptions): Player { // TODO: Support initialize with only an array of playlist
-    const opt = {
+export function initialize(options?: PenguinPlayerOptions | Playlist[]): Player {
+    const opt: PenguinPlayerOptions = {
         autoplay: true,
-        ...options
+        ...(Array.isArray(options) ? {
+            lists: options
+        } : options)
     }
 
     if (opt.fixed && document.querySelector(".PPlayer--fixed"))
@@ -164,6 +163,11 @@ export function initialize(options?: PenguinPlayerOptions): Player { // TODO: Su
     const instance = new Player(opt.parent, opt);
     if (opt.fixed)
         instance.root.classList.add("PPlayer--fixed");
+
+    if (Array.isArray(opt.lists))
+        for (let p of opt.lists) {
+            instance.loadPlaylist(p).then(_ => console.log("Playlist loaded"));
+        }
 
     return instance;
 }

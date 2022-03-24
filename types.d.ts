@@ -15,6 +15,7 @@ interface PenguinPlayerOptions {
     autoplay?: boolean | "auto"
     song?: number
     theme?: new () => Theme
+    lists?: import("./src/ts/playlist").Playlist[]
 }
 
 interface PPlayerLayoutState {
