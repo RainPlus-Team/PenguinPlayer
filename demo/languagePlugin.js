@@ -2,9 +2,9 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("webpack");
 
-class LangPlugin {
+class LanguagePlugin {
     apply(compiler) {
-        compiler.hooks.beforeCompile.tap("LangPlugin", (_) => {
+        compiler.hooks.beforeCompile.tap("LanguagePlugin", (_) => {
             const lang = [];
             const files = fs.readdirSync(path.resolve(__dirname, "lang"));
             for (let file of files) {
@@ -30,4 +30,4 @@ class LangPlugin {
     }
 }
 
-module.exports = LangPlugin;
+module.exports = LanguagePlugin;

@@ -10,7 +10,7 @@ const merge = require("webpack-merge").merge;
 
 const es5 = require("./config/es5");
 const es2015 = require("./config/es2015");
-const LangPlugin = require("./demo/lang-plugin");
+const LanguagePlugin = require("./demo/languagePlugin");
 
 module.exports = env => {
     // Determine build mode
@@ -19,7 +19,7 @@ module.exports = env => {
     console.log("Compilation Mode: " + mode);
 
     // Compile variables
-    let enabledFlags = typeof env.flags === "string" ? env.flags.split(".") : [];
+    //let enabledFlags = typeof env.flags === "string" ? env.flags.split(".") : [];
 
     const THEME = env.theme || "default";
 
@@ -123,7 +123,7 @@ module.exports = env => {
                     }
                 }
             }),
-            new LangPlugin()
+            new LanguagePlugin()
         ],
         module: {
             rules: [
