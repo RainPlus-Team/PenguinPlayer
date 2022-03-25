@@ -5,6 +5,9 @@ import { themeConfig, useTheme } from "./theme";
 
 import MediaSession from "./media-session";
 
+// Load default providers
+import "./providers/file"
+
 declare var define: any;
 
 declare global {
