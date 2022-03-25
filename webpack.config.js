@@ -40,9 +40,6 @@ module.exports = env => {
     let plugins = [
         new webpack.DefinePlugin(constants)
     ];
-    if (mode === "development") {
-        plugins.push(new BundleAnalyzerPlugin({openAnalyzer: false}));
-    }
 
     // Optimization
     const optimization = {
@@ -137,7 +134,9 @@ module.exports = env => {
                 filename: "[name].mjs"
             },
             plugins: [
-                new DemoCopyPlugin()
+                new DemoCopyPlugin(),
+                ...(mode === "development" ?
+                [new BundleAnalyzerPlugin({openAnalyzer: false, analyzerPort: 8888})] : [])
             ]
         }),
         merge(merge(base, es5), { // ES5
@@ -147,7 +146,9 @@ module.exports = env => {
                 filename: "[name].js"
             },
             plugins: [
-                new DemoCopyPlugin()
+                new DemoCopyPlugin(),
+                ...(mode === "development" ?
+                    [new BundleAnalyzerPlugin({openAnalyzer: false, analyzerPort: 8889})] : [])
             ]
         }),
         merge(merge(base, es2015), merge(demo, { // ES2015+
