@@ -5,12 +5,12 @@ const TerserPlugin = require("terser-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-const FileManagerPlugin = require("filemanager-webpack-plugin");
 const merge = require("webpack-merge").merge;
 
 const es5 = require("./config/es5");
 const es2015 = require("./config/es2015");
 const LanguagePlugin = require("./demo/languagePlugin");
+const DemoCopyPlugin = require("./plugins/demoCopyPlugin");
 
 module.exports = env => {
     // Determine build mode
@@ -113,16 +113,6 @@ module.exports = env => {
                     {from: "demo/lang/", to: "lang/"}
                 ]
             }),
-            new FileManagerPlugin({
-                events: {
-                    onEnd: {
-                        copy: [
-                            {source: "dist/player.js", destination: "dist/demo/player.js"},
-                            {source: "dist/player.mjs", destination: "dist/demo/player.mjs"}
-                        ]
-                    }
-                }
-            }),
             new LanguagePlugin()
         ],
         module: {
@@ -145,14 +135,20 @@ module.exports = env => {
             output: {
                 path: path.resolve(__dirname, "dist/"),
                 filename: "[name].mjs"
-            }
+            },
+            plugins: [
+                new DemoCopyPlugin()
+            ]
         }),
         merge(merge(base, es5), { // ES5
             entry: { player: path.resolve(__dirname, "src/ts/index.ts") },
             output: {
                 path: path.resolve(__dirname, "dist/"),
                 filename: "[name].js"
-            }
+            },
+            plugins: [
+                new DemoCopyPlugin()
+            ]
         }),
         merge(merge(base, es2015), merge(demo, { // ES2015+
             entry: { demo: path.resolve(__dirname, "demo/demo.tsx") },
