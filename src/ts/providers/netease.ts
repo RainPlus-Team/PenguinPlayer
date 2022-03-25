@@ -13,7 +13,7 @@ interface NeteasePlaylist extends Playlist {
 
 class NeteaseProvider implements Provider {
     async fetchPlaylist(list: NeteasePlaylist): Promise<NeteaseSong[]> {
-        const data = await fetch("https://gcm.tenmahw.com/resolve/playlist?id=" + list.id).then(res => res.json());
+        const data = await fetch("https://gcm.tenmahw.com/resolve/playlist?id=" + list.id).then(res => res.json()).catch(console.error);
         const tracks = data.playlist.tracks;
         const songs: NeteaseSong[] = [];
         for (let track of tracks) {
@@ -31,7 +31,7 @@ class NeteaseProvider implements Provider {
     }
 
     async fetchUrl(song: NeteaseSong): Promise<string> {
-        const data = await fetch("https://gcm.tenmahw.com/song/url?id=" + song.id).then(res => res.json());
+        const data = await fetch("https://gcm.tenmahw.com/song/url?id=" + song.id).then(res => res.json()).catch(console.error);
         return data.data[0].url;
     }
 

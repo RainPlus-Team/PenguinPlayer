@@ -139,7 +139,7 @@ export class Player extends EventTarget {
         if (len == 0 && this.options.autoplay) {
             // This is the first playlist loaded, and we should play it automatically
             const index = this.options.song || Math.floor(this.songs.length * Math.random());
-            this.play(index).then(_ => console.log("Auto play started!"));
+            this.play(index).then(_ => console.log("Auto play started!")).catch(console.error);
         }
     }
 
@@ -166,7 +166,7 @@ export function initialize(options?: PenguinPlayerOptions | Playlist[]): Player 
 
     if (Array.isArray(opt.lists))
         for (let p of opt.lists) {
-            instance.loadPlaylist(p).then(_ => console.log("Playlist loaded"));
+            instance.loadPlaylist(p).then(_ => console.log("Playlist loaded")).catch(console.error);
         }
 
     return instance;

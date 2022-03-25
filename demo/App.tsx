@@ -39,9 +39,9 @@ export default class extends Component<any, State> {
     constructor() {
         super();
 
-        this.setState({
+        this.state = {
             language: defaultLanguage
-        });
+        };
 
         const matcher = new LocaleMatcher(LANGUAGES);
         const match = matcher.match(navigator.language).locale.id;
@@ -54,7 +54,7 @@ export default class extends Component<any, State> {
                 });
                 // Update lang attribute
                 document.documentElement.lang = match;
-            });
+            }).catch(() => console.warn("Unable to load " + match + " language file, using default language"));
     }
 
     componentDidMount() {
