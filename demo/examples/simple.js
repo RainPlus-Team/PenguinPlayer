@@ -24,3 +24,12 @@ initialize([ // Initialize with an array of playlist
     }
 ]);
 // That's it! You are getting a fixed (float on page) player!
+
+// Or you want to embed it to somewhere...
+initialize([ // Initialize with an array of playlist
+    { // Playlist
+        provider: "netease", // Playlist provider (which means music platform)
+        id: "[NETEASE CLOUD MUSIC PLAYLIST ID]" // Platform's playlist metadata
+    }
+], document.querySelector("#player_container") // Set its parent
+);
