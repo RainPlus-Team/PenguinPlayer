@@ -120,6 +120,18 @@ module.exports = env => {
                     generator: {
                         filename: 'images/[name].[contenthash:5][ext]'
                     }
+                },
+                {
+                    test: /\.(mp3|wav|ogg)$/,
+                    type: "asset/resource",
+                    generator: {
+                        filename: 'sounds/[name].[contenthash:5][ext]'
+                    }
+                },
+                {
+                    resourceQuery: /raw/,
+                    //type: 'asset/source',
+                    use: "raw-loader" // asset/source doesn't work like raw-loader :/
                 }
             ]
         }

@@ -6,8 +6,8 @@ import Prism from "prismjs";
 
 import GitHub from "../assets/images/github.svg";
 import Vercel from "../assets/images/vercel-dark.svg";
-// @ts-ignore
-import SimpleInitialization from "!raw-loader!./examples/simple.js";
+
+import SimpleInitialization from "./examples/simple.js?raw";
 
 import defaultLanguage from "./lang/en.json";
 

@@ -3,6 +3,11 @@ declare module "*.svg" {
     export default svg
 }
 
+declare module "*?raw" {
+    const content: string;
+    export default content;
+}
+
 declare const _VERSION_: string;
 declare const _BUILD_DATE_: string;
 
