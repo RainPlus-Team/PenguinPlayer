@@ -10,7 +10,6 @@ const es2015 = {
                     {
                         loader: "babel-loader",
                         options: {
-                            sourceType: "unambiguous",
                             presets: [
                                 ['@babel/preset-env', {
                                     useBuiltIns: "usage",
