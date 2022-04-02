@@ -4,11 +4,13 @@ const webpack = require("webpack");
 
 class LanguagePlugin {
     apply(compiler) {
-        compiler.hooks.beforeCompile.tap("LanguagePlugin", (_) => {
-            const lang = [];
-            const files = fs.readdirSync(path.resolve(__dirname, "lang"));
+        compiler.hooks.beforeCompile.tapAsync("LanguagePlugin", (params, callback) => {
+            const lang = {};
+            const langPath = path.resolve(__dirname, "lang");
+            const files = fs.readdirSync(langPath);
             for (let file of files) {
-                lang.push(path.parse(file).name);
+                const l = path.parse(file).name;
+                lang[l] = JSON.parse(fs.readFileSync(path.resolve(langPath, file)).toString()).name;
             }
             const plug = new webpack.DefinePlugin({
                 LANGUAGES: JSON.stringify(lang)
@@ -26,6 +28,7 @@ class LanguagePlugin {
                 compiler.options.plugins.push(plug);
                 plug.apply(compiler);
             }
+            callback();
         });
     }
 }

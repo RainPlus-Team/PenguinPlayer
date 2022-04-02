@@ -1,6 +1,8 @@
 {
+  "name": "中文（简体）",
   "title": "Penguin Player",
   "description": "一个为嵌入而生的模块化网页播放器",
+  "languages": "语言",
   "sections": {
     "what": {
       "title": "它能做什么",

@@ -1,5 +1,5 @@
-import {h, Component} from "preact";
-import {IntlProvider, MarkupText, Text} from "preact-i18n";
+import {h, Component, createRef} from "preact";
+import {IntlProvider, MarkupText, Text, Localizer} from "preact-i18n";
 import {LocaleMatcher} from "@phensley/locale-matcher";
 import {extend} from "./util";
 import Prism from "prismjs";
@@ -7,11 +7,13 @@ import Prism from "prismjs";
 import GitHub from "../assets/images/github.svg";
 import Vercel from "../assets/images/vercel-dark.svg";
 
+import Language from "../assets/icons/language_black_24dp.svg";
+
 import SimpleInitialization from "./examples/simple.js?raw";
 
 import defaultLanguage from "./lang/en.json";
 
-declare const LANGUAGES: string[];
+declare const LANGUAGES: {[key: string]: string};
 
 interface CodeProps {
     language?: string
@@ -32,38 +34,66 @@ class Code extends Component<CodeProps, any> {
 }
 
 interface State {
-    language: any
+    language: any,
+    showLangList: boolean
 }
 
 export default class extends Component<any, State> {
+    private langSelector = createRef();
+
     constructor() {
         super();
 
         this.state = {
-            language: defaultLanguage
+            language: defaultLanguage,
+            showLangList: false
         };
 
-        const matcher = new LocaleMatcher(LANGUAGES);
+        const matcher = new LocaleMatcher(Object.keys(LANGUAGES));
         const match = matcher.match(navigator.language).locale.id;
 
         if (match != "en")
-            fetch("lang/" + match + ".json").then(res => res.json()).then(lang => {
-                // Apply fallbacks and apply it
-                this.setState({
-                    language: extend(defaultLanguage, lang)
-                });
-                // Update lang attribute
-                document.documentElement.lang = match;
-            }).catch(() => console.warn("Unable to load " + match + " language file, using default language"));
+            this.loadLanguage(match);
+    }
+
+    loadLanguage(lang: string) {
+        fetch("lang/" + lang + ".json").then(res => res.json()).then(lang => {
+            // Apply fallbacks and apply it
+            this.setState({
+                language: extend(defaultLanguage, lang)
+            });
+            // Update lang attribute
+            document.documentElement.lang = lang;
+        }).catch(() => console.warn("Unable to load " + lang + " language file, using default language"));
     }
 
     componentDidMount() {
         //Prism.highlightAll();
+        window.addEventListener("click", (e) => {
+            const el = this.langSelector.current;
+            if (!el || !el.contains(e.target))
+                this.setState({showLangList: false});
+        });
     }
 
     render(props) {
         return <IntlProvider definition={this.state.language}>
             <div className="Header">
+                    <div ref={this.langSelector} className={["Language-Selector", (this.state.showLangList ? "Language-Selector--listed" : "")].join(" ")}>
+                        <Localizer>
+                            <button onClick={() => this.setState({showLangList: true})} className="Language-Button" title={<Text id="languages"/> as unknown as string}>
+                                <Language/>
+                            </button>
+                            <strong style="vertical-align: super;"><Text id="languages"/></strong>
+                        </Localizer>
+                        <ul className="Language-List">
+                            {Object.keys(LANGUAGES).map((v) =>
+                                <li>
+                                    <button onClick={() => this.loadLanguage(v)}>{LANGUAGES[v]}</button>
+                                </li>
+                            )}
+                        </ul>
+                    </div>
                 <p style="font-size: 64px;margin: 0;">🐧</p>
                 <h1><Text id="title"/><span className="Player-Version">v{_VERSION_}</span></h1>
                 <p><Text id="description"/></p>

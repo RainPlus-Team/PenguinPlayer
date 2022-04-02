@@ -20,6 +20,72 @@ body {
     font-family: "Poppins", "Noto Sans", sans-serif;
   }
 
+  .Language-Selector {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 34px;
+    height: 34px;
+    border-radius: 17px;
+    overflow: hidden;
+    text-align: left;
+    transition: width .1s ease-in-out, height .1s ease-in-out, box-shadow .1s ease-in-out, background-color .1s ease-in-out;
+    white-space: nowrap;
+
+    .Language-Button {
+      width: 24px;
+      height: 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 5px;
+      box-sizing: content-box;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, .3);
+      }
+    }
+
+    &.Language-Selector--listed {
+      background-color: white;
+      width: 200px;
+      height: 250px;
+      box-shadow: 0 2px 5px #7a7a7a;
+
+      .Language-Button {
+        cursor: default;
+        background: none;
+      }
+
+      .Language-List {
+        overflow-y: auto;
+      }
+    }
+
+    .Language-List {
+      overflow: hidden;
+      list-style: none;
+      padding: 0;
+      height: calc(100% - 34px);
+      margin: 0;
+
+      li {
+        button {
+          width: 100%;
+          height: 100%;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 5px 5px;
+
+          &:hover {
+            background-color: rgba(0, 0, 0, .2);
+          }
+        }
+      }
+    }
+  }
+
   .Player-Version {
     font-size: 14px;
     font-weight: lighter;

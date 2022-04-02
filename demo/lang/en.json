@@ -1,6 +1,8 @@
 {
+  "name": "English",
   "title": "Penguin Player",
   "description": "A modular web music player for embedding",
+  "languages": "Languages",
   "sections": {
     "what": {
       "title": "What can it do",
