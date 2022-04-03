@@ -24,7 +24,7 @@ export default class extends Component<CodeProps, CodeState> {
     componentDidUpdate(previousProps: Readonly<CodeProps>, previousState: Readonly<CodeState>, snapshot: any) {
         if (previousProps.i18nLang != this.props.i18nLang && typeof this.props.i18nLang === "string") {
             // New language
-            fetch(`examples/${this.props.i18nName}.${this.props.i18nLang}.js`).then(res => {
+            fetch(`examples/${this.props.i18nName}.${this.props.i18nLang}.txt`).then(res => {
                 if (res.ok)
                     res.text().then((j) => {
                         this.setState({
