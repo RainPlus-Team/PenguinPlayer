@@ -3,7 +3,7 @@ import {h, render} from "preact";
 import "prismjs/themes/prism.min.css";
 import "./style.less";
 
-import App from "./App";
+import App from "./components/App";
 
 declare const PPlayer: any;
 

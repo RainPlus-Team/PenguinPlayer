@@ -1,40 +1,23 @@
 import {h, Component, createRef} from "preact";
 import {IntlProvider, MarkupText, Text, Localizer} from "preact-i18n";
 import {LocaleMatcher} from "@phensley/locale-matcher";
-import {extend} from "./util";
-import Prism from "prismjs";
+import {extend} from "../util";
+import Code from "./Code";
 
-import GitHub from "../assets/images/github.svg";
-import Vercel from "../assets/images/vercel-dark.svg";
+import GitHub from "../../assets/images/github.svg";
+import Vercel from "../../assets/images/vercel-dark.svg";
 
-import Language from "../assets/icons/language_black_24dp.svg";
+import Language from "../../assets/icons/language_black_24dp.svg";
 
-import SimpleInitialization from "./examples/simple.js?raw";
+import SimpleInitialization from "../examples/simple.en.js?raw";
 
-import defaultLanguage from "./lang/en.json";
+import defaultLanguage from "../lang/en.json";
 
 declare const LANGUAGES: {[key: string]: string};
 
-interface CodeProps {
-    language?: string
-    className?: string
-}
-
-class Code extends Component<CodeProps, any> {
-    render() {
-        const lang = this.props.language || "javascript";
-
-        return <pre
-            className={[`language-${lang}`, this.props.className]
-                .filter(Boolean)
-                .join(' ')}
-        >
-            <code className={`language-${lang}`} dangerouslySetInnerHTML={{__html: Prism.highlight(this.props.children, Prism.languages[lang])}}/>
-        </pre>}
-}
-
 interface State {
-    language: any,
+    langName: string
+    language: object,
     showLangList: boolean
 }
 
@@ -45,6 +28,7 @@ export default class extends Component<any, State> {
         super();
 
         this.state = {
+            langName: "en",
             language: defaultLanguage,
             showLangList: false
         };
@@ -57,10 +41,11 @@ export default class extends Component<any, State> {
     }
 
     loadLanguage(lang: string) {
-        fetch("lang/" + lang + ".json").then(res => res.json()).then(lang => {
+        fetch("lang/" + lang + ".json").then(res => res.json()).then(l => {
             // Apply fallbacks and apply it
             this.setState({
-                language: extend(defaultLanguage, lang)
+                langName: lang,
+                language: extend(defaultLanguage, l)
             });
             // Update lang attribute
             document.documentElement.lang = lang;
@@ -122,7 +107,7 @@ export default class extends Component<any, State> {
                         <h2><sup className="penguin-mark">❗</sup>&nbsp;<Text id="title"/></h2>
                         <h3><Text id="simple.title"/></h3>
                         <p><Text id="simple.introduce"/></p>
-                        <Code>
+                        <Code i18nName="simple" i18nLang={this.state.langName}>
                             {SimpleInitialization}
                         </Code>
                         <h3><Text id="advanced.title"/></h3>

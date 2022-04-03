@@ -107,7 +107,8 @@ module.exports = env => {
             }),
             new CopyPlugin({
                 patterns: [
-                    {from: "demo/lang/", to: "lang/"}
+                    {from: "demo/lang/", to: "lang/"},
+                    {from: "demo/examples/", to: "examples/"}
                 ]
             }),
             new LanguagePlugin()
