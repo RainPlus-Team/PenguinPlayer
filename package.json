@@ -27,6 +27,9 @@
   "homepage": "https://github.com/M4TEC/PenguinPlayer#readme",
   "devDependencies": {
     "@types/preact-i18n": "^2.3.1",
+    "@typescript-eslint/eslint-plugin": "^5.18.0",
+    "@typescript-eslint/parser": "^5.18.0",
+    "eslint": "^8.12.0",
     "webpack-bundle-analyzer": "^4.5.0"
   },
   "dependencies": {
