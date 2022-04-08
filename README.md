@@ -1,4 +1,4 @@
-[中文README](README-zh_CN.md)
+English | [中文（简体）](README-zh_CN.md)
 
 # 🐧 PenguinPlayer
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/M4TEC/PenguinPlayer/Compile%20the%20player)
@@ -22,7 +22,12 @@ A simple player based on Netease Cloud Music, and it only needs to load ONE Java
 - _More features are coming..._
 
 ## Usage
-Still in development, no usage for now.
+See [demo page](https://penguin-player-rewrite.vercel.app).
+
+## Note
+All versions in [Releases](https://github.com/M4TEC/PenguinPlayer/releases) (without "**NonSem**") follow [Semantic Versioning](https://semver.org/) specification.
+
+See [CHANGELOG](CHANGELOG.md) for changelogs.
 
 ## License
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FM4TEC%2FPenguinPlayer.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FM4TEC%2FPenguinPlayer?ref=badge_large)

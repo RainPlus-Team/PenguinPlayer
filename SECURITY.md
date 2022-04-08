@@ -10,11 +10,10 @@ Following table shows that if a version is still getting updates or not.
 
 :x: - Not supported
 
-| Version | Supported          |
-|---------|--------------------|
-| 1.3.x   | :white_check_mark: |
-| 1.2.x   | :o:                |
-| < 1.2   | :x:                |
+| Version         | Supported          |
+|-----------------|--------------------|
+| 0.x             | :white_check_mark: |
+| NonSem versions | :x:                |
 
 ## Reporting a Vulnerability
 

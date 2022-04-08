@@ -1,3 +1,5 @@
+[English](README.md) | 中文（简体）
+
 # 🐧 PenguinPlayer
 ![GitHub Workflow状态](https://img.shields.io/github/workflow/status/M4TEC/PenguinPlayer/Compile%20the%20player?label=%E7%BC%96%E8%AF%91%E7%8A%B6%E6%80%81)
 [![可维护性](https://img.shields.io/codeclimate/maintainability/M4TEC/PenguinPlayer?label=%E5%8F%AF%E7%BB%B4%E6%8A%A4%E6%80%A7)](https://codeclimate.com/github/M4TEC/PenguinPlayer/maintainability)
@@ -20,7 +22,12 @@
 - _更多亮点还在路上..._
 
 ## 用法
-仍在开发中，目前暂无使用方法。
+查看[Demo页面](https://penguin-player-rewrite.vercel.app)。
+
+## 注意
+所有在 [Releases](https://github.com/M4TEC/PenguinPlayer/releases) 的版本（不带"**NonSem**"字样）均遵循 [语义化版本](https://semver.org/lang/zh-CN) 标准。
+
+查看 [CHANGELOG](CHANGELOG.md) 获取更新日志.
 
 ## 许可证
 [![FOSSA状态](https://app.fossa.com/api/projects/git%2Bgithub.com%2FM4TEC%2FPenguinPlayer.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FM4TEC%2FPenguinPlayer?ref=badge_large)
