@@ -16,15 +16,15 @@ class NeteaseProvider implements Provider {
         const data = await fetch("https://gcm.tenmahw.com/resolve/playlist?id=" + list.id).then(res => res.json()).catch(console.error);
         const tracks = data.playlist.tracks;
         const songs: NeteaseSong[] = [];
-        for (let track of tracks) {
+        for (const track of tracks) {
             const id = track.id;
             const name = track.name;
-            const artists = (track.ar as Array<any>).map((ar: any) => (ar.name as string));
+            const artists = (track.ar as Array<{ name: string }>).map((ar) => (ar.name));
             songs.push({
                 id,
                 name,
                 artists,
-                thumbnail: track.al.picUrl
+                thumbnail: track.al.picUrl,
             });
         }
         return songs;

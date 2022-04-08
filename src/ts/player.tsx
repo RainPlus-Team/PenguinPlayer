@@ -7,8 +7,10 @@ import { Playmode } from "./playmode";
 import { PlaylistLoadEvent, PlaymodeChangeEvent, SongChangeEvent } from "./events";
 
 export interface Song {
+    thumbnail?: string
     name: string
     artists: string[]
+    album?: string
 }
 
 export interface Module {
@@ -18,22 +20,22 @@ export interface Module {
 }
 
 export class Player extends EventTarget {
-    private layout: new () => Theme
-    private _currentSong: number
-    private _playmode: Playmode
-    private _modules: Module[]
+    private layout: new () => Theme;
+    private _currentSong: number;
+    private _playmode: Playmode;
+    private _modules: Module[];
 
-    public readonly audio: HTMLAudioElement
+    public readonly audio: HTMLAudioElement;
 
-    public readonly options: PenguinPlayerOptions
-    public readonly root: HTMLElement
-    public readonly songs: SongList[]
+    public readonly options: PenguinPlayerOptions;
+    public readonly root: HTMLElement;
+    public readonly songs: SongList[];
 
     get currentSong() {
         return getSongByIndex(this.songs, this._currentSong);
     }
     get currentSongIndex() {
-        return this._currentSong
+        return this._currentSong;
     }
 
     get currentTime() {
@@ -91,11 +93,11 @@ export class Player extends EventTarget {
         />, player);
     }
 
-    next(user: boolean = true) {
+    next(user = true) {
         this.playmode.handleNext(user);
     }
 
-    previous(user: boolean = true) {
+    previous(user = true) {
         this.playmode.handlePrevious(user);
     }
 
@@ -118,11 +120,11 @@ export class Player extends EventTarget {
                 return await this.play();
             }
         } else
-            return this.audio ? this.audio.play() : ""
+            return this.audio ? this.audio.play() : "";
     }
 
     pause() {
-        this.audio ? this.audio.pause() : ""
+        this.audio ? this.audio.pause() : "";
     }
 
     async loadPlaylist(playlist: Playlist) {
@@ -139,7 +141,7 @@ export class Player extends EventTarget {
         if (len == 0 && this.options.autoplay) {
             // This is the first playlist loaded, and we should play it automatically
             const index = this.options.song || Math.floor(this.songs.length * Math.random());
-            this.play(index).then(_ => console.log("Auto play started!")).catch(console.error);
+            this.play(index).then(() => console.log("Auto play started!")).catch(console.error);
         }
     }
 
@@ -155,7 +157,7 @@ export function initialize(options?: PenguinPlayerOptions | Playlist[]): Player 
         ...(Array.isArray(options) ? {
             lists: options
         } : options)
-    }
+    };
 
     if (opt.fixed && document.querySelector(".PPlayer--fixed"))
         throw Error("Only one instance of fixed player can be existed at once.");
@@ -165,8 +167,8 @@ export function initialize(options?: PenguinPlayerOptions | Playlist[]): Player 
         instance.root.classList.add("PPlayer--fixed");
 
     if (Array.isArray(opt.lists))
-        for (let p of opt.lists) {
-            instance.loadPlaylist(p).then(_ => console.log("Playlist loaded")).catch(console.error);
+        for (const p of opt.lists) {
+            instance.loadPlaylist(p).then(() => console.log("Playlist loaded")).catch(console.error);
         }
 
     return instance;

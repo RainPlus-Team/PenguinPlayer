@@ -12,7 +12,7 @@ export interface SongList {
 
 export function getSongListLength(songlist: SongList[]): number {
     let length = 0;
-    for (let list of songlist) {
+    for (const list of songlist) {
         length += list.songs.length;
     }
     return length;
@@ -20,8 +20,8 @@ export function getSongListLength(songlist: SongList[]): number {
 
 export function getSongByIndex(songlist: SongList[], index: number): {song: Song, provider: string} {
     let prevLengths = 0;
-    for (let list of songlist) {
-        let pLen = prevLengths;
+    for (const list of songlist) {
+        const pLen = prevLengths;
         prevLengths += list.songs.length;
         if (pLen + list.songs.length >= index) continue;
         if (index - pLen < list.songs.length)

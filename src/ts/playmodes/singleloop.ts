@@ -3,7 +3,7 @@ import { getSongListLength } from "../playlist";
 import { addPlaymode, Playmode } from "../playmode";
 
 class SingleLoop implements Playmode {
-    player: Player
+    player: Player;
 
     initialize(player: Player): void {
         this.player = player;
@@ -14,7 +14,7 @@ class SingleLoop implements Playmode {
             this.player.play();
         else {
             const len = getSongListLength(this.player.songs);
-            const cId = this.player.currentSong;
+            const cId = this.player.currentSongIndex;
             if (cId >= len + 1) {
                 this.player.play(0);
             } else {
@@ -28,7 +28,7 @@ class SingleLoop implements Playmode {
             this.player.play();
         else {
             const len = getSongListLength(this.player.songs);
-            const cId = this.player.currentSong;
+            const cId = this.player.currentSongIndex;
             if (cId <= 0) {
                 this.player.play(len - 1);
             } else {

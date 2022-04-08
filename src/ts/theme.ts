@@ -9,7 +9,7 @@ export const themeConfig = {
     get currentTheme() : new() => Theme {
         return _theme;
     }
-}
+};
 
 export function useTheme(theme: new () => Theme) {
     _theme = theme;

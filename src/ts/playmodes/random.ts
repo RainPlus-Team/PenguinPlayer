@@ -10,7 +10,7 @@ interface SongWithOriginalInfo {
 
 class Random implements Playmode {
     randomizedList: SongWithOriginalInfo[];
-    player: Player
+    player: Player;
 
     initialize(player: Player): void {
         this.player = player;
@@ -34,7 +34,7 @@ class Random implements Playmode {
     private findRandId(index: number) {
         const cId = index;
         let randId = -1;
-        for (let item of this.randomizedList) {
+        for (const item of this.randomizedList) {
             if (item.index == cId) {
                 randId = cId;
                 break;
@@ -43,8 +43,8 @@ class Random implements Playmode {
         return randId;
     }
 
-    handleNext(_: boolean) {
-        const randId = this.findRandId(this.player.currentSong);
+    handleNext() {
+        const randId = this.findRandId(this.player.currentSongIndex);
         if (randId < 0) {
             // Must do something?
             this.player.play(this.randomizedList[0].index);
@@ -57,8 +57,8 @@ class Random implements Playmode {
         }
     }
 
-    handlePrevious(_: boolean) {
-        const randId = this.findRandId(this.player.currentSong);
+    handlePrevious() {
+        const randId = this.findRandId(this.player.currentSongIndex);
         if (randId < 0) {
             // Must do something?
             this.player.play(this.randomizedList[0].index);

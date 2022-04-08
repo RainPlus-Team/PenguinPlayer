@@ -3,14 +3,14 @@ import { getSongListLength } from "../playlist";
 import { addPlaymode, Playmode } from "../playmode";
 
 class ListLoop implements Playmode {
-    player: Player
+    player: Player;
 
     initialize(player: Player): void {
         this.player = player;
     }
 
-    handleNext(_: boolean) {
-        let c = this.player.currentSong;
+    handleNext() {
+        let c = this.player.currentSongIndex;
         if (c < getSongListLength(this.player.songs) - 1) {
             c++;
         } else {
@@ -19,8 +19,8 @@ class ListLoop implements Playmode {
         this.player.play(c);
     }
 
-    handlePrevious(_: boolean) {
-        let c = this.player.currentSong;
+    handlePrevious() {
+        let c = this.player.currentSongIndex;
         if (c <= 0) {
             c = getSongListLength(this.player.songs) - 1;
         } else {

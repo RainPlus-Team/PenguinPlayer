@@ -3,25 +3,25 @@ import { getSongListLength } from "../playlist";
 import { addPlaymode, Playmode } from "../playmode";
 
 class List implements Playmode {
-    player: Player
+    player: Player;
 
     initialize(player: Player): void {
         this.player = player;
     }
 
     handleNext(user: boolean) {
-        let c = this.player.currentSong;
+        let c = this.player.currentSongIndex;
         if (c < getSongListLength(this.player.songs) - 1) {
             c++;
         } else if (user) {
             c = 0;
         }
-        if (c != this.player.currentSong)
+        if (c != this.player.currentSongIndex)
             this.player.play(c);
     }
 
-    handlePrevious(_: boolean) {
-        let c = this.player.currentSong;
+    handlePrevious() {
+        let c = this.player.currentSongIndex;
         if (c <= 0) {
             c = getSongListLength(this.player.songs) - 1;
         } else {

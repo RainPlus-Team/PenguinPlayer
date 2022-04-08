@@ -2,7 +2,7 @@ import {Module, Player} from "./player";
 import {SongChangeEvent} from "./events";
 
 export default class implements Module {
-    private player: Player
+    private player: Player;
 
     initialize(player: Player) {
         this.player = player;
@@ -14,11 +14,11 @@ export default class implements Module {
 
         player.addEventListener("songchange", (e: SongChangeEvent) => {
             const s = e.song;
-            const thumbnail = (s as any).thumbnail || ""; // TODO: Thumbnail fallback image
+            const thumbnail = s.thumbnail || ""; // TODO: Thumbnail fallback image
             navigator.mediaSession.metadata = new MediaMetadata({
                 title: s.name,
                 artist: s.artists.join(", "),
-                album: (s as any).album || "",
+                album: s.album || "",
                 artwork: [
                     {
                         src: thumbnail
@@ -27,7 +27,7 @@ export default class implements Module {
             });
         });
         player.audio.addEventListener("playing", () => {
-            navigator.mediaSession.playbackState = "playing"
+            navigator.mediaSession.playbackState = "playing";
         });
         player.audio.addEventListener("pause", () => {
             navigator.mediaSession.playbackState = "paused";

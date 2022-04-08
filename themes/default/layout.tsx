@@ -1,4 +1,4 @@
-import { h, Component, Fragment } from "preact"
+import { h, Component, Fragment } from "preact";
 
 import Play from "./icons/play.svg";
 import Pause from "./icons/pause.svg";
