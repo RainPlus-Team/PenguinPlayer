@@ -11,7 +11,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/M4TEC/PenguinPlayer)](https://github.com/M4TEC/PenguinPlayer/stargazers)
 [![FOSSA状态](https://app.fossa.com/api/projects/git%2Bgithub.com%2FM4TEC%2FPenguinPlayer.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FM4TEC%2FPenguinPlayer?ref=badge_shield)
 
-一个基于网易云音乐的简易播放器，而且它仅仅是**一个** JavaScript 文件！
+一个为嵌入而生的播放器，而且它仅仅是**一个** JavaScript 文件！
 
 ## 亮点
 - 移动/触控设备支持
