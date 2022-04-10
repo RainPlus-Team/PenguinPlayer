@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Well-maintained player code
 - Modularized player
 - Themeable user interface
+- Support [QQ Music](https://y.qq.com)
+- Support [KuGou Music](https://kugou.com)
+- Support [Spotify](https://spotify.com) (limited support?)
 
 ### Changed
 - Almost everything
