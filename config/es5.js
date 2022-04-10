@@ -11,14 +11,14 @@ const es5 = {
                         loader: "babel-loader",
                         options: {
                             presets: [
-                                ['@babel/preset-env', {
+                                ["@babel/preset-env", {
                                     useBuiltIns: "usage",
                                     corejs: 3,
                                     targets: {
                                         browsers: [
-                                            '> 1%',
-                                            'last 2 versions',
-                                            'Firefox ESR',
+                                            "> 1%",
+                                            "last 2 versions",
+                                            "Firefox ESR",
                                         ],
                                     },
                                 }],
@@ -37,4 +37,4 @@ const es5 = {
     }
 };
 
-module.exports = es5;
+export default es5;
