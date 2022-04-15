@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const fs = require("fs");
 const path = require("path");
 const webpack = require("webpack");
@@ -9,7 +11,7 @@ const merge = require("webpack-merge").merge;
 
 const es5 = require("./config/es5");
 const es2015 = require("./config/es2015");
-const LanguagePlugin = require("./demo/languagePlugin");
+const LanguagePlugin = require("./plugins/languagePlugin");
 const DemoCopyPlugin = require("./plugins/demoCopyPlugin");
 
 module.exports = env => {
@@ -34,7 +36,7 @@ module.exports = env => {
     const constants = {
         _VERSION_: JSON.stringify(pkg.version),
         _BUILD_DATE_: JSON.stringify(new Date().toString())
-    }
+    };
 
     // Plugins
     let plugins = [
@@ -95,7 +97,7 @@ module.exports = env => {
                 }
             ]
         }
-    }
+    };
 
     // Demo Configuration
     const demo = {
@@ -119,14 +121,14 @@ module.exports = env => {
                     test: /\.(png|jpg|bmp|webp)$/,
                     type: "asset/resource",
                     generator: {
-                        filename: 'images/[name].[contenthash:5][ext]'
+                        filename: "images/[name].[contenthash:5][ext]"
                     }
                 },
                 {
                     test: /\.(mp3|wav|ogg)$/,
                     type: "asset/resource",
                     generator: {
-                        filename: 'sounds/[name].[contenthash:5][ext]'
+                        filename: "sounds/[name].[contenthash:5][ext]"
                     }
                 },
                 {
@@ -136,7 +138,7 @@ module.exports = env => {
                 }
             ]
         }
-    }
+    };
 
     // Webpack Configuration
     return [
@@ -149,7 +151,7 @@ module.exports = env => {
             plugins: [
                 new DemoCopyPlugin(),
                 ...(mode === "development" ?
-                [new BundleAnalyzerPlugin({openAnalyzer: false, analyzerPort: 8888})] : [])
+                    [new BundleAnalyzerPlugin({openAnalyzer: false, analyzerPort: 8888})] : [])
             ]
         }),
         merge(merge(base, es5), { // ES5
@@ -171,5 +173,5 @@ module.exports = env => {
                 filename: "js/[name].[contenthash:5].js"
             }
         }))
-    ]
-}
+    ];
+};

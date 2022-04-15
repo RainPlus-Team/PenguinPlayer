@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const fs = require("fs");
 const path = require("path");
 const webpack = require("webpack");
@@ -6,7 +8,7 @@ class LanguagePlugin {
     apply(compiler) {
         compiler.hooks.beforeCompile.tapAsync("LanguagePlugin", (params, callback) => {
             const lang = {};
-            const langPath = path.resolve(__dirname, "lang");
+            const langPath = path.resolve(__dirname, "../demo/lang");
             const files = fs.readdirSync(langPath);
             for (let file of files) {
                 const l = path.parse(file).name;
