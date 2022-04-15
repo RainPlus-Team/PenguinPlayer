@@ -1,23 +1,18 @@
-/*eslint-env node */
+const fs = require("fs");
+const path = require("path");
+const webpack = require("webpack");
+const TerserPlugin = require("terser-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const merge = require("webpack-merge").merge;
 
-import fs from "fs";
-import path from "path";
-import webpack from "webpack";
-import TerserPlugin from "terser-webpack-plugin";
-import HtmlWebpackPlugin from "html-webpack-plugin";
-import CopyPlugin from "copy-webpack-plugin";
-import {BundleAnalyzerPlugin} from "webpack-bundle-analyzer";
-import {merge} from "webpack-merge";
+const es5 = require("./config/es5");
+const es2015 = require("./config/es2015");
+const LanguagePlugin = require("./demo/languagePlugin");
+const DemoCopyPlugin = require("./plugins/demoCopyPlugin");
 
-import es5 from "./config/es5";
-import es2015 from "./config/es2015";
-import LanguagePlugin from "./plugins/languagePlugin";
-import DemoCopyPlugin from "./plugins/demoCopyPlugin";
-
-export default env => {
-    if (!env)
-        env = {};
-
+module.exports = env => {
     // Determine build mode
     let mode = "development";
     if (env.production) {mode = "production";}
@@ -39,7 +34,7 @@ export default env => {
     const constants = {
         _VERSION_: JSON.stringify(pkg.version),
         _BUILD_DATE_: JSON.stringify(new Date().toString())
-    };
+    }
 
     // Plugins
     let plugins = [
@@ -100,7 +95,7 @@ export default env => {
                 }
             ]
         }
-    };
+    }
 
     // Demo Configuration
     const demo = {
@@ -124,14 +119,14 @@ export default env => {
                     test: /\.(png|jpg|bmp|webp)$/,
                     type: "asset/resource",
                     generator: {
-                        filename: "images/[name].[contenthash:5][ext]"
+                        filename: 'images/[name].[contenthash:5][ext]'
                     }
                 },
                 {
                     test: /\.(mp3|wav|ogg)$/,
                     type: "asset/resource",
                     generator: {
-                        filename: "sounds/[name].[contenthash:5][ext]"
+                        filename: 'sounds/[name].[contenthash:5][ext]'
                     }
                 },
                 {
@@ -141,7 +136,7 @@ export default env => {
                 }
             ]
         }
-    };
+    }
 
     // Webpack Configuration
     return [
@@ -154,7 +149,7 @@ export default env => {
             plugins: [
                 new DemoCopyPlugin(),
                 ...(mode === "development" ?
-                    [new BundleAnalyzerPlugin({openAnalyzer: false, analyzerPort: 8888})] : [])
+                [new BundleAnalyzerPlugin({openAnalyzer: false, analyzerPort: 8888})] : [])
             ]
         }),
         merge(merge(base, es5), { // ES5
@@ -176,5 +171,5 @@ export default env => {
                 filename: "js/[name].[contenthash:5].js"
             }
         }))
-    ];
-};
+    ]
+}

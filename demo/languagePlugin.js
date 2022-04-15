@@ -1,6 +1,6 @@
-import fs from "fs";
-import path from "path";
-import webpack from "webpack";
+const fs = require("fs");
+const path = require("path");
+const webpack = require("webpack");
 
 class LanguagePlugin {
     apply(compiler) {
@@ -33,4 +33,4 @@ class LanguagePlugin {
     }
 }
 
-export default LanguagePlugin;
+module.exports = LanguagePlugin;

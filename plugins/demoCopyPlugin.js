@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+const fs = require("fs");
+const path = require("path");
 
 class DemoCopyPlugin {
     apply(compiler) {
@@ -17,4 +17,4 @@ class DemoCopyPlugin {
     }
 }
 
-export default DemoCopyPlugin;
+module.exports = DemoCopyPlugin;
