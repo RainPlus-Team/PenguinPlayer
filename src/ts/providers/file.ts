@@ -1,6 +1,6 @@
-import { Song } from "../player";
-import { Playlist } from "../playlist";
-import { addProvider, Provider } from "../provider";
+import {Song} from "../player";
+import {Playlist} from "../playlist";
+import {addProvider, Provider} from "../provider";
 
 interface FileSong extends Song {
     thumbnail: string
@@ -11,6 +11,9 @@ interface FilePlaylist extends Playlist {
     songs: FileSong[]
 }
 
+/**
+ * Provider that plays musics from files.
+ */
 class FileProvider implements Provider {
     async fetchPlaylist(list: FilePlaylist): Promise<FileSong[]> {
         return list.songs;

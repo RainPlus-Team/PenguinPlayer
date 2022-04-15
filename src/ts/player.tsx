@@ -6,6 +6,9 @@ import { themeConfig } from "./theme";
 import { Playmode } from "./playmode";
 import { PlaylistLoadEvent, PlaymodeChangeEvent, SongChangeEvent } from "./events";
 
+/**
+ * Interface for classes that represent a song.
+ */
 export interface Song {
     thumbnail?: string
     name: string
@@ -13,12 +16,25 @@ export interface Song {
     album?: string
 }
 
+/**
+ * Interface for classes that represent a module.
+ */
 export interface Module {
+    /**
+     * Initializes a module.
+     * @param player - The instance of the player.
+     */
     initialize(player: Player)
 
+    /**
+     * Called when a module is being unloaded.
+     */
     unload?()
 }
 
+/**
+ * Penguin Player class.
+ */
 export class Player extends EventTarget {
     private layout: new () => Theme;
     private _currentSong: number;
@@ -31,13 +47,22 @@ export class Player extends EventTarget {
     public readonly root: HTMLElement;
     public readonly songs: SongList[];
 
+    /**
+     * Current playing song.
+     */
     get currentSong() {
         return getSongByIndex(this.songs, this._currentSong);
     }
+    /**
+     * The index of current playing song.
+     */
     get currentSongIndex() {
         return this._currentSong;
     }
 
+    /**
+     * Gets or set current time of audio.
+     */
     get currentTime() {
         return this.audio ? this.audio.currentTime : NaN;
     }
@@ -45,6 +70,9 @@ export class Player extends EventTarget {
         this.audio ? this.audio.currentTime = v : "";
     }
 
+    /**
+     * Gets or sets the volume of audio.
+     */
     get volume() {
         return this.audio ? this.audio.volume : NaN;
     }
@@ -52,10 +80,17 @@ export class Player extends EventTarget {
         this.audio ? this.audio.volume = v : "";
     }
 
+    /**
+     * Gets the duration of audio.
+     */
     get duration() {
         return this.audio ? this.audio.duration : NaN;
     }
 
+    /**
+     * Gets or sets the playmode of the player.
+     * @fires Player#playmodechange
+     */
     get playmode() {
         return this._playmode;
     }
@@ -66,10 +101,18 @@ export class Player extends EventTarget {
         this.dispatchEvent(new PlaymodeChangeEvent(old, v));
     }
 
+    /**
+     * Gets the modules that used by the player.
+     */
     get modules() {
         return this._modules;
     }
 
+    /**
+     * Creates an instance of the player.
+     * @param parent - The parent element of the player.
+     * @param options - Options that used by the player.
+     */
     constructor(parent: HTMLElement, options: PenguinPlayerOptions) {
         super();
         this.options = options;
@@ -93,14 +136,30 @@ export class Player extends EventTarget {
         />, player);
     }
 
+    /**
+     * Change to next music in playlists.
+     * @param user - Is the operation triggered by user?
+     *
+     * @fires Player#songchange
+     */
     next(user = true) {
         this.playmode.handleNext(user);
     }
 
+    /**
+     * Change to previous music in playlists.
+     * @param user - Is the operation triggered by user?
+     *
+     * @fires Player#songchange
+     */
     previous(user = true) {
         this.playmode.handlePrevious(user);
     }
 
+    /**
+     * Continue playing or plays a music in playlists.
+     * @param index - (Optional) The index of target music.
+     */
     async play(index?: number) {
         if (index != undefined) {
             if (index < 0 || index >= getSongListLength(this.songs)) throw new Error("Song index out of bound");
@@ -123,10 +182,19 @@ export class Player extends EventTarget {
             return this.audio ? this.audio.play() : "";
     }
 
+    /**
+     * Pauses the player.
+     */
     pause() {
         this.audio ? this.audio.pause() : "";
     }
 
+    /**
+     * Loads a playlist to the player.
+     * @param playlist - Playlist options.
+     *
+     * @fires Player#playlistload
+     */
     async loadPlaylist(playlist: Playlist) {
         const provider = findProvider(playlist.provider);
         if (provider == null) throw new Error("No such provider " + playlist.provider);
@@ -145,12 +213,47 @@ export class Player extends EventTarget {
         }
     }
 
+    /**
+     * Add module to the player.
+     * @param module - The module that will be added to the player.
+     */
     withModule(module: Module) {
         module.initialize(this);
         this._modules.push(module);
     }
 }
 
+/**
+ * Song change event.
+ * Triggered when current song changed.
+ * @event Player#songchange
+ * @type {SongChangeEvent}
+ * @property {number} songIndex - The index of the new song.
+ * @property {Song} song - The new song.
+ * @property {string} provider - The provider of the new song.
+ */
+
+/**
+ * Playlist loaded event.
+ * Triggered when a playlist is loaded.
+ * @event Player#playlistload
+ * @type {PlaylistLoadEvent}
+ * @property {Playlist} playlist - The playlist.
+ */
+
+/**
+ * Playmode change event.
+ * Triggered when the playmode is changed.
+ * @event Playlist#playmodechange
+ * @type {PlaymodeChangeEvent}
+ * @property {Playmode} oldPlaymode - Previous playmode.
+ * @property {Playmode} playmode - Current playmode.
+ */
+
+/**
+ * Initializes an instance of the player.
+ * @param options - Options or playlists that will be used to initialize the player.
+ */
 export function initialize(options?: PenguinPlayerOptions | Playlist[]): Player {
     const opt: PenguinPlayerOptions = {
         autoplay: true,

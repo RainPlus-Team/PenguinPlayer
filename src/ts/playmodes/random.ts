@@ -1,6 +1,6 @@
-import { Player, Song } from "../player";
-import { addPlaymode, Playmode } from "../playmode";
-import { shuffle } from "../util";
+import {Player, Song} from "../player";
+import {addPlaymode, Playmode} from "../playmode";
+import {shuffle} from "../util";
 
 interface SongWithOriginalInfo {
     song: Song,
@@ -8,6 +8,9 @@ interface SongWithOriginalInfo {
     index: number
 }
 
+/**
+ * Playmode that plays a songlist randomly.
+ */
 class Random implements Playmode {
     randomizedList: SongWithOriginalInfo[];
     player: Player;

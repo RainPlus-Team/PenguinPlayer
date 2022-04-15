@@ -11,6 +11,10 @@ export const themeConfig = {
     }
 };
 
+/**
+ * Set the default theme.
+ * @param theme - The instance of the theme.
+ */
 export function useTheme(theme: new () => Theme) {
     _theme = theme;
 }

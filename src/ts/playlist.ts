@@ -1,5 +1,8 @@
 import { Song } from "./player";
 
+/**
+ * Interface for classes that represent a playlist.
+ */
 export interface Playlist {
     provider: string
     //priority?: number

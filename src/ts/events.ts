@@ -1,7 +1,10 @@
-import { Song } from "./player";
+import {Song} from "./player";
 import {SongList} from "./playlist";
 import {Playmode} from "./playmode";
 
+/**
+ * Triggered when current song changed.
+ */
 export class SongChangeEvent extends Event {
     public readonly songIndex?: number;
     public readonly song: Song;
@@ -16,6 +19,9 @@ export class SongChangeEvent extends Event {
     }
 }
 
+/**
+ * Triggered when a playlist is loaded.
+ */
 export class PlaylistLoadEvent extends Event {
     public readonly playlist: SongList;
 
@@ -26,6 +32,9 @@ export class PlaylistLoadEvent extends Event {
     }
 }
 
+/**
+ * Triggered when the playmode is changed.
+ */
 export class PlaymodeChangeEvent extends Event {
     public readonly oldPlaymode: Playmode;
     public readonly playmode: Playmode;

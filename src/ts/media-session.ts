@@ -1,6 +1,11 @@
 import {Module, Player} from "./player";
 import {SongChangeEvent} from "./events";
 
+/**
+ * Media Session module.
+ * Current song's metadata will be handled by browser when using this module.
+ * @class
+ */
 export default class implements Module {
     private player: Player;
 

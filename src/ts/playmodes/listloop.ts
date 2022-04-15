@@ -1,7 +1,10 @@
-import { Player } from "../player";
-import { getSongListLength } from "../playlist";
-import { addPlaymode, Playmode } from "../playmode";
+import {Player} from "../player";
+import {getSongListLength} from "../playlist";
+import {addPlaymode, Playmode} from "../playmode";
 
+/**
+ * Playmode that loops a songlist.
+ */
 class ListLoop implements Playmode {
     player: Player;
 

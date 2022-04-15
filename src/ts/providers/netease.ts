@@ -11,6 +11,9 @@ interface NeteasePlaylist extends Playlist {
     id: string
 }
 
+/**
+ * Provider that plays musics from Netease Cloud Music.
+ */
 class NeteaseProvider implements Provider {
     async fetchPlaylist(list: NeteasePlaylist): Promise<NeteaseSong[]> {
         const data = await fetch("https://gcm.tenmahw.com/resolve/playlist?id=" + list.id).then(res => res.json()).catch(console.error);
