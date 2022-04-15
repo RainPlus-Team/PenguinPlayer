@@ -1,7 +1,7 @@
 import { Song } from "./player";
 import { Playlist } from "./playlist";
 
-const providers = {};
+export const providers = {};
 
 /**
  * Interface for classes that represent a music provider.

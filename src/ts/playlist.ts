@@ -26,7 +26,7 @@ export function getSongByIndex(songlist: SongList[], index: number): {song: Song
     for (const list of songlist) {
         const pLen = prevLengths;
         prevLengths += list.songs.length;
-        if (pLen + list.songs.length >= index) continue;
+        if (pLen + list.songs.length < index) continue;
         if (index - pLen < list.songs.length)
             return {
                 song: list.songs[index - pLen],

@@ -13,24 +13,16 @@ class ListLoop implements Playmode {
     }
 
     handleNext() {
-        let c = this.player.currentSongIndex;
-        if (c < getSongListLength(this.player.songs) - 1) {
-            c++;
-        } else {
-            c = 0;
-        }
-        this.player.play(c);
+        const c = this.player.currentSongIndex;
+        const len = getSongListLength(this.player.songs);
+        this.player.play((c + 1) % len);
     }
 
     handlePrevious() {
-        let c = this.player.currentSongIndex;
-        if (c <= 0) {
-            c = getSongListLength(this.player.songs) - 1;
-        } else {
-            c--;
-        }
-        this.player.play(c);
+        const c = this.player.currentSongIndex;
+        const len = getSongListLength(this.player.songs);
+        this.player.play((c - 1 + len) % len);
     }
 }
 
-addPlaymode("listloop", new ListLoop());
+addPlaymode("listloop", ListLoop);

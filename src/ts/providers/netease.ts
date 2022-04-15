@@ -27,6 +27,7 @@ class NeteaseProvider implements Provider {
                 id,
                 name,
                 artists,
+                album: track.al.name,
                 thumbnail: track.al.picUrl,
             });
         }

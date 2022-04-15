@@ -13,25 +13,17 @@ class List implements Playmode {
     }
 
     handleNext(user: boolean) {
-        let c = this.player.currentSongIndex;
-        if (c < getSongListLength(this.player.songs) - 1) {
-            c++;
-        } else if (user) {
-            c = 0;
-        }
-        if (c != this.player.currentSongIndex)
-            this.player.play(c);
+        const c = this.player.currentSongIndex;
+        const len = getSongListLength(this.player.songs);
+        if (user || c < len - 1)
+            this.player.play((c + 1) % len);
     }
 
     handlePrevious() {
-        let c = this.player.currentSongIndex;
-        if (c <= 0) {
-            c = getSongListLength(this.player.songs) - 1;
-        } else {
-            c--;
-        }
-        this.player.play(c);
+        const c = this.player.currentSongIndex;
+        const len = getSongListLength(this.player.songs);
+        this.player.play((c - 1 + len) % len);
     }
 }
 
-addPlaymode("list", new List());
+addPlaymode("list", List);

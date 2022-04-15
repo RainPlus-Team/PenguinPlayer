@@ -21,7 +21,7 @@ class Random implements Playmode {
         let previousLength = 0;
         for (let i = 0;i<player.songs.length;i++) {
             const list = player.songs[i];
-            for (let j = 0;i<list.songs.length;j++) {
+            for (let j = 0;j<list.songs.length;j++) {
                 const song = list.songs[j];
                 this.randomizedList.push({
                     song,
@@ -75,4 +75,4 @@ class Random implements Playmode {
     }
 }
 
-addPlaymode("random", new Random());
+addPlaymode("random", Random);

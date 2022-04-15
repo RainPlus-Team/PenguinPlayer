@@ -16,13 +16,9 @@ class SingleLoop implements Playmode {
         if (!user)
             this.player.play();
         else {
+            const c = this.player.currentSongIndex;
             const len = getSongListLength(this.player.songs);
-            const cId = this.player.currentSongIndex;
-            if (cId >= len + 1) {
-                this.player.play(0);
-            } else {
-                this.player.play(cId + 1);
-            }
+            this.player.play((c + 1) % len);
         }
     }
 
@@ -30,15 +26,11 @@ class SingleLoop implements Playmode {
         if (!user)
             this.player.play();
         else {
+            const c = this.player.currentSongIndex;
             const len = getSongListLength(this.player.songs);
-            const cId = this.player.currentSongIndex;
-            if (cId <= 0) {
-                this.player.play(len - 1);
-            } else {
-                this.player.play(cId - 1);
-            }
+            this.player.play((c - 1 + len) % len);
         }
     }
 }
 
-addPlaymode("singleloop", new SingleLoop());
+addPlaymode("singleloop", SingleLoop);

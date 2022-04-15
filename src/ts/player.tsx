@@ -3,7 +3,7 @@ import { h, render } from "preact";
 import { getSongByIndex, getSongListLength, Playlist, SongList } from "./playlist";
 import { findProvider } from "./provider";
 import { themeConfig } from "./theme";
-import { Playmode } from "./playmode";
+import {findPlaymode, Playmode} from "./playmode";
 import { PlaylistLoadEvent, PlaymodeChangeEvent, SongChangeEvent } from "./events";
 
 /**
@@ -39,13 +39,13 @@ export class Player extends EventTarget {
     private layout: new () => Theme;
     private _currentSong: number;
     private _playmode: Playmode;
-    private _modules: Module[];
+    private _modules: Module[] = [];
 
     public readonly audio: HTMLAudioElement;
 
     public readonly options: PenguinPlayerOptions;
     public readonly root: HTMLElement;
-    public readonly songs: SongList[];
+    public readonly songs: SongList[] = [];
 
     /**
      * Current playing song.
@@ -91,14 +91,15 @@ export class Player extends EventTarget {
      * Gets or sets the playmode of the player.
      * @fires Player#playmodechange
      */
-    get playmode() {
+    get playmode(): Playmode {
         return this._playmode;
     }
-    set playmode(v) {
+    set playmode(v: Playmode | string) {
         const old = this._playmode;
-        this._playmode = v;
+        const mode = typeof v === "string" ? new (findPlaymode(v))() : v;
+        this._playmode = mode;
         this._playmode.initialize(this);
-        this.dispatchEvent(new PlaymodeChangeEvent(old, v));
+        this.dispatchEvent(new PlaymodeChangeEvent(old, mode));
     }
 
     /**
@@ -128,6 +129,11 @@ export class Player extends EventTarget {
 
         // Get audio ready
         this.audio = new Audio();
+        this.audio.addEventListener("error", () => this.playmode.handleNext(false));
+        this.audio.addEventListener("ended", () => this.playmode.handleNext(false));
+
+        // Set default playmode
+        this.playmode = "listloop";
 
         // All ready, get the UI working!
         render(<this.layout
@@ -172,10 +178,15 @@ export class Player extends EventTarget {
             if (p == null) throw new Error("No such provider " + provider);
 
             // Get its URL and then play it
+            this.pause();
             const url = await p.fetchUrl(song);
-            this.dispatchEvent(new SongChangeEvent(this.currentSong.song, this.currentSong.provider, this.currentSongIndex));
             if (this._currentSong == index) { // Make sure song doesn't change when fetching URL
                 this.audio.src = url;
+                if (url == null) {
+                    this.next();
+                    return;
+                }
+                this.dispatchEvent(new SongChangeEvent(this.currentSong.song, this.currentSong.provider, this.currentSongIndex));
                 return await this.play();
             }
         } else
@@ -220,6 +231,7 @@ export class Player extends EventTarget {
     withModule(module: Module) {
         module.initialize(this);
         this._modules.push(module);
+        return this; // For chaining
     }
 }
 

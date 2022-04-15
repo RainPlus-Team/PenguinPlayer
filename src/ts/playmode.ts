@@ -23,14 +23,14 @@ export interface Playmode {
     handlePrevious(user: boolean): void;
 }
 
-const playmodes = {};
+export const playmodes = {};
 
 /**
  * Register a playmode.
  * @param id - The ID of the playmode.
  * @param playmode - The instance of the playmode.
  */
-export function addPlaymode(id: string, playmode: Playmode) {
+export function addPlaymode(id: string, playmode: new () => Playmode) {
     if (playmodes[id] != undefined) throw new Error("Playmode is already registered");
     playmodes[id] = playmode;
 }
@@ -39,6 +39,6 @@ export function addPlaymode(id: string, playmode: Playmode) {
  * Finds a playmode.
  * @param id - The ID of the playmode.
  */
-export function findPlaymode(id: string): Playmode {
+export function findPlaymode(id: string): new () => Playmode {
     return playmodes[id];
 }

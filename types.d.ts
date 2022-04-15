@@ -1,6 +1,15 @@
 declare module "*.svg" {
     const svg: new() => import("preact").Component<{className?: string, preserveAspectRatio?: string}>;
-    export default svg
+    export default svg;
+}
+
+declare module "*.jpg" {
+    const path: string;
+    export default path;
+}
+declare module "*.ogg" {
+    const path: string;
+    export default path;
 }
 
 declare module "*?raw" {
@@ -23,6 +32,7 @@ interface PenguinPlayerOptions {
     lists?: import("./src/ts/playlist").Playlist[]
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface PPlayerLayoutState {
 
 }

@@ -16,6 +16,18 @@ export default class implements Module {
         navigator.mediaSession.setActionHandler("pause", () => this.player.pause());
         navigator.mediaSession.setActionHandler("nexttrack", () => this.player.next());
         navigator.mediaSession.setActionHandler("previoustrack", () => this.player.previous());
+        navigator.mediaSession.setActionHandler("seekforward", (details) => {
+            const skipTime = details.seekOffset || 10;
+            player.currentTime = Math.min(player.currentTime + skipTime, player.duration);
+        });
+        navigator.mediaSession.setActionHandler("seekbackward", (details) => {
+            const skipTime = details.seekOffset || 10;
+            player.currentTime = Math.max(player.currentTime - skipTime, 0);
+        });
+        navigator.mediaSession.setActionHandler("seekto", (details) => {
+            if (details.seekTime)
+                player.currentTime = details.seekTime;
+        });
 
         player.addEventListener("songchange", (e: SongChangeEvent) => {
             const s = e.song;
@@ -31,7 +43,7 @@ export default class implements Module {
                 ]
             });
         });
-        player.audio.addEventListener("playing", () => {
+        player.audio.addEventListener("play", () => {
             navigator.mediaSession.playbackState = "playing";
         });
         player.audio.addEventListener("pause", () => {
