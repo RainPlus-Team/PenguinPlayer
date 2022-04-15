@@ -25,7 +25,15 @@
 查看[Demo页面](https://penguin-player-rewrite.vercel.app)。
 
 ## 注意
-所有在 [Releases](https://github.com/M4TEC/PenguinPlayer/releases) 的版本（不带"**NonSem**"字样）均遵循 [语义化版本](https://semver.org/lang/zh-CN) 标准。
+### 获取帮助
+如果你遇到了一些问题，或你想提交功能请求，你可以前往我们的[Issues](https://github.com/M4TEC/PenguinPlayer/issues)页面提交一个新issue。
+
+你也可以通过[contact@m4tec.org](mailto:contact@m4tec.org)联系我们。
+
+**提醒** 我们只接受 _**英文**_ issue。
+
+### 关于已发布的版本
+所有在 [Releases](https://github.com/M4TEC/PenguinPlayer/releases) 中的版本（不带"**NonSem**"字样）均遵循 [语义化版本](https://semver.org/lang/zh-CN) 标准。
 
 查看 [CHANGELOG](CHANGELOG.md) 获取更新日志.
 

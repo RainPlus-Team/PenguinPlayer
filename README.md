@@ -25,6 +25,15 @@ A simple player for embedding, and it only needs to load ONE JavaScript file!
 See [demo page](https://penguin-player-rewrite.vercel.app).
 
 ## Note
+### Get Help
+Are you experiencing some issues, or you want to submit a feature request?
+You can go to our [Issues](https://github.com/M4TEC/PenguinPlayer/issues) page, and submit a new issue.
+
+Or you can contact us at [contact@m4tec.org](mailto:contact@m4tec.org).
+
+**NOTE** We only accept _**English**_ issues.
+
+### About releases
 All versions in [Releases](https://github.com/M4TEC/PenguinPlayer/releases) (without "**NonSem**") follow [Semantic Versioning](https://semver.org/) specification.
 
 See [CHANGELOG](CHANGELOG.md) for changelogs.
