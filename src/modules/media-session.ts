@@ -1,5 +1,6 @@
 import {Module, Player} from "../player";
 import {SongChangeEvent} from "../events";
+import {httpsAdapter} from "../util";
 
 /**
  * Media Session module.
@@ -60,7 +61,7 @@ export default class implements Module {
                 album: s.album || "",
                 artwork: [
                     {
-                        src: thumbnail
+                        src: player.options.enforceHttps ? httpsAdapter(thumbnail) : thumbnail
                     }
                 ]
             });

@@ -30,6 +30,7 @@ interface PenguinPlayerOptions {
     song?: number
     theme?: new () => Theme
     lists?: import("./src/playlist").Playlist[]
+    enforceHttps?: boolean
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

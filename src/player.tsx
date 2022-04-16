@@ -1,10 +1,11 @@
-import { h, render } from "preact";
+import {h, render} from "preact";
 
-import { getSongByIndex, getSongListLength, Playlist, SongList } from "./playlist";
-import { findProvider } from "./provider";
-import { themeConfig } from "./theme";
+import {getSongByIndex, getSongListLength, Playlist, SongList} from "./playlist";
+import {findProvider} from "./provider";
+import {themeConfig} from "./theme";
 import {findPlaymode, Playmode} from "./playmode";
-import { PlaylistLoadEvent, PlaymodeChangeEvent, SongChangeEvent } from "./events";
+import {PlaylistLoadEvent, PlaymodeChangeEvent, SongChangeEvent} from "./events";
+import {httpsAdapter} from "./util";
 
 /**
  * Interface for classes that represent a song.
@@ -186,7 +187,7 @@ export class Player extends EventTarget {
                     this.next();
                     return;
                 }
-                this.audio.src = url;
+                this.audio.src = this.options.enforceHttps ? httpsAdapter(url) : url;
                 return await this.play()
                     .then(() =>
                         this.dispatchEvent(new SongChangeEvent(
@@ -278,6 +279,7 @@ export function initialize(options?: PenguinPlayerOptions | Playlist[] | Playlis
         options = [options as Playlist];
     const opt: PenguinPlayerOptions = {
         autoplay: true,
+        enforceHttps: true,
         ...(Array.isArray(options) ? {
             lists: options
         } : options)
