@@ -73,5 +73,6 @@ export default class implements Module {
         });
         player.audio.addEventListener("durationchange", this.updatePositionState);
         player.audio.addEventListener("ratechange", this.updatePositionState);
+        player.audio.addEventListener("timeupdate", this.updatePositionState); // Performance impact?
     }
 }
