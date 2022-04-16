@@ -1,6 +1,6 @@
 import {h, render} from "preact";
-import {PenguinPlayerAPI} from "../src/ts";
-import {Player} from "../src/ts/player";
+import {PenguinPlayerAPI} from "../src";
+import {Player} from "../src/player";
 
 //import "prismjs/themes/prism.min.css";
 import "./style.less";

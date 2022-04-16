@@ -64,21 +64,21 @@ export default class extends Component<any, State> {
     render(props) {
         return <IntlProvider definition={this.state.language}>
             <div className="Header">
-                    <div ref={this.langSelector} className={["Language-Selector", (this.state.showLangList ? "Language-Selector--listed" : "")].join(" ")}>
-                        <Localizer>
-                            <button onClick={() => this.setState({showLangList: true})} className="Language-Button" title={<Text id="languages"/> as unknown as string}>
-                                <Language/>
-                            </button>
-                            <strong style="vertical-align: super;"><Text id="languages"/></strong>
-                        </Localizer>
-                        <ul className="Language-List">
-                            {Object.keys(LANGUAGES).map((v) =>
-                                <li>
-                                    <button onClick={() => this.loadLanguage(v)}>{LANGUAGES[v]}</button>
-                                </li>
-                            )}
-                        </ul>
-                    </div>
+                <div ref={this.langSelector} className={["Language-Selector", (this.state.showLangList ? "Language-Selector--listed" : "")].join(" ")}>
+                    <Localizer>
+                        <button onClick={() => this.setState({showLangList: true})} className="Language-Button" title={<Text id="languages"/> as unknown as string}>
+                            <Language/>
+                        </button>
+                        <strong style="vertical-align: super;"><Text id="languages"/></strong>
+                    </Localizer>
+                    <ul className="Language-List">
+                        {Object.keys(LANGUAGES).map((v) =>
+                            <li>
+                                <button onClick={() => this.loadLanguage(v)}>{LANGUAGES[v]}</button>
+                            </li>
+                        )}
+                    </ul>
+                </div>
                 <p style="font-size: 64px;margin: 0;">🐧</p>
                 <h1><Text id="title"/><span className="Player-Version">v{_VERSION_}</span></h1>
                 <p><Text id="description"/></p>
@@ -121,6 +121,6 @@ export default class extends Component<any, State> {
             <div className="Footer">
                 Maintained by <a href="https://m4tec.org" target="_blank">M4TEC</a> with <span title="Love">❤</span>.
             </div>
-        </IntlProvider>
+        </IntlProvider>;
     }
 }

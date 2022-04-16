@@ -1,5 +1,5 @@
-import {Module, Player} from "./player";
-import {SongChangeEvent} from "./events";
+import {Module, Player} from "../player";
+import {SongChangeEvent} from "../events";
 
 /**
  * Media Session module.

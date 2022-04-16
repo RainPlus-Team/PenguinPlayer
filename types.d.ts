@@ -29,7 +29,7 @@ interface PenguinPlayerOptions {
     autoplay?: boolean | "auto"
     song?: number
     theme?: new () => Theme
-    lists?: import("./src/ts/playlist").Playlist[]
+    lists?: import("./src/playlist").Playlist[]
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -39,7 +39,7 @@ interface PPlayerLayoutState {
 
 interface PPlayerLayoutProps {
     options: PenguinPlayerOptions
-    player: import("./src/ts/player").Player
+    player: import("./src/player").Player
 }
 
 interface MediaArtwork {

@@ -143,7 +143,7 @@ module.exports = env => {
     // Webpack Configuration
     return [
         merge(merge(base, es2015), { // ES2015+
-            entry: { player: path.resolve(__dirname, "src/ts/index.ts") },
+            entry: { player: path.resolve(__dirname, "src/index.ts") },
             output: {
                 path: path.resolve(__dirname, "dist/"),
                 filename: "[name].mjs"
@@ -155,7 +155,7 @@ module.exports = env => {
             ]
         }),
         merge(merge(base, es5), { // ES5
-            entry: { player: path.resolve(__dirname, "src/ts/index.ts") },
+            entry: { player: path.resolve(__dirname, "src/index.ts") },
             output: {
                 path: path.resolve(__dirname, "dist/"),
                 filename: "[name].js"

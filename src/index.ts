@@ -3,7 +3,7 @@ import {addPlaymode, playmodes} from "./playmode";
 import {addProvider, providers} from "./provider";
 import { themeConfig, useTheme } from "./theme";
 
-import MediaSession from "./media-session";
+import MediaSession from "./modules/media-session";
 
 // Load default providers
 import "./providers/file";

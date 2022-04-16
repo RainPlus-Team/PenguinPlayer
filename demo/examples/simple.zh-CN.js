@@ -4,7 +4,7 @@
 // 以下使用的所有函数/属性都会被简化为导出名称
 
 // 如果你正使用独立的JavaScript文件，它会被暴露在
-window.PPlayer
+window.PPlayer;
 // 如果要访问initialize（初始化）函数，只需要
 PPlayer.initialize(/* 选项 */);
 
@@ -16,12 +16,18 @@ import { initialize } from "@m4tec/penguinplayer";
 initialize(/* 选项 */);
 
 
-// 使用它最简单的方式就是喂给它一个含有播放列表的数组
+// 最简单的使用方法就是只给它一个播放列表
+initialize({ // 使用一个播放列表初始化
+    provider: "netease", // 播放列表提供方（也就是音乐平台）
+    id: "[NETEASE CLOUD MUSIC PLAYLIST ID]" // 平台特定播放列表数据
+});
+// 你也可以添加多个播放列表
 initialize([ // 使用播放列表数组初始化
-    { // 单个播放列表
+    { // 播放列表
         provider: "netease", // 播放列表提供方（也就是音乐平台）
-        id: "[网易云音乐播放列表ID]" // 平台特定播放列表数据
-    }
+        id: "[NETEASE CLOUD MUSIC PLAYLIST ID]" // 平台特定播放列表数据
+    },
+    // 其它播放列表...
 ]);
 // 完事！你得到了一个固定在页面上的播放器！
 

@@ -2,7 +2,7 @@
   "name": "@m4tec/penguinplayer",
   "version": "0.0.1-alpha",
   "description": "A simple player based on Netease Cloud Music",
-  "main": "src/ts/index.ts",
+  "main": "src/index.ts",
   "scripts": {
     "build": "yarn run webpack --mode=production --env production",
     "watch": "yarn run webpack --watch",
@@ -51,6 +51,7 @@
     "postcss-preset-env": "^6.7.0",
     "preact": "^10.6.4",
     "preact-i18n": "2.4.0-preactx",
+    "prism-themes": "^1.9.0",
     "prismjs": "^1.27.0",
     "raw-loader": "^4.0.2",
     "style-loader": "^3.3.1",

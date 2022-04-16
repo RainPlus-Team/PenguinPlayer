@@ -187,7 +187,14 @@ export class Player extends EventTarget {
                     return;
                 }
                 this.audio.src = url;
-                return await this.play().then(() => this.dispatchEvent(new SongChangeEvent(this.currentSong.song, this.currentSong.provider, this.currentSongIndex)));
+                return await this.play()
+                    .then(() =>
+                        this.dispatchEvent(new SongChangeEvent(
+                            this.currentSong.song,
+                            this.currentSong.provider,
+                            this.currentSongIndex)
+                        )
+                    );
             }
         } else
             return this.audio ? this.audio.play() : "";
@@ -266,7 +273,9 @@ export class Player extends EventTarget {
  * Initializes an instance of the player.
  * @param options - Options or playlists that will be used to initialize the player.
  */
-export function initialize(options?: PenguinPlayerOptions | Playlist[]): Player {
+export function initialize(options?: PenguinPlayerOptions | Playlist[] | Playlist): Player {
+    if (options && (options as Playlist).provider) // Check if it's a Playlist
+        options = [options as Playlist];
     const opt: PenguinPlayerOptions = {
         autoplay: true,
         ...(Array.isArray(options) ? {
@@ -282,9 +291,11 @@ export function initialize(options?: PenguinPlayerOptions | Playlist[]): Player 
         instance.root.classList.add("PPlayer--fixed");
 
     if (Array.isArray(opt.lists))
-        for (const p of opt.lists) {
-            instance.loadPlaylist(p).then(() => console.log("Playlist loaded")).catch(console.error);
-        }
+        for (const p of opt.lists)
+            instance
+                .loadPlaylist(p)
+                .then(() => console.log("Playlist loaded"))
+                .catch(console.error);
 
     return instance;
 }
