@@ -8,6 +8,7 @@ import {httpsAdapter} from "../util";
  */
 export default class implements Module {
     private player: Player;
+    private _lastCurrentTime = -1;
 
     constructor() {
         this.updatePositionState = this.updatePositionState.bind(this);
@@ -57,6 +58,7 @@ export default class implements Module {
         }
 
         player.addEventListener("songchange", (e: SongChangeEvent) => {
+            this._lastCurrentTime = -1;
             const s = e.song;
             const thumbnail = s.thumbnail || ""; // TODO: Thumbnail fallback image
             navigator.mediaSession.metadata = new MediaMetadata({
@@ -72,12 +74,22 @@ export default class implements Module {
         });
         player.audio.addEventListener("play", () => {
             navigator.mediaSession.playbackState = "playing";
+            this.updatePositionState();
         });
         player.audio.addEventListener("pause", () => {
             navigator.mediaSession.playbackState = "paused";
+            this.updatePositionState();
         });
         player.audio.addEventListener("durationchange", this.updatePositionState);
         player.audio.addEventListener("ratechange", this.updatePositionState);
-        player.audio.addEventListener("timeupdate", this.updatePositionState); // Performance impact?
+
+        player.audio.addEventListener("timeupdate", () => {
+            const time = this.player.audio.currentTime;
+            if (!isNaN(time)) {
+                if (this._lastCurrentTime != -1 && Math.abs(time - this._lastCurrentTime) > 5)
+                    this.updatePositionState();
+                this._lastCurrentTime = time;
+            }
+        });
     }
 }
