@@ -165,29 +165,29 @@ export class Player extends EventTarget {
     /**
      * Continue playing or plays a music in playlists.
      * @param index - (Optional) The index of target music.
+     *
+     * @fires Player#songchange
      */
     async play(index?: number) {
         if (index != undefined) {
             if (index < 0 || index >= getSongListLength(this.songs)) throw new Error("Song index out of bound");
 
             // Find the song and its provider
-            this._currentSong = index;
-            const ret = getSongByIndex(this.songs, index);
-            const song = ret.song, provider = ret.provider;
+            const { song, provider } = getSongByIndex(this.songs, index);
             const p = findProvider(provider);
             if (p == null) throw new Error("No such provider " + provider);
 
             // Get its URL and then play it
             this.pause();
+            this._currentSong = index;
             const url = await p.fetchUrl(song);
             if (this._currentSong == index) { // Make sure song doesn't change when fetching URL
-                this.audio.src = url;
                 if (url == null) {
                     this.next();
                     return;
                 }
-                this.dispatchEvent(new SongChangeEvent(this.currentSong.song, this.currentSong.provider, this.currentSongIndex));
-                return await this.play();
+                this.audio.src = url;
+                return await this.play().then(() => this.dispatchEvent(new SongChangeEvent(this.currentSong.song, this.currentSong.provider, this.currentSongIndex)));
             }
         } else
             return this.audio ? this.audio.play() : "";

@@ -41,3 +41,9 @@ interface PPlayerLayoutProps {
     options: PenguinPlayerOptions
     player: import("./src/ts/player").Player
 }
+
+interface MediaArtwork {
+    sizes: string,
+    src: string,
+    type: string
+}

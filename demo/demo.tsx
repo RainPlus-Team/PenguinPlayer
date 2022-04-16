@@ -64,7 +64,7 @@ window.addEventListener("load", () => {
                 } as never);
             window.PInst.loadPlaylist({
                 provider: "netease",
-                id: "2717890285"
+                id: "7332275167"
             } as never);
         }
     } else {

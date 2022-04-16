@@ -4,13 +4,31 @@ import {SongChangeEvent} from "./events";
 /**
  * Media Session module.
  * Current song's metadata will be handled by browser when using this module.
- * @class
  */
 export default class implements Module {
     private player: Player;
 
+    constructor() {
+        this.updatePositionState = this.updatePositionState.bind(this);
+    }
+
+    private updatePositionState() {
+        if ("setPositionState" in navigator.mediaSession) {
+            const audio = this.player.audio;
+            navigator.mediaSession.setPositionState({
+                duration: audio.duration,
+                playbackRate: audio.playbackRate,
+                position: audio.currentTime
+            });
+        }
+    }
+
     initialize(player: Player) {
         this.player = player;
+
+        if (!("mediaSession" in navigator)) {
+            throw new Error("Media Session is not supported!");
+        }
 
         navigator.mediaSession.setActionHandler("play", () => this.player.play());
         navigator.mediaSession.setActionHandler("pause", () => this.player.pause());
@@ -24,10 +42,14 @@ export default class implements Module {
             const skipTime = details.seekOffset || 10;
             player.currentTime = Math.max(player.currentTime - skipTime, 0);
         });
-        navigator.mediaSession.setActionHandler("seekto", (details) => {
-            if (details.seekTime)
-                player.currentTime = details.seekTime;
-        });
+        try {
+            navigator.mediaSession.setActionHandler("seekto", (details) => {
+                if (details.seekTime)
+                    player.currentTime = details.seekTime;
+            });
+        } catch (e) {
+            console.warn("seekto unsupported");
+        }
 
         player.addEventListener("songchange", (e: SongChangeEvent) => {
             const s = e.song;
@@ -49,5 +71,7 @@ export default class implements Module {
         player.audio.addEventListener("pause", () => {
             navigator.mediaSession.playbackState = "paused";
         });
+        player.audio.addEventListener("durationchange", this.updatePositionState);
+        player.audio.addEventListener("ratechange", this.updatePositionState);
     }
 }
