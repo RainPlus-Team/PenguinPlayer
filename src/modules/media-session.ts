@@ -16,11 +16,15 @@ export default class implements Module {
     private updatePositionState() {
         if ("setPositionState" in navigator.mediaSession) {
             const audio = this.player.audio;
-            navigator.mediaSession.setPositionState({
-                duration: audio.duration,
-                playbackRate: audio.playbackRate,
-                position: audio.currentTime
-            });
+            if (!isNaN(audio.duration)) {
+                navigator.mediaSession.setPositionState({
+                    duration: audio.duration,
+                    playbackRate: audio.playbackRate,
+                    position: audio.currentTime
+                });
+            } else {
+                navigator.mediaSession.setPositionState(null);
+            }
         }
     }
 
