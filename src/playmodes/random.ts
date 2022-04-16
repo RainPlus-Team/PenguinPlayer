@@ -52,7 +52,7 @@ class Random implements Playmode {
             // Must do something?
             this.player.play(this.randomizedList[0].index);
         } else {
-            if (randId >= this.randomizedList.length + 1) {
+            if (randId >= this.randomizedList.length) {
                 this.player.play(this.randomizedList[0].index);
             } else {
                 this.player.play(this.randomizedList[randId + 1].index);
