@@ -189,7 +189,7 @@ export class Player extends EventTarget {
                 }
                 this.audio.src = this.options.enforceHttps ? httpsAdapter(url) : url;
                 return await this.play()
-                    .then(() =>
+                    .finally(() =>
                         this.dispatchEvent(new SongChangeEvent(
                             this.currentSong.song,
                             this.currentSong.provider,
