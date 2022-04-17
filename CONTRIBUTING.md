@@ -16,9 +16,9 @@ So if you find a typo, code error, or something else, you are welcome to submit 
 
 If you don't know how to create a pull request, you can create an issue instead of submitting a pull request.
 
-To do so, you need to navigate to the [Issues](https://github.com/M4TEC/PenguinPlayer/issues) page first. Then click on the `New issue` button, write your issue title and content.
+To do so, you need to navigate to the [Issues](https://github.com/M4TEC/PenguinPlayer/issues) page first. Then click on the `New issue` button, and write your issue title and content.
 
-Also, you need to make sure your title is simple and understandable. For example, you are experiencing some errors, your title should be `Errors found in ...`, not `I'm getting some errors, help!`.
+Also, you need to make sure your title is simple and understandable. For example, if you are experiencing some errors, your title should be `Errors found in ...`, not `I'm getting some errors, help!`.
 
 After that, submit it, and we will check your issue. ;)
 
