@@ -1,7 +1,7 @@
-import { initialize } from "./player";
+import {initialize} from "./player";
 import {addPlaymode, playmodes} from "./playmode";
 import {addProvider, providers} from "./provider";
-import { themeConfig, useTheme } from "./theme";
+import themes, {useTheme} from "./theme";
 
 import MediaSession from "./modules/media-session";
 
@@ -29,7 +29,7 @@ const exposes = {
     addProvider,
     addPlaymode,
     useTheme,
-    themeConfig,
+    themes,
     modules: {
         MediaSession
     },

@@ -2,7 +2,7 @@ import {h, render} from "preact";
 
 import {getSongByIndex, getSongListLength, Playlist, SongList} from "./playlist";
 import {findProvider} from "./provider";
-import {themeConfig} from "./theme";
+import themes from "./theme";
 import {findPlaymode, Playmode} from "./playmode";
 import {PlaylistLoadEvent, PlaymodeChangeEvent, SongChangeEvent} from "./events";
 import {httpsAdapter} from "./util";
@@ -119,7 +119,7 @@ export class Player extends EventTarget {
         super();
         this.options = options;
 
-        this.layout = this.options.theme || themeConfig.currentTheme;
+        this.layout = this.options.theme || themes.default;
 
         // Create player root element
         const player = document.createElement("div");

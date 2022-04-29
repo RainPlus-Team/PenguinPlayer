@@ -23,8 +23,6 @@ module.exports = env => {
     // Compile variables
     //let enabledFlags = typeof env.flags === "string" ? env.flags.split(".") : [];
 
-    const THEME = env.theme || "default";
-
     /*const compileOptions = {
         PRODUCTION: mode === "production",
         NO_STYLE: enabledFlags.indexOf("no-style") !== -1,
@@ -69,7 +67,7 @@ module.exports = env => {
         mode,
         plugins,
         optimization,
-        resolve: { extensions: [".wasm", ".mjs", ".ts", ".tsx", ".js", ".json"], alias: { Theme: path.resolve(__dirname, "themes/" + THEME + "/") } },
+        resolve: { extensions: [".wasm", ".mjs", ".ts", ".tsx", ".js", ".json"] },
         module: {
             rules: [
                 {

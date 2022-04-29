@@ -1,15 +1,12 @@
-import defaultTheme from "Theme/layout";
+let _theme: new () => Theme;
 
-let _theme: new() => Theme = defaultTheme;
-
-export const themeConfig = {
-    get defaultTheme() : new() => Theme {
-        return defaultTheme;
-    },
-    get currentTheme() : new() => Theme {
+const themes = {
+    get default() {
         return _theme;
     }
 };
+
+export default themes;
 
 /**
  * Set the default theme.
