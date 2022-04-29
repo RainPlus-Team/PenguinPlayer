@@ -37,9 +37,10 @@ class Random implements Playmode {
     private findRandId(index: number) {
         const cId = index;
         let randId = -1;
-        for (const item of this.randomizedList) {
+        for (let i = 0;i<this.randomizedList.length;i++) {
+            const item = this.randomizedList[i];
             if (item.index == cId) {
-                randId = cId;
+                randId = i;
                 break;
             }
         }
