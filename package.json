@@ -2,7 +2,6 @@
   "name": "@m4tec/penguinplayer",
   "version": "0.0.1-alpha",
   "description": "A simple player based on Netease Cloud Music",
-  "main": "src/index.ts",
   "scripts": {
     "build": "yarn run webpack --mode=production --env production",
     "watch": "yarn run webpack --watch",
@@ -29,37 +28,22 @@
     "@types/preact-i18n": "^2.3.1",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
     "@typescript-eslint/parser": "^5.18.0",
-    "eslint": "^8.12.0",
-    "webpack-bundle-analyzer": "^4.5.0"
+    "eslint": "^8.12.0"
   },
   "dependencies": {
     "@babel/core": "^7.16.0",
     "@babel/preset-env": "^7.16.0",
     "@phensley/locale-matcher": "^1.4.0",
-    "babel-loader": "^8.2.3",
-    "colorthief": "^2.3.2",
-    "copy-webpack-plugin": "^10.2.4",
     "core-js": "^3.21.1",
-    "css-loader": "^6.5.0",
-    "html-loader": "^3.0.0",
-    "html-webpack-plugin": "^5.5.0",
-    "ifdef-loader": "^2.3.0",
     "less": "^4.1.2",
-    "less-loader": "^10.2.0",
     "postcss": "^8.3.11",
-    "postcss-loader": "^6.2.0",
     "postcss-preset-env": "^6.7.0",
     "preact": "^10.6.4",
     "preact-i18n": "2.4.0-preactx",
     "prism-themes": "^1.9.0",
     "prismjs": "^1.27.0",
-    "raw-loader": "^4.0.2",
-    "style-loader": "^3.3.1",
+    "rollup": "^2.71.0",
     "svg-to-jsx": "^1.0.4",
-    "ts-loader": "^9.2.6",
-    "typescript": "^4.5.3",
-    "webpack": "^5.61.0",
-    "webpack-cli": "^4.9.1",
-    "webpack-merge": "^5.8.0"
+    "typescript": "^4.5.3"
   }
 }

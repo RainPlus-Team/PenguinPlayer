@@ -2,6 +2,8 @@ import {h, render} from "preact";
 import {PenguinPlayerAPI} from "../src";
 import {Player} from "../src/player";
 
+import Theme from "../themes/default";
+
 //import "prismjs/themes/prism.min.css";
 import "./style.less";
 
@@ -30,6 +32,8 @@ window.addEventListener("load", () => {
             alert("Incompatible Penguin Player version, this demo is built for Penguin Player v" + _VERSION_ + ", but version " + PPlayer?.version + " is detected!");
         } else {
             // PPlayer compatible, initialize
+            PPlayer.useTheme(Theme);
+
             window.PInst = PPlayer.initialize();
             window.PInst
                 .withModule(new PPlayer.modules.MediaSession())
@@ -62,10 +66,10 @@ window.addEventListener("load", () => {
                         }
                     ]
                 } as never);
-            window.PInst.loadPlaylist({
+            /*window.PInst.loadPlaylist({
                 provider: "netease",
                 id: "7332275167"
-            } as never);
+            } as never);*/
         }
     } else {
         alert("Penguin Player not detected, is it fail to load or it contains some fatal error?");

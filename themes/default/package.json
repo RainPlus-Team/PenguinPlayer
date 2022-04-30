@@ -1,0 +1,26 @@
+{
+  "name": "@m4tec/pplayer-theme-default",
+  "version": "0.0.1-alpha",
+  "description": "Default theme for Penguin Player",
+  "main": "dist/theme.js",
+  "module": "dist/theme.mjs",
+  "files": [
+    "dist/theme.js",
+    "dist/theme.mjs"
+  ],
+  "repository": "https://github.com/M4TEC/PenguinPlayer",
+  "author": "LuoRain",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "@babel/core": "^7.17.10",
+    "@babel/preset-env": "^7.17.10",
+    "@babel/preset-react": "^7.16.7",
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-typescript": "^8.3.2",
+    "rollup": "^2.70.2",
+    "typescript": "^4.6.4",
+    "webpack-bundle-analyzer": "^4.5.0",
+    "webpack-merge": "^5.8.0"
+  }
+}

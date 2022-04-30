@@ -1,0 +1,1 @@
+// This webpack config is created for demo page, not the player.

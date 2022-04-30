@@ -119,7 +119,7 @@ export class Player extends EventTarget {
         super();
         this.options = options;
 
-        this.layout = this.options.theme || themes.default;
+        this.layout = this.options.theme || themes.current;
 
         // Create player root element
         const player = document.createElement("div");
