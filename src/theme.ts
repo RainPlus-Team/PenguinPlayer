@@ -1,7 +1,7 @@
 let _theme: new () => Theme;
 
 const themes = {
-    get default() {
+    get current() {
         return _theme;
     }
 };

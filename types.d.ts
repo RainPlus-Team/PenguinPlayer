@@ -30,6 +30,7 @@ interface PenguinPlayerOptions {
     song?: number
     theme?: new () => Theme
     lists?: import("./src/playlist").Playlist[]
+    backendOnly?: boolean
     enforceHttps?: boolean
 }
 

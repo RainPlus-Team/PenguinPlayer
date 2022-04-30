@@ -119,7 +119,7 @@ export class Player extends EventTarget {
         super();
         this.options = options;
 
-        this.layout = this.options.theme || themes.default;
+        this.layout = this.options.backendOnly ? null : (this.options.theme || themes.current);
 
         // Create player root element
         const player = document.createElement("div");
@@ -136,11 +136,12 @@ export class Player extends EventTarget {
         // Set default playmode
         this.playmode = "listloop";
 
-        // All ready, get the UI working!
-        render(<this.layout
-            options={options}
-            player={this}
-        />, player);
+        if (this.layout)
+            // All ready, get the UI working!
+            render(<this.layout
+                options={options}
+                player={this}
+            />, player);
     }
 
     /**
