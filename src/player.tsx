@@ -136,11 +136,12 @@ export class Player extends EventTarget {
         // Set default playmode
         this.playmode = "listloop";
 
-        // All ready, get the UI working!
-        render(<this.layout
-            options={options}
-            player={this}
-        />, player);
+        if (this.layout)
+            // All ready, get the UI working!
+            render(<this.layout
+                options={options}
+                player={this}
+            />, player);
     }
 
     /**
