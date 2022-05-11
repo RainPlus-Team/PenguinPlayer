@@ -1,2 +1,0 @@
-exclude_patterns:
-- "webpack.config.js"
