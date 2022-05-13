@@ -1,0 +1,10 @@
+{
+  "name": "@rainplus/pplayer-core",
+  "version": "0.0.1-alpha",
+  "description": "Penguin Player Core",
+  "main": "index.js",
+  "repository": "https://github.com/RainPlus-Team/PenguinPlayer",
+  "author": "RainPlus",
+  "license": "MIT",
+  "private": false
+}

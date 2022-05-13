@@ -1,0 +1,13 @@
+{
+  "name": "@rainplus/pplayer-demo",
+  "version": "0.0.1-alpha",
+  "description": "Penguin Player Demo Application",
+  "main": "index.js",
+  "repository": "https://github.com/RainPlus-Team/PenguinPlayer",
+  "author": "RainPlus",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "webpack": "^5.72.1"
+  }
+}

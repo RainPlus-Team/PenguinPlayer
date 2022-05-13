@@ -1,0 +1,20 @@
+{
+  "name": "@rainplus/pplayer",
+  "version": "0.0.1-alpha",
+  "description": "Penguin Player",
+  "main": "index.js",
+  "repository": "https://github.com/RainPlus-Team/PenguinPlayer",
+  "author": "RainPlus",
+  "license": "MIT",
+  "private": false,
+  "scripts": {},
+  "dependencies": {
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-typescript": "^8.3.2",
+    "rollup": "^2.73.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "^5.23.0",
+    "eslint": "^8.15.0"
+  }
+}
