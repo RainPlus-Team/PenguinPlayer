@@ -8,7 +8,9 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "build:dev": "yarn run rollup -c"
+    "build:dev": "yarn run rollup -c",
+    "build:prod": "yarn run cross-env NODE_ENV=production yarn run build:dev",
+    "watch:dev": "yarn run rollup -c -w"
   },
   "dependencies": {
     "@babel/core": "^7.17.10",
@@ -16,7 +18,9 @@
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-typescript": "^8.3.2",
+    "cross-env": "^7.0.3",
     "rollup": "^2.73.0",
+    "rollup-plugin-terser": "^7.0.2",
     "typescript": "^4.6.4"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 import Player, {Options} from "./player";
 
-const defaultOptions = {
+const defaultOptions: Options = {
     autoplay: false
 };
 

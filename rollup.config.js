@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from "fs";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import babel from "@rollup/plugin-babel";
+import {terser} from "rollup-plugin-terser";
 
 const packages = ["core", "modules", "ui"];
 
@@ -11,8 +12,17 @@ const commonPlugins = [
     typescript(),
     babel({ babelHelpers: "bundled" })
 ];
+const prodPlugins = [
+    terser({
+        format: {
+            comments: false
+        }
+    })
+];
 
 async function main() {
+    // eslint-disable-next-line no-undef
+    const isProd = process.env.NODE_ENV === "production";
     /**
      * @type {import('rollup').RollupOptions[]}
      */
@@ -50,7 +60,8 @@ async function main() {
                 exports: "default"
             },
             plugins: [
-                ...commonPlugins
+                ...commonPlugins,
+                ...(isProd ? prodPlugins : [])
             ]
         }, {
             input,
@@ -59,7 +70,8 @@ async function main() {
                 format: "esm"
             },
             plugins: [
-                ...commonPlugins
+                ...commonPlugins,
+                ...(isProd ? prodPlugins : [])
             ]
         });
 
@@ -75,7 +87,8 @@ async function main() {
                     nodeResolve({
                         moduleDirectories: [join(p, "node_modules")]
                     }),
-                    ...commonPlugins
+                    ...commonPlugins,
+                    ...(isProd ? prodPlugins : [])
                 ]
             });
         }
