@@ -1,0 +1,11 @@
+{
+  "name": "@rainplus/pplayer-module-media-session",
+  "version": "0.0.1-alpha",
+  "description": "Penguin Player Media Session Module",
+  "main": "dist/cjs/mediasession.js",
+  "module": "dist/module/mediasession.js",
+  "repository": "https://github.com/RainPlus-Team/PenguinPlayer",
+  "author": "RainPlus",
+  "license": "MIT",
+  "private": false
+}

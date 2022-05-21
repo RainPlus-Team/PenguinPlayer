@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "sourceMap": true,
+        "jsx": "react",
+        "jsxFactory": "h"
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}

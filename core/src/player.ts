@@ -2,6 +2,10 @@ export interface Options {
     autoplay?: boolean
 }
 
+export interface Module {
+    initialize(player: Player)
+}
+
 class Player extends EventTarget {
     constructor() {
         super();
@@ -25,7 +29,21 @@ class Player extends EventTarget {
     /**
      * Loads a new playlist to player.
      */
-    loadPlaylist() {
+    async addPlaylist() {
+
+    }
+
+    /**
+     * Loads a single song to player.
+     */
+    async addSong() {
+
+    }
+
+    /**
+     * Loads a module to player.
+     */
+    async addModule() {
 
     }
 }

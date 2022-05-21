@@ -8,6 +8,27 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "webpack": "^5.72.1"
+    "@babel/core": "^7.17.12",
+    "babel-loader": "^8.2.5",
+    "corejs": "^1.0.0",
+    "css-loader": "^6.7.1",
+    "html-webpack-plugin": "^5.5.0",
+    "less": "^4.1.2",
+    "less-loader": "^11.0.0",
+    "postcss": "^8.4.13",
+    "postcss-loader": "^6.2.1",
+    "preact": "^10.7.2",
+    "style-loader": "^3.3.1",
+    "terser-webpack-plugin": "^5.3.1",
+    "ts-loader": "^9.3.0",
+    "typescript": "^4.6.4",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.25.0",
+    "@typescript-eslint/parser": "^5.25.0",
+    "eslint": "^8.16.0",
+    "eslint-plugin-react": "^7.30.0"
   }
 }

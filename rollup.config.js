@@ -6,7 +6,7 @@ import typescript from "@rollup/plugin-typescript";
 import babel from "@rollup/plugin-babel";
 import {terser} from "rollup-plugin-terser";
 
-const packages = ["core", "modules", "ui"];
+const packages = ["core", "modules/media_session", "ui"];
 
 const commonPlugins = [
     typescript(),
@@ -19,6 +19,24 @@ const prodPlugins = [
         }
     })
 ];
+
+function getResult(input, file, format, prod, plugins) {
+    const plug = plugins || [];
+    return {
+        input,
+        output: {
+            name: "PPlayer",
+            file: prod ? file.replace(/\.(m)?js$/, ".min.$1js") : file,
+            format,
+            exports: "default"
+        },
+        plugins: [
+            ...plug,
+            ...commonPlugins,
+            ...(prod ? prodPlugins : [])
+        ]
+    };
+}
 
 async function main() {
     // eslint-disable-next-line no-undef
@@ -52,45 +70,19 @@ async function main() {
 
         const input = join(p, "src/index.ts");
 
-        results.push({
-            input,
-            output: {
-                file: join(p, main),
-                format: "cjs",
-                exports: "default"
-            },
-            plugins: [
-                ...commonPlugins,
-                ...(isProd ? prodPlugins : [])
-            ]
-        }, {
-            input,
-            output: {
-                file: join(p, module),
-                format: "esm"
-            },
-            plugins: [
-                ...commonPlugins,
-                ...(isProd ? prodPlugins : [])
-            ]
-        });
+        results.push(getResult(input, join(p, main), "cjs", false), getResult(input, join(p, module), "esm", false));
+        if (isProd)
+            results.push(getResult(input, join(p, main), "cjs", true), getResult(input, join(p, module), "esm", true));
 
         if (bundle) {
-            results.push({
-                input,
-                output: {
-                    file: join(p, bundle),
-                    name: "PPlayer",
-                    format: "umd"
-                },
-                plugins: [
-                    nodeResolve({
-                        moduleDirectories: [join(p, "node_modules")]
-                    }),
-                    ...commonPlugins,
-                    ...(isProd ? prodPlugins : [])
-                ]
-            });
+            const bundlePlugs = [
+                nodeResolve({
+                    moduleDirectories: [join(p, "node_modules")]
+                })
+            ];
+            results.push(getResult(input, join(p, bundle), "umd", false, bundlePlugs));
+            if (isProd)
+                results.push(getResult(input, join(p, bundle), "umd", true, bundlePlugs));
         }
     }
 
