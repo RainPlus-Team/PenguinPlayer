@@ -1,0 +1,116 @@
+.Header {
+  position: relative;
+  color: #2b2b2b;
+  padding: 80px 0;
+  background: url(../../assets/images/background.webp) center;
+  background-size: cover;
+  box-sizing: border-box;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .Header--content {
+    text-align: center;
+
+    .Header--icon {
+      width: 100px;
+      height: 100px;
+    }
+
+    .Header--title {
+      margin: 0 auto;
+      display: inline-block;
+
+      h1 {
+        font-family: "Poppins", sans-serif;
+        font-weight: 200;
+      }
+
+      h1, p {
+        margin: 3px;
+      }
+
+      .Header--version {
+        opacity: .5;
+        font-size: smaller;
+        text-align: right;
+      }
+    }
+  }
+
+  .Header--badges {
+    max-width: 80%;
+    margin: 0 auto;
+
+    > img {
+      margin: 0 2px;
+    }
+  }
+
+  .Header--sponsors {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+
+    .Header--sponsor-vercel path {
+      fill: black;
+      transition: fill .2s linear;
+    }
+
+    .Header--photographer {
+      opacity: .5;
+      margin: 0;
+    }
+  }
+
+  &:before, &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    transition: opacity .2s linear;
+    opacity: 0;
+    z-index: 0;
+  }
+
+  &:before {
+    background: linear-gradient(to bottom, transparent, white);
+    opacity: 1;
+  }
+
+  &:after {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, .1), #2b2b2b);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .Header {
+    color: white;
+
+    &:before {
+      opacity: 0;
+    }
+
+    &:after {
+      opacity: 1;
+    }
+
+    .Header--sponsors {
+      .Header--sponsor-vercel path {
+        fill: white;
+      }
+    }
+  }
+
+  a {
+    color: #00c4ff;
+  }
+}

@@ -38,7 +38,8 @@
     },
     "settings": {
         "react": {
-            "pragma": "h"
+            "pragma": "h",
+            "fragment": "Fragment"
         }
     }
 }

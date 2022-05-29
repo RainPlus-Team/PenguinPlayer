@@ -6,10 +6,15 @@ import typescript from "@rollup/plugin-typescript";
 import babel from "@rollup/plugin-babel";
 import {terser} from "rollup-plugin-terser";
 
+// eslint-disable-next-line no-undef
+const isProd = process.env.NODE_ENV === "production";
+
 const packages = ["core", "modules/media_session", "ui"];
 
 const commonPlugins = [
-    typescript(),
+    typescript({
+        sourceMap: !isProd
+    }),
     babel({ babelHelpers: "bundled" })
 ];
 const prodPlugins = [
@@ -25,6 +30,7 @@ function getResult(input, file, format, prod, plugins) {
     return {
         input,
         output: {
+            sourcemap: !isProd,
             name: "PPlayer",
             file: prod ? file.replace(/\.(m)?js$/, ".min.$1js") : file,
             format,
@@ -39,8 +45,6 @@ function getResult(input, file, format, prod, plugins) {
 }
 
 async function main() {
-    // eslint-disable-next-line no-undef
-    const isProd = process.env.NODE_ENV === "production";
     /**
      * @type {import('rollup').RollupOptions[]}
      */

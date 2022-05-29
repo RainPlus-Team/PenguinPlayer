@@ -12,7 +12,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Optional and themeable user interface
 - Support [QQ Music](https://y.qq.com)
 - Support [KuGou Music](https://kugou.com)
-- Support [Spotify](https://spotify.com) (limited support?)
 
 ### Removed
 - __Everything__

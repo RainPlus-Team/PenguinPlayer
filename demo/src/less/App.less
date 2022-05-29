@@ -1,0 +1,20 @@
+body {
+  margin: 0;
+  transition: background-color .2s linear;
+}
+
+a {
+  color: #2e47d3;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    color: white;
+    background-color: #2b2b2b;
+  }
+}
