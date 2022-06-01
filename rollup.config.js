@@ -12,71 +12,79 @@ const isProd = process.env.NODE_ENV === "production";
 const packages = ["core", "modules/media_session", "ui"];
 
 const commonPlugins = [
-    typescript({
-        sourceMap: !isProd
-    }),
+    typescript(),
     babel({ babelHelpers: "bundled" })
 ];
 const prodPlugins = [
     terser({
-        format: {
-            comments: false
-        }
+        format: { comments: false }
     })
 ];
 
-function getResult(input, file, format, prod, plugins) {
-    const plug = plugins || [];
+function getResult(input, file, format, min = false, plugins = []) {
     return {
         input,
         output: {
             sourcemap: !isProd,
             name: "PPlayer",
-            file: prod ? file.replace(/\.(m)?js$/, ".min.$1js") : file,
+            file: min ? file.replace(/\.(m)?js$/, ".min.$1js") : file,
             format,
             exports: "default"
         },
         plugins: [
-            ...plug,
+            ...plugins,
             ...commonPlugins,
-            ...(prod ? prodPlugins : [])
+            ...(min ? prodPlugins : [])
         ]
     };
 }
+
+function isPackageValid(p) {
+    if (!existsSync(p)) {
+        console.log(`Package ${p} cannot be found`);
+        return false;
+    }
+    if (!existsSync(join(p, "package.json"))) {
+        console.log(`${p} is not a valid package`);
+        return false;
+    }
+    if (!existsSync(join(p, "src/index.ts"))) {
+        console.log(`No entry point found for package ${p}`);
+        return false;
+    }
+    return true;
+}
+
+const prodOnly = (input) => isProd ? input : undefined;
 
 async function main() {
     /**
      * @type {import('rollup').RollupOptions[]}
      */
     const results = [];
+    const addResult = (...r) => results.push(...r.filter(x => x !== undefined));
 
     for (const p of packages) {
-        if (!existsSync(p)) {
-            console.log(`Package ${p} cannot be found`);
+        if (!isPackageValid(p))
             continue;
-        }
-        if (!existsSync(join(p, "package.json"))) {
-            console.log(`${p} is not a valid package`);
-            continue;
-        }
-        if (!existsSync(join(p, "src/index.ts"))) {
-            console.log(`No entry point found for package ${p}`);
-            continue;
-        }
 
         const {
-            name,
-            version,
+            //name,
+            //version,
             main,
             module,
-            bundle
+            bundle,
+            entry
         } = JSON.parse(readFileSync(join(p, "package.json")).toString());
 
-        const input = join(p, "src/index.ts");
+        const input = join(p, entry || "src/index.ts");
 
-        results.push(getResult(input, join(p, main), "cjs", false), getResult(input, join(p, module), "esm", false));
-        if (isProd)
-            results.push(getResult(input, join(p, main), "cjs", true), getResult(input, join(p, module), "esm", true));
+        addResult(
+            getResult(input, join(p, main), "cjs"),
+            getResult(input, join(p, module), "esm"),
+            prodOnly(getResult(input, join(p, main), "cjs", true)),
+            prodOnly(getResult(input, join(p, module), "esm", true))
+        );
 
         if (bundle) {
             const bundlePlugs = [
@@ -84,9 +92,10 @@ async function main() {
                     moduleDirectories: [join(p, "node_modules")]
                 })
             ];
-            results.push(getResult(input, join(p, bundle), "umd", false, bundlePlugs));
-            if (isProd)
-                results.push(getResult(input, join(p, bundle), "umd", true, bundlePlugs));
+            addResult(
+                getResult(input, join(p, bundle), "umd", false, bundlePlugs),
+                prodOnly(getResult(input, join(p, bundle), "umd", true, bundlePlugs))
+            );
         }
     }
 
