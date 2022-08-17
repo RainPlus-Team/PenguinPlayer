@@ -5,7 +5,7 @@ import CancelablePromise from "../modules/cancelable-promise";
 
 function getPlaylist(id: string): Promise<Song[]> {
     return new Promise((resolve, reject) => {
-        ajax(`https://gcm.tenmahw.com/resolve/playlist?id=${id}`).send().then((result: AjaxResponse) => {
+        ajax(`https://ncm.tenmahw.com/resolve/playlist?id=${id}`).send().then((result: AjaxResponse) => {
             if (result.data != null && result.data.code == 200) {
                 let songs: NeteaseSong[] = [];
                 let list = result.data.playlist;
@@ -25,7 +25,7 @@ let lyricReq: AjaxPromise;
 function getLyric(song: NeteaseSong): CancelablePromise<Lyric> {
     return new CancelablePromise((resolve, reject) => {
         lyricReq?.cancel();
-        lyricReq = ajax(`https://gcm.tenmahw.com/resolve/lyric?id=${song.id}`).send().then((result: AjaxResponse) => {
+        lyricReq = ajax(`https://ncm.tenmahw.com/resolve/lyric?id=${song.id}`).send().then((result: AjaxResponse) => {
             let lyric = result.data?.lyric;
             resolve({
                 lrc: lyric?.lrc,
@@ -40,7 +40,7 @@ let currentUrlReq: AjaxPromise;
 function getUrl(song: NeteaseSong): CancelablePromise<string> {
     return new CancelablePromise((resolve, reject) => {
         currentUrlReq?.cancel();
-        currentUrlReq = ajax(`https://gcm.tenmahw.com/song/url?id=${(song as NeteaseSong).id}`).send().then((result: AjaxResponse) => {
+        currentUrlReq = ajax(`https://ncm.tenmahw.com/song/url?id=${(song as NeteaseSong).id}`).send().then((result: AjaxResponse) => {
             if (result.data.code == 200) {
                 let track = result.data.data[0];
                 if (track.url) {
