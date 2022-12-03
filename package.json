@@ -11,9 +11,8 @@
     "build:dev": "yarn rollup -c",
     "build:prod": "yarn cross-env NODE_ENV=production yarn run build:dev",
     "watch:dev": "yarn rollup -c -w",
-    "demo:build:dev": "yarn --cwd demo webpack",
-    "demo:build:prod": "yarn cross-env NODE_ENV=production yarn run demo:build:dev",
-    "demo:watch:dev": "yarn --cwd demo webpack --watch",
+    "demo:build:prod": "yarn --cwd demo build",
+    "demo:watch:dev": "yarn --cwd demo dev",
     "vercel-build": "yarn run build:prod && yarn run "
   },
   "dependencies": {
@@ -30,6 +29,8 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.23.0",
     "@typescript-eslint/parser": "^5.23.0",
-    "eslint": "^8.15.0"
+    "eslint": "^8.15.0",
+    "eslint-plugin-svelte3": "^4.0.0",
+    "svelte": "^3.53.1"
   }
 }
