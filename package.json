@@ -8,7 +8,7 @@
     "watch": "yarn run webpack --watch",
     "watch-ie": "yarn run webpack --watch --env flags=ie",
     "build-dev": "yarn run webpack",
-    "vercel-build": "yarn run build && cp -R dist/ demo/ && cp -R demo/ public/"
+    "vercel-build": "yarn run webpack --mode=production --env production --env flags=ie && cp -R dist/ demo/ && cp -R demo/ public/"
   },
   "repository": {
     "type": "git",
