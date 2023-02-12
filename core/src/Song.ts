@@ -7,6 +7,10 @@ export interface ThumbnailedSongInfo extends SongInfo {
     thumbnail: string
 }
 
+export interface AlbumSongInfo extends SongInfo {
+    album: string
+}
+
 export default interface Song {
     getSongInfo(): Promise<SongInfo>
     getSongURL(): Promise<string>
@@ -15,4 +19,7 @@ export default interface Song {
 /* Type Guards */
 export function isThumbnailed(songInfo: SongInfo): boolean {
     return (songInfo as ThumbnailedSongInfo) !== undefined;
+}
+export function hasAlbum(songInfo: SongInfo): boolean {
+    return (songInfo as AlbumSongInfo) !== undefined;
 }
