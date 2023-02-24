@@ -1,4 +1,4 @@
-import Player, {Options} from "./player";
+import Player, {Options} from "./Player";
 
 const defaultOptions: Options = {
     autoplay: false

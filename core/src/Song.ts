@@ -18,8 +18,8 @@ export default interface Song {
 
 /* Type Guards */
 export function isThumbnailed(songInfo: SongInfo): boolean {
-    return (songInfo as ThumbnailedSongInfo) !== undefined;
+    return (songInfo as ThumbnailedSongInfo).thumbnail !== undefined;
 }
 export function hasAlbum(songInfo: SongInfo): boolean {
-    return (songInfo as AlbumSongInfo) !== undefined;
+    return (songInfo as AlbumSongInfo).album !== undefined;
 }
